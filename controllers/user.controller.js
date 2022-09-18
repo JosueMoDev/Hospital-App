@@ -1,0 +1,129 @@
+const User = require('../models/user.model');
+
+const bcrypt = require('bcryptjs');
+const { response } = require('express');
+const { JWTGenerated } = require('../helpers/JWT.helpers');
+
+const getUsers = async (req, resp = response) => { 
+    
+    const users = await User.find();
+   
+    resp.json({
+        ok: true,
+        message:'getting users ....',
+        users
+    })
+}
+
+const createUser = async (req, resp) => { 
+    
+    
+    const {  email, password } = req.body;
+    
+    try {
+        const isEmailTaken = await User.findOne({ email });
+        if (isEmailTaken) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'This mail has already taken'
+            });
+        }
+        const user = new User(req.body);
+     // encrypt password
+        const encrypting = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(password, encrypting);
+    // here create our users    
+        await user.save();
+
+    
+    // Generate a JWT 
+        const token = await JWTGenerated(user.id);
+
+        resp.json({
+            ok: true,
+            message: 'user has been created success',
+            user,
+            token
+        });
+        
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message: 'unexpercted error'
+        });
+    }
+
+
+
+
+}
+const updateUser = async (req, resp) => {
+    const user_id = req.params.id;
+    try {
+        //Database users
+        const user = await User.findById(user_id);
+        if (!user) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'unknown user at database'
+            })
+        } 
+   
+        // Updating user
+        const { password, google, email, ...fields } = req.body;
+
+        if (user.email !== email) { 
+            const isEmailTaken = await User.findOne({ email });
+            if (isEmailTaken) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message: 'This mail has been already taken'
+                });
+            }
+            fields.email = email;
+        }
+
+        console.log(fields);
+
+        const userUpdated = await User.findByIdAndUpdate(user_id, fields,{ new:true})
+ 
+        resp.json({
+            ok: true,
+            massage:'data has been updated success',
+            user: userUpdated
+        })
+        
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'unexpected error'
+        })
+    }
+}
+
+const deleteUser = async (req, resp) => {
+    const  user_id  = req.params.id;
+    
+    try {
+        const user = await User.findById(user_id);
+        if (!user) { 
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown user '${user_id}' at database`
+            })
+        } 
+        await User.findByIdAndDelete(user.id);
+        resp.status(200).json({
+            ok: true,
+            massage:'user has been deleted success',
+            user_id
+        }) 
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'We could perform this action'
+        });
+    }
+  
+}
+module.exports = { getUsers, createUser, updateUser, deleteUser };
