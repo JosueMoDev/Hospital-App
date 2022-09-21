@@ -16,7 +16,13 @@ dbConnection();
 //Routes 
 
 app.use('/api/users', require('./routes/users.route'));
+app.use('/api/hospitals', require('./routes/hospitals.route'));
+app.use('/api/doctors', require('./routes/doctors.route'));
 app.use('/api/login', require('./routes/auth.route'));
+
+app.use('/api/all', require('./routes/searchingAll.route'));
+//TODO: valations error must be checked
+app.use('/api/upload', require('./routes/uploads.route'));
 
 
 app.listen(process.env.PORT, () => { console.log (' server is running on '+ process.env.PORT) });
