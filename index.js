@@ -10,6 +10,9 @@ app.use(cors());
 
 app.use(express.json());
 
+// use static dir 
+app.use(express.static('public'));
+
 // data base
 dbConnection();
 
