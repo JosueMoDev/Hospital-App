@@ -43,7 +43,6 @@ const uploadFile = async (req, resp = response) => {
     // move file to dir 
     file.mv(path, (err) => {
         if (err) {
-            console.log(err);
             return resp.status(500).json({
                 ok: false,
                 message: 'we could move the file to dir it was internal error'

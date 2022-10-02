@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Hospital = require('../models/hospital.model');
+const User = require('../models/user.model');
 
 const getHospitals = async (req, resp = response) => { 
     const hospitals = await Hospital.find().populate('user','name');
@@ -41,20 +42,86 @@ const createHospital = async (req, resp = response) => {
 }
 
 const updateHospital = async (req, resp = response) => { 
+    const user_id = req.user_id;
+    const hospital_id = req.params.id;
 
-
-    resp.status(200).json({
-        ok: true,
-        message:'Hospitals was updated success'
-    });
+    try {
+        const hospital = await Hospital.findById(hospital_id);
+        if (!hospital) { 
+            return resp.status(404).json({
+                ok: false,
+                message:'We couldnt find this hospial'
+            });
+        }
+        
+        const { name, user, ...fields } = req.body;
+        if (hospital.name !== name) { 
+            const hospitalExist = await Hospital.findOne({ name });
+            if (hospitalExist) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message:'One hospital has already registered with this name'
+                });
+            }
+            fields.name = name;
+        }
+        fields.user = user_id;
+        const hospitalUpdated = await Hospital.findByIdAndUpdate(hospital_id,  fields, { new: true }).populate('user', 'name');
+        resp.status(200).json({
+            ok: true,
+            message: 'Hospitals was updated success',
+            success: hospitalUpdated
+        });
+    } catch (error) {   
+        resp.status(500).json({
+            ok: false,
+            message:'something was wrong'
+        });
+        
+    }
 }
+    
+    const deleteHospital = async (req, resp = response) => { 
+        
+        const user_id = req.user_id;
+        const user = await User.findById(user_id);
+        const userLoggedIn = JSON.stringify(user._id);
+        const ROLE = user.role;
 
-const deleteHospital = async (req, resp = response) => { 
+   
+        const hospital_id = req.params.id;
+        try {
+            const hospital = await Hospital.findById(hospital_id);   
+            if (!hospital) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message:'we could not find hospital'
+                });
+            }
 
-    resp.status(200).json({
-        ok: true,
-        message:'Hospitals has been deleted'
-    });
-}
+            const userCreator = JSON.stringify(hospital.user);
+         
+            if ((userLoggedIn !== userCreator)&& ROLE !== 'ADMIN_ROLE' ) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message: 'to delete a hospital, User must be who has been created it or has an ADMIN_ROLE', 
+                }); 
+                
+            }
+            await Hospital.findByIdAndDelete(hospital.id);
+            resp.status(200).json({
+                ok: true,
+                message: 'hospital deleted', 
+            });
 
+        } catch (error) {  
+            console.log(error)
+            resp.status(500).json({
+                ok: false,
+                message:'something was wrong'
+            });
+            
+        }
+    }
+        
 module.exports = { getHospitals, createHospital, updateHospital, deleteHospital }

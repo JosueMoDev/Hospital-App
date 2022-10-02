@@ -1,5 +1,6 @@
 const { response, query } = require('express');
 const Doctor = require('../models/doctor.model')
+const User = require('../models/user.model')
 
 const getDoctors = async (req, resp = response) => { 
 
@@ -59,18 +60,75 @@ const createDoctor = async (req, resp = response) => {
 
 const updateDoctor  = async (req, resp = response) => { 
 
-    resp.status(200).json({
-        ok: true,
-        message:'Doctor was updated success'
-    });
+    const doctor_id = req.params.id
+    try {
+        const doctor = await Doctor.findById(doctor_id);
+        if (!doctor) { 
+            return resp.status(404).json({
+                ok: true,
+                message:'Any doctor found it '
+            });
+        }
+        const {user, ...fields } = req.body;
+        fields.user = req.user_id;
+
+        const doctorUpdated = await Doctor.findByIdAndUpdate(doctor_id,  fields, { new: true }).populate('user', 'name');
+     
+        resp.status(200).json({
+            ok: true,
+            message: 'Doctor was updated success',
+            data: doctorUpdated
+        });
+    } catch (error) {
+        resp.status(500).json({
+            ok: true,
+            message:'internal error'
+        }); 
+    }
+
 }
 
 const deleteDoctor = async (req, resp = response) => { 
 
-    resp.status(200).json({
-        ok: true,
-        message:'Doctor has been deleted'
-    });
+    const user_id = req.user_id;
+    const user = await User.findById(user_id);
+    const userLoggedIn = JSON.stringify(user._id);
+    const ROLE = user.role;
+
+
+    const doctor_id = req.params.id;
+    try {
+        const doctor = await Doctor.findById(doctor_id);   
+        if (!doctor) { 
+            return resp.status(400).json({
+                ok: false,
+                message:'we could not find doctor'
+            });
+        }
+
+        const userCreator = JSON.stringify(doctor.user);
+     
+        if ((userLoggedIn !== userCreator)&& ROLE !== 'ADMIN_ROLE' ) { 
+            return resp.status(400).json({
+                ok: false,
+                message: 'to delete a Doctor, User must be who has been created it or hava to be ADMIN_ROLE', 
+            }); 
+            
+        }
+        await Doctor.findByIdAndDelete(doctor.id);
+        resp.status(200).json({
+            ok: true,
+            message: 'doctor deleted', 
+        });
+
+    } catch (error) {  
+        console.log(error)
+        resp.status(500).json({
+            ok: false,
+            message:'something was wrong'
+        });
+        
+    }
 }
 
 module.exports = { getDoctors, createDoctor, updateDoctor, deleteDoctor }

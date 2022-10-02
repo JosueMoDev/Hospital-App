@@ -39,9 +39,7 @@ const uploadImage = async (schema, id, fileName) => {
             break;
 
         case 'users':
-            console.log('id:',id);
             let user = await User.findById(id);
-            console.log(user);
             if (!user) {
                 console.log('we could not find any user with id : id');
             } else { 

@@ -6,12 +6,23 @@ const { JWTGenerated } = require('../helpers/JWT.helpers');
 
 const getUsers = async (req, resp = response) => { 
     
-    const users = await User.find();
+    const pagination = Number(req.query.pagination) || 0;
+    const [users, total] = await Promise.all([
+
+        User
+            .find()
+            .skip(pagination)
+            .limit(5),
+        
+        User.count()
+
+    ]);
    
     resp.json({
         ok: true,
         message:'getting users ....',
-        users
+        users,
+        total
     })
 }
 
@@ -23,7 +34,7 @@ const createUser = async (req, resp) => {
     try {
         const isEmailTaken = await User.findOne({ email });
         if (isEmailTaken) { 
-            return resp.status(404).json({
+            return resp.status(400).json({
                 ok: false,
                 message: 'This mail has already taken'
             });
@@ -58,6 +69,7 @@ const createUser = async (req, resp) => {
 
 }
 const updateUser = async (req, resp) => {
+    
     const user_id = req.params.id;
     try {
         //Database users
@@ -83,7 +95,6 @@ const updateUser = async (req, resp) => {
             fields.email = email;
         }
 
-        console.log(fields);
 
         const userUpdated = await User.findByIdAndUpdate(user_id, fields,{ new:true})
  
@@ -102,8 +113,7 @@ const updateUser = async (req, resp) => {
 }
 
 const deleteUser = async (req, resp) => {
-    const  user_id  = req.params.id;
-    
+    const user_id = req.params.id;    
     try {
         const user = await User.findById(user_id);
         if (!user) { 
@@ -112,12 +122,21 @@ const deleteUser = async (req, resp) => {
                 message: `unknown user '${user_id}' at database`
             })
         } 
-        await User.findByIdAndDelete(user.id);
-        resp.status(200).json({
+        if (user.role === 'ADMIN_ROLE') { 
+
+            // await User.findByIdAndDelete(user.id);
+            return resp.status(200).json({
+                 ok: true,
+                 massage:'user has been deleted success',
+                 user_id
+             }) 
+        }
+        resp.status(400).json({
             ok: true,
-            massage:'user has been deleted success',
+            massage:'to delete user you must be admin',
             user_id
         }) 
+
     } catch (error) {
         resp.status(500).json({
             ok: false,

@@ -7,7 +7,6 @@ const getDocumentsCollection = async (req, resp = response) => {
     
     const schema = req.params.schema;
     const query = req.params.query;
-
     const regexpresion = new RegExp(query, 'i');
     
     try {
@@ -32,7 +31,7 @@ const getDocumentsCollection = async (req, resp = response) => {
                 
                 return resp.status(400).json({
                     ok: false,
-                    message: `You should search into the following paths: ${'/api/all/collection/doctor/juan'} `
+                    message: `You should search into the following paths `
                 });
         }
         resp.status(200).json({

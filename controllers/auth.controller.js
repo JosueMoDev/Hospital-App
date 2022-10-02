@@ -15,9 +15,9 @@ const login = async (req, resp = response) => {
         // checking email
         if (!user) { 
             
-            return resp.status(404).json({
+            return resp.status(400).json({
                 ok: false,
-                message:` we couldn't fiend  this user '${email}' into databese`
+                message:'You must check your credentials'
             });
         }
 
@@ -26,19 +26,20 @@ const login = async (req, resp = response) => {
         const validatePassword = bcryp.compareSync(password, user.password);
 
         if (!validatePassword) { 
-            return resp.status(404).json({
+            return resp.status(400).json({
                 ok: false,
-                message:'Password not valid'
+                message:'You must check your credentials'
             });
         }
 
         // Generate a JWT 
-        const token = await JWTGenerated(user.id);
+        const token = await JWTGenerated(user.id, user.role);
 
         resp.status(200).json({
             ok: true,
             message: ' Welcome ',
-            token
+            token,
+            role:user.role
         });
 
     } catch (error) {
@@ -82,4 +83,16 @@ const googleSignIn = async (req, resp = response) => {
         });
     }
 }
-module.exports = { login, googleSignIn }
+
+const renewToken = async (req, resp = response) => { 
+    const user_id = req.user_id
+    const token = await JWTGenerated(user_id);
+    const user = await User.findById(user_id);
+    resp.status(200).json({
+        ok: true,
+        message: "this is your new token",
+        token,
+        user
+    });
+}
+module.exports = { login, googleSignIn, renewToken }
