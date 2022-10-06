@@ -26,7 +26,7 @@ const DoctorSchema = Schema({
 
 DoctorSchema.method('toJSON', function () {
     const { __v, _id,  ...object } = this.toObject();
-    object.Doctor_id = _id;
+    object.doctor_id = _id;
     return object
 });
 module.exports = model('Doctor', DoctorSchema);

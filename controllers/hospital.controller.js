@@ -66,7 +66,7 @@ const updateHospital = async (req, resp = response) => {
             fields.name = name;
         }
         fields.user = user_id;
-        const hospitalUpdated = await Hospital.findByIdAndUpdate(hospital_id,  fields, { new: true }).populate('user', 'name');
+        const hospitalUpdated = await Hospital.findByIdAndUpdate(hospital_id,  fields, { new: true }).populate('user', 'name').populate('user', 'img');
         resp.status(200).json({
             ok: true,
             message: 'Hospitals was updated success',

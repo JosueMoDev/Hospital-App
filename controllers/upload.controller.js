@@ -41,6 +41,7 @@ const uploadFile = async (req, resp = response) => {
     const path = `./uploads/${schema}/${fileName}`;
 
     // move file to dir 
+    //FIXME: we must wait for moving picture to dir path
     file.mv(path, (err) => {
         if (err) {
             return resp.status(500).json({
