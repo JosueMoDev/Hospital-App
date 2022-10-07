@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { getHospitals, createHospital, updateHospital, deleteHospital } = require('../controllers/hospital.controller')
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
-const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
+const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
 // Route => Hospitals
@@ -14,10 +14,11 @@ router.post('/', [
 ], createHospital);
 router.put('/:id', [
     isJwtValid,
+    isAdminUser,
     check('name', `Hospital's name is a required field`).not().isEmpty(),
     fieldsValidation
 ], updateHospital);
-router.delete('/:id', isJwtValid, deleteHospital);
+router.delete('/:id', [isJwtValid, isAdminUser], deleteHospital);
 
 
 module.exports = router;
