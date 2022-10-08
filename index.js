@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { dbConnection } = require('./database/config')
-
+const path = require('path');
 const app = express();
+
+
+
 //cors
 app.use(cors());
 //read and parse body
@@ -26,6 +29,9 @@ app.use('/api/login', require('./routes/auth.route'));
 app.use('/api/all', require('./routes/searchingAll.route'));
 //TODO: valations error must be checked
 app.use('/api/upload', require('./routes/uploads.route'));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
 
 
-app.listen(process.env.PORT, () => { console.log (' server is running on '+ process.env.PORT) });
+app.listen(process.env.PORT, () => { console.log(' server is running on ' + process.env.PORT) });
