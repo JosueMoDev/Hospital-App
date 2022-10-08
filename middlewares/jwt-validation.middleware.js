@@ -32,15 +32,14 @@ isAdminUser= async (req, resp= response, next) => {
                 message: `we couldn't find this user on DataBase`
             });
         }
-        if (userDB.role === 'ADMIN_ROLE' || user_id===user_request) { 
-            next()
-        } { 
+        if (userDB.role !== 'ADMIN_ROLE' && user_id!==user_request) { 
+           
             return resp.status(403).json({
                 ok: false,
                 message: `You are not avable to do this acction`
             });
         }
-       
+        next()
         
     } catch (error) {
         return resp.status(500).json({

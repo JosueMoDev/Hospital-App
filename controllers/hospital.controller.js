@@ -83,12 +83,6 @@ const updateHospital = async (req, resp = response) => {
     
     const deleteHospital = async (req, resp = response) => { 
         
-        const user_id = req.user_id;
-        const user = await User.findById(user_id);
-        const userLoggedIn = JSON.stringify(user._id);
-        const ROLE = user.role;
-
-   
         const hospital_id = req.params.id;
         try {
             const hospital = await Hospital.findById(hospital_id);   
@@ -98,16 +92,7 @@ const updateHospital = async (req, resp = response) => {
                     message:'we could not find hospital'
                 });
             }
-
-            const userCreator = JSON.stringify(hospital.user);
-         
-            if ((userLoggedIn !== userCreator)&& ROLE !== 'ADMIN_ROLE' ) { 
-                return resp.status(400).json({
-                    ok: false,
-                    message: 'to delete a hospital, User must be who has been created it or has an ADMIN_ROLE', 
-                }); 
-                
-            }
+ 
             await Hospital.findByIdAndDelete(hospital.id);
             resp.status(200).json({
                 ok: true,

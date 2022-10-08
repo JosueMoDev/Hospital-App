@@ -107,11 +107,6 @@ const updateDoctor  = async (req, resp = response) => {
 
 const deleteDoctor = async (req, resp = response) => { 
 
-    // const user_id = req.user_id;
-    // const user = await User.findById(user_id);
-    // const ROLE = user.role;
-
-
     const doctor_id = req.params.id;
     try {
         const doctor = await Doctor.findById(doctor_id);   
@@ -122,13 +117,6 @@ const deleteDoctor = async (req, resp = response) => {
             });
         }
         
-        // if ( ROLE !== 'ADMIN_ROLE' ) { 
-        //     return resp.status(400).json({
-        //         ok: false,
-        //         message: 'to delete a Doctor, User must be who has been created it or hava to be ADMIN_ROLE', 
-        //     }); 
-            
-        // }
         await Doctor.findByIdAndDelete(doctor.id);
         resp.status(200).json({
             ok: true,
