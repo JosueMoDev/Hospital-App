@@ -52,32 +52,34 @@ const login = async (req, resp = response) => {
     }
 }
 const googleSignIn = async (req, resp = response) => {
-    
     try {
         const { name, email, picture } = await googleTokenVerify(req.body.token);
         const userIntoDB = await User.findOne({ email });
         let user;
-        if (!user) {
+        if (!userIntoDB) {
             user = new User({
                 name, 
                 email,
                 password:'@@@',
                 img: picture,
                 google:true,
-
+                
             })
         } else {
+            
             user = userIntoDB;
             user.google= true
         }
+        
 // save on database
-        await user.save();
+         await user.save();
 // generate token
         const token = await JWTGenerated(user.id)
         resp.status(200).json({
             ok: true,
             email, name, picture,token
         });
+
     } catch (error) {
         resp.status(400).json({
             ok: false,
