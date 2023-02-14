@@ -1,15 +1,17 @@
 const { Router } = require('express');
-const { uploadFile, returnImage } = require('../controllers/upload.controller');
-const  expressFileUpload  = require('express-fileupload');
+const { uploadFile } = require('../controllers/upload.controller');
+
 
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 
-
 const router = Router();
-router.use(expressFileUpload());
+// router.use(expressFileUpload());
 // Route => Searching All
-router.put('/:schema/:id', isJwtValid, uploadFile);
+// router.put('/:schema/:id', isJwtValid, uploadFile);
 
-router.get('/:schema/:file', returnImage );
+// router.get('/:schema/:file', returnImage );
+
+router.post('/photo/:folder/:id', isJwtValid, uploadFile);
+
 
 module.exports = router;

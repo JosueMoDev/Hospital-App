@@ -1,64 +1,51 @@
-const path = require('path');
-const fs = require('fs');
-
 const { response } = require('express');
-const { v4: uuidv4 } = require('uuid');
-const {uploadImage } = require('../helpers/updataImage.helpers');
-
-
-
+const { insertPhotoOn } = require('../helpers/insertPhotoOn.helpers');
+  
 const uploadFile = async (req, resp = response) => { 
-    
-    const schema = req.params.schema;
+    const folder = req.params.folder;
     const id = req.params.id;
-    const pathAvible = ['hospitals', 'doctors', 'users'];
+    const file = req.file
+    
 
-    if (!pathAvible.includes(schema)) {    
+    if (!file) {    
+        return resp.status(400).json({
+            ok: false,
+            message: `you don't provide any photo`,
+            
+        });
+    }
+
+    const isPathAvailable = ['hospitals', 'doctors', 'users', 'patients'];
+    //  validate if one those folders are avilable on claudinary
+    if (!isPathAvailable.includes(folder)) {    
         return resp.status(400).json({
             ok: false,
             message: 'path not found',
             
         });
     }
-//Validate If we are sending a file
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return resp.status(400).json('No files were uploaded.');
-    }
-// processing file 
-    const file = req.files.img;
-    const nameChunck = file.name.split('.');
+    
+    
+    // get file extension
+    const nameChunck = file.originalname.split('.');
     const fileExtension = nameChunck[nameChunck.length - 1];
-
     // validate extesion 
     const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
     if (!allowedExtension.includes(fileExtension)) { 
         return resp.status(400).json('extension file not allow');
     }
-    // generate a file name
-    const fileName = `${uuidv4()}.${fileExtension}`;
+    
+   
+    // here we insert or update the photo depending on the EndPoint
+    await insertPhotoOn(folder, id, file.originalname, file.path);
 
-    // create a path
-    const path = `./uploads/${schema}/${fileName}`;
+    resp.status(200).json({
+    ok: true,
+    message: 'File upload success',
+    });
 
-    // move file to dir 
-    //FIXME: we must wait for moving picture to dir path
-    file.mv(path, (err) => {
-        if (err) {
-            return resp.status(500).json({
-                ok: false,
-                message: 'we could move the file to dir it was internal error'
-            });
-        }      
-        // here we are goin to upload the file
-
-        uploadImage(schema, id, fileName);
-
-         resp.status(200).json({
-            ok: true,
-            message: 'File upload success',
-            file:fileName
-        });
-      });
+    
+    
 }
 
 returnImage = async (req, resp = response) => { 

@@ -14,8 +14,11 @@ const UserSchema = Schema({
         type: String,
         require:true
     },
-    img: {
+    photo: {
         type: String,
+    },
+    photo_id: {
+        type: String
     },
     role: {
         type: String,
@@ -25,7 +28,9 @@ const UserSchema = Schema({
     google: {
         type: Boolean,
         default: false
-    },
+    }
+  
+
 
 });
 

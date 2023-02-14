@@ -5,7 +5,12 @@ const HospitalSchema = Schema({
         type: String,
         require: true
     },
-
+    photo: {
+        type: String
+    },
+    photo_id: {
+      type: String  
+    },
     img: {
         type: String,
     },
