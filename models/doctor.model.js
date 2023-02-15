@@ -11,9 +11,7 @@ const DoctorSchema = Schema({
     photo_id: {
         type: String
     },
-    img: {
-        type: String,
-    },
+ 
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

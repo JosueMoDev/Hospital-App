@@ -17,82 +17,92 @@ const uploadPhotoToCloudinary = async (folder, photoName, filePath) => {
     return { secure_url, public_id }
 }
 
-const insertPhotoOn = async (folder, id, fileName, filePath) => {
+const handlerPhoto = {
+    
+    uploadPhoto: async (folder, schema,  fileName, filePath) => { 
+        
+        const { collection, document } = schema;
+        if (!collection && !document) { 
+            return false
+        } else {
+
+            let collection = document;
+
+            
+            const  photoName = `${collection._id}${collection.name}${fileName}`
+            if (collection.photo_id) { await cloudinary.uploader.destroy(collection.photo_id);}
+            
+            const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
+            
+            collection.photo = secure_url;
+            collection.photo_id = public_id 
+            await collection.save();
+            await fs.unlink(filePath)
+            return true
+        }
+    },
+    destroyPhoto: async (schema) => { 
+        const { collection, document } = schema;
+        console.log( schema )
+        if (!collection && !document) {
+
+            return false
+        } else {
+            let collection = document;
+            
+            if (collection.photo_id) {
+                const res = await cloudinary.uploader.destroy(collection.photo_id);
+                console.log('eliminiada',res)
+                collection.photo = 'none';
+                collection.photo_id = 'none'
+                await collection.save();
+                return true
+            }
+             return false
+        }
+    }
+
+}
+
+
+
+const handlerFolder = async (folder, id ) => {
 
     switch (folder) {
         case 'doctors':
             let doctor = await Doctor.findById(id);
             if (!doctor) {
-                console.log(`we could not find any doctor with id : ${id}`);
-            } else { 
-                const  photoName = `${doctor._id}${doctor.name}${fileName}`
-                 if (doctor.photo_id) { await cloudinary.uploader.destroy(doctor.photo_id);}
-     
-                 const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
-     
-                 doctor.photo = secure_url;
-                 doctor.photo_id = public_id 
-                 await doctor.save();
-                 await fs.unlink(filePath)
-                 
-                return true
+                return false;
+            } else {  
+                return { collection:'doctor', document:doctor }
             }
         break;
         case 'hospitals':
             let hospital = await Hospital.findById(id);
             if (!hospital) {
                 console.log(`we could not find any user with id : ${id}`);
+                return false;
             } else { 
-               const  photoName = `${hospital._id}${hospital.name}${fileName}`
-                if (hospital.photo_id) {
-                    res = await cloudinary.uploader.destroy(hospital.photo_id);
-                    console.log(res)
-                }
-    
-                const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
-    
-                hospital.photo = secure_url;
-                hospital.photo_id = public_id 
-                await hospital.save();
-                await fs.unlink(filePath)
-                
-                return true
+                return { collection:'hospital', document:hospital }
             }
         break;
         case 'users':
             let user = await User.findById(id);
             if (!user) {
                 console.log(`we could not find any user with id : ${id}`);
-            } else { 
-               const  photoName = `${user._id}${user.name}${fileName}`
-                if (user.photo_id) {await cloudinary.uploader.destroy(user.photo_id)}
-    
-                const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
-    
-                user.photo = secure_url;
-                user.photo_id = public_id 
-                await user.save();
-                await fs.unlink(filePath)
-                
-                return true
+                return false;
+            } else {    
+                return { collection:'user', document:user }
             }
         break;
         case 'patient':
             let patient = await Patient.findById(id);
             if (!patient) {
                 console.log(`we could not find any user with id : ${id}`);
+                return false;
             } else { 
-                const  photoName = `${patient._id}${patient.name}${fileName}`
-                if (patient.photo_id) { await cloudinary.uploader.destroy(patient.photo_id);}
-    
-                const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
-    
-                patient.photo = secure_url;
-                patient.photo_id = public_id 
-                await patient.save();
-                await fs.unlink(filePath)
-                
-                return true
+       
+                return { collection:'patient', document:patient }
             }
         break;
         
@@ -100,6 +110,7 @@ const insertPhotoOn = async (folder, id, fileName, filePath) => {
         default:
             break;
     }
-
 }
-module.exports = { insertPhotoOn }
+
+
+module.exports = { handlerPhoto, handlerFolder }

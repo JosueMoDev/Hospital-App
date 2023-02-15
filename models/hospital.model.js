@@ -11,9 +11,6 @@ const HospitalSchema = Schema({
     photo_id: {
       type: String  
     },
-    img: {
-        type: String,
-    },
     user: {
         require: true,
         type: Schema.Types.ObjectId,

@@ -48,7 +48,7 @@ app.use('/api/patient-record', require('./routes/patient-record.route'));
 
 app.use('/api/all', require('./routes/searchingAll.route'));
 //TODO: valations error must be checked
-app.use('/api/upload', require('./routes/uploads.route'));
+app.use('/api/file', require('./routes/files.route'));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public/index.html'));
 });
