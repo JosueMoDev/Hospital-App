@@ -1,58 +1,78 @@
-const { response } = require('express');
-const { handlerPhoto, handlerFolder } = require('../helpers/insertPhotoOn.helpers');
+const response = require('express');
+const path = require('path');
+const fs = require('fs-extra');
+
+const { handlerPhoto, handlerFolder } = require('../helpers/handlerFile.helper');
   
 const uploadPhoto = async (req, resp = response) => { 
     const folder = req.params.folder;
     const id = req.params.id;
     const file = req.file
+    try {
+        if (!file) {    
+            return resp.status(400).json({
+                ok: false,
+                message: `you don't provide any photo`,
+                
+            });
+        }
     
+        // get file extension
+        const nameChunck = file.originalname.split('.');
+        const fileExtension = nameChunck[nameChunck.length - 1];
+        // validate extesion 
+        const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
+        if (!allowedExtension.includes(fileExtension)) { 
+            await fs.unlink(file.path)
+            return resp.status(403).json('extension file not allow');
+        }
+    
+        const isPathAvailable = ['hospitals', 'doctors', 'users', 'patients'];
+        //  validate if one those folders are avilable on claudinary
+        if (!isPathAvailable.includes(folder)) {    
+            return resp.status(403).json({
+                ok: false,
+                message: 'path not found',
+                
+            });
+        }
+        
+        
+        const schema = await handlerFolder(folder, id);
+    
+        if (schema) {
+            const cloudinary_response = await handlerPhoto.uploadPhoto(folder, schema, file.originalname, file.path)
+            await fs.unlink(file.path)
+            if (cloudinary_response) {
+                
+                return resp.status(200).json({
+                    ok: true,
+                    message: 'Photo upload success',
+                });
+            } else {
+                return resp.status(404).json({
+                    ok: false,
+                    message: `we could'nt upload photo`,
+                });
+            }
+    
+        } else { 
+            await fs.unlink(file.path)
+            return resp.status(404).json({
+                ok: false,
+                message: `we could'nt fould any document at ${folder} in db`,
+            });
+        }
 
-    if (!file) {    
-        return resp.status(400).json({
-            ok: false,
-            message: `you don't provide any photo`,
-            
-        });
-    }
-
-    const isPathAvailable = ['hospitals', 'doctors', 'users', 'patients'];
-    //  validate if one those folders are avilable on claudinary
-    if (!isPathAvailable.includes(folder)) {    
-        return resp.status(400).json({
-            ok: false,
-            message: 'path not found',
-            
-        });
+    
+        
+    } catch (error) {
+        return resp.status(500).json({
+            ok: true,
+            message: `Sorry something wrong `, error,
+        })
     }
     
-    
-    // get file extension
-    const nameChunck = file.originalname.split('.');
-    const fileExtension = nameChunck[nameChunck.length - 1];
-    // validate extesion 
-    const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
-    if (!allowedExtension.includes(fileExtension)) { 
-        return resp.status(400).json('extension file not allow');
-    }
-    
-    // TODO: validar si el el documento existe 
-    const schema = await handlerFolder(folder, id);
-
-    if (schema) {
-        //TODO aquivamos vamos a permitir que la photo se guarde en la carpeta temporal
-        const resoult = await handlerPhoto.uploadPhoto(folder, schema, file.originalname, file.path)
-        console.log( resoult )
-        return resp.status(200).json({
-        ok: true,
-        message: 'Photo upload success',
-        });
-
-    }
-    return resp.status(404).json({
-        ok: true,
-        message: `we could'nt upload photo`,
-    });
-
     
     
 }
@@ -62,23 +82,38 @@ const deletePhoto = async (req, resp) =>{
     const id = req.params.id;
 
     
- // TODO: validar si el el documento existe 
-    const schema = await handlerFolder(folder, id);
+    try {
+        const schema = await handlerFolder(folder, id);
 
-    if (schema) {
-        //TODO aquivamos vamos a permitir que la photo se guarde en la carpeta temporal
-        const resoult = await handlerPhoto.destroyPhoto( schema )
-        console.log( resoult )
-        return resp.status(200).json({
-        ok: true,
-        message: 'Photo delete success',
-        });
+        if (schema) {
+    
+        const cloudinary_response = await handlerPhoto.destroyPhoto( schema )
+        if (cloudinary_response) {
+            return resp.status(200).json({
+                ok: true,
+                message: 'Photo delete success',
+                });
+        } else {
+            return resp.status(404).json({
+                ok: false,
+                message: `we could'nt delete photo` ,
+            }); 
+        }
+
+       
 
     }
     return resp.status(404).json({
-        ok: true,
-        message: `we could'nt delete  photo`,
+        ok: false,
+        message: `we could'nt fould any document at ${folder} in db`,
     });
+    } catch (error) {
+        return resp.status(500).json({
+            ok: true,
+            message: `something wrong`,
+        });
+    }
+    
 }
 
 returnImage = async (req, resp = response) => { 

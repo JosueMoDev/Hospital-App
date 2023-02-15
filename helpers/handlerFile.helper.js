@@ -1,4 +1,3 @@
-const fs = require('fs-extra');
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -37,24 +36,21 @@ const handlerPhoto = {
             collection.photo = secure_url;
             collection.photo_id = public_id 
             await collection.save();
-            await fs.unlink(filePath)
+            
             return true
         }
     },
     destroyPhoto: async (schema) => { 
         const { collection, document } = schema;
-        console.log( schema )
         if (!collection && !document) {
 
             return false
         } else {
             let collection = document;
-            
             if (collection.photo_id) {
-                const res = await cloudinary.uploader.destroy(collection.photo_id);
-                console.log('eliminiada',res)
-                collection.photo = 'none';
-                collection.photo_id = 'none'
+                await cloudinary.uploader.destroy(collection.photo_id);
+                collection.photo = '';
+                collection.photo_id = ''
                 await collection.save();
                 return true
             }
@@ -80,7 +76,6 @@ const handlerFolder = async (folder, id ) => {
         case 'hospitals':
             let hospital = await Hospital.findById(id);
             if (!hospital) {
-                console.log(`we could not find any user with id : ${id}`);
                 return false;
             } else { 
                 return { collection:'hospital', document:hospital }
@@ -89,7 +84,6 @@ const handlerFolder = async (folder, id ) => {
         case 'users':
             let user = await User.findById(id);
             if (!user) {
-                console.log(`we could not find any user with id : ${id}`);
                 return false;
             } else {    
                 return { collection:'user', document:user }
@@ -98,7 +92,6 @@ const handlerFolder = async (folder, id ) => {
         case 'patient':
             let patient = await Patient.findById(id);
             if (!patient) {
-                console.log(`we could not find any user with id : ${id}`);
                 return false;
             } else { 
        
