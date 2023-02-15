@@ -1,19 +1,30 @@
 const { Schema, model } = require("mongoose");
 
 const DoctorSchema = Schema({
+   
+    id: {
+        type: String,
+        require: true
+    },
+   
     name: {
         type: String,
         require: true
     },
+
+    lastname: {
+        type: String,
+        require:true
+    },
+
     photo: {
         type: String
     },
+
     photo_id: {
         type: String
     },
-    img: {
-        type: String,
-    },
+ 
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

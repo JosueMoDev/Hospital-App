@@ -21,20 +21,17 @@ const PatientSchema = Schema({
         type: String,
         require: true
     },
-    img: {
-        type: String,
-    },
-    user: {
-        require: true,
-        type: Schema.Types.ObjectId,
-        ref:'User'
-    },
     photo: {
         type: String
     },
     photo_id: {
         type: String
     },
+    user: {
+        require: true,
+        type: Schema.Types.ObjectId,
+        ref:'User'
+    }
     //if you want to change the plural name in spanish you can use { collection : 'Plural_Name_Collection'}
 
 });

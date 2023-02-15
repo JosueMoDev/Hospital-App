@@ -11,7 +11,7 @@ const HospitalSchema = Schema({
     photo_id: {
       type: String  
     },
-    img: {
+    address: {
         type: String,
     },
     user: {
