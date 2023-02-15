@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { uploadFile } = require('../controllers/upload.controller');
+const { uploadPhoto, deletePhoto } = require('../controllers/files.controller');
 
 
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
@@ -11,7 +11,8 @@ const router = Router();
 
 // router.get('/:schema/:file', returnImage );
 
-router.post('/photo/:folder/:id', isJwtValid, uploadFile);
+router.post('/photo/upload/:folder/:id', isJwtValid, uploadPhoto);
+router.delete('/photo/destroy/:folder/:id', isJwtValid, deletePhoto);
 
 
 module.exports = router;
