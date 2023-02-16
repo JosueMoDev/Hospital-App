@@ -8,7 +8,7 @@ cloudinary.config({
 const Doctor = require('../models/doctor.model');
 const Hospital = require('../models/hospital.model');
 const User = require('../models/user.model');
-const Patient = require('../models/patient.model')
+const Patient = require('../models/patient.model');
 
 const uploadPhotoToCloudinary = async (folder, photoName, filePath) => {     
     const res = await cloudinary.uploader.upload(filePath, { folder: folder, public_id: photoName });
@@ -16,6 +16,16 @@ const uploadPhotoToCloudinary = async (folder, photoName, filePath) => {
     return { secure_url, public_id }
 }
 
+const handlerPhotoValidation = (file ) => { 
+    const nameChunck = file.originalname.split('.');
+    const fileExtension = nameChunck[nameChunck.length - 1];
+    // validate extesion 
+    const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
+    if (!allowedExtension.includes(fileExtension)) { 
+        return false;
+    }
+    return true;
+}
 const handlerPhoto = {
     
     uploadPhoto: async (folder, schema,  fileName, filePath) => { 
@@ -106,4 +116,4 @@ const handlerFolder = async (folder, id ) => {
 }
 
 
-module.exports = { handlerPhoto, handlerFolder }
+module.exports = { handlerPhoto, handlerFolder, handlerPhotoValidation }

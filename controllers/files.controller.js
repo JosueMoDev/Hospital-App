@@ -12,21 +12,11 @@ const uploadPhoto = async (req, resp = response) => {
         if (!file) {    
             return resp.status(400).json({
                 ok: false,
-                message: `you don't provide any photo`,
+                message: `you don't provide any photo or file extension forbidden`,
                 
             });
         }
-    
-        // get file extension
-        const nameChunck = file.originalname.split('.');
-        const fileExtension = nameChunck[nameChunck.length - 1];
-        // validate extesion 
-        const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
-        if (!allowedExtension.includes(fileExtension)) { 
-            await fs.unlink(file.path)
-            return resp.status(403).json('extension file not allow');
-        }
-    
+            
         const isPathAvailable = ['hospitals', 'doctors', 'users', 'patients'];
         //  validate if one those folders are avilable on claudinary
         if (!isPathAvailable.includes(folder)) {    

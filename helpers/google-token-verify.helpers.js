@@ -7,7 +7,6 @@ async function googleTokenVerify(token) {
         audience: process.env.GOOGLE_CLIENT_KEY
     });
     const payload = ticket.getPayload();
-    console.log( payload )
     return payload;
   
 }

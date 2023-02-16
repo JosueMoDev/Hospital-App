@@ -5,13 +5,14 @@ const { dbConnection } = require('./database/config')
 const path = require('path');
 const app = express();
 
-const multer  = require('multer')
+const multer  = require('multer');
+const { handlerPhotoValidation } = require('./helpers/handlerFile.helper');
 
-
+const { response } = express();
 //cors
 app.use(cors());
-//read and parse body
 
+//read and parse body
 app.use(express.json());
 
 // use static dir 
@@ -21,17 +22,26 @@ app.use(express.static('public'));
 dbConnection();
 
 
-//Img
-app.use(express.json());
+// Multer Upload files
 app.use(express.urlencoded({ extended: false }));
 const storage = multer.diskStorage({
+ 
     destination: path.join(__dirname, './public/uploads'),
     filename: (req, file, callback) => { 
         callback(null, new Date().getTime()+file.originalname);
-
+        
     }
 });
-app.use(multer({ storage }).single('image'));
+app.use(multer({
+    fileFilter: (req, file, callback) => {
+        if (handlerPhotoValidation(file)) {
+            callback(null,true)
+        } else { 
+            callback(null, false)
+        }
+    },
+    storage
+}).single('image'));
 
 //Routes 
 
@@ -42,12 +52,7 @@ app.use('/api/login', require('./routes/auth.route'));
 app.use('/api/appointment', require('./routes/appointment.route'));
 app.use('/api/patient', require('./routes/patient.route'));
 app.use('/api/patient-record', require('./routes/patient-record.route'));
-
-
-
-
 app.use('/api/all', require('./routes/searchingAll.route'));
-//TODO: valations error must be checked
 app.use('/api/file', require('./routes/files.route'));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public/index.html'));
