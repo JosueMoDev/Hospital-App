@@ -1,6 +1,7 @@
 const { response } = require('express');
 const User = require('../models/user.model');
-const bcryp = require('bcryptjs');
+const bcrypt = require('bcryptjs');
+
 
 const { JWTGenerated } = require('../helpers/JWT.helpers');
 const { googleTokenVerify } = require('../helpers/google-token-verify.helpers');
@@ -24,7 +25,7 @@ const login = async (req, resp = response) => {
 
         // checking Password
 
-        const validatePassword = bcryp.compareSync(password, user.password);
+        const validatePassword = bcrypt.compareSync(password, user.password);
 
         if (!validatePassword) { 
             return resp.status(400).json({
@@ -53,31 +54,23 @@ const login = async (req, resp = response) => {
 }
 const googleSignIn = async (req, resp = response) => {
     try {
-        const { name, email, picture } = await googleTokenVerify(req.body.token);
+  
+        const { email } = await googleTokenVerify(req.body.token);
         const userIntoDB = await User.findOne({ email });
-        let user;
+
         if (!userIntoDB) {
-            user = new User({
-                name, 
-                email,
-                password:'@@@',
-                photo: picture,
-                google:true,
-                
-            })
-        } else {
-            
-            user = userIntoDB;
-            user.google= true
+            console.log( 'user forbidden')
+           return resp.status(403).json({
+                ok: false,
+                message:' User Forbidden'
+            });
         }
-        
-// save on database
-         await user.save();
-// generate token
-        const token = await JWTGenerated(user.id)
+
+        const token = await JWTGenerated(userIntoDB.id)
+        console.log( token, userIntoDB)
         resp.status(200).json({
             ok: true,
-            email, name, picture,token
+            token, userIntoDB
         });
 
     } catch (error) {

@@ -8,9 +8,12 @@ const router = Router();
 // Route => users
 router.get('/',isJwtValid, getUsers);
 router.post('/', [
+    check('user_id', 'user id is a mandatory field').not().isEmpty(),
     check('name', 'user name is a mandatory field').not().isEmpty(),
+    check('lastname', 'user lastname is a mandatory field').not().isEmpty(),
     check('email', 'email is a mandatory field').isEmail(),
     check('password', 'password is a mandatory field').not().isEmpty(),
+    check('rol', 'rol is a mandatory field').not().isEmpty(),
     fieldsValidation
 ], createUser);
 router.put('/:id', [

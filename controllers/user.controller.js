@@ -30,7 +30,7 @@ const createUser = async (req, resp) => {
     
     
     const {  email, password } = req.body;
-    
+
     try {
         const isEmailTaken = await User.findOne({ email });
         if (isEmailTaken) { 
