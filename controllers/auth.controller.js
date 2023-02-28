@@ -67,7 +67,7 @@ const googleSignIn = async (req, resp = response) => {
         }
 
         const token = await JWTGenerated(userIntoDB.id)
-        console.log( token, userIntoDB)
+
         resp.status(200).json({
             ok: true,
             token, userIntoDB

@@ -8,6 +8,7 @@ const router = Router();
 // Route => users
 router.get('/',isJwtValid, getUsers);
 router.post('/', [
+    // isJwtValid,
     check('document_type', 'document type is a mandatory field').not().isEmpty(),
     check('document_number', 'document number is a mandatory field').not().isEmpty(),
     check('email', 'email is a mandatory field').isEmail(),
