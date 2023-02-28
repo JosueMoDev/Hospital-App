@@ -29,7 +29,7 @@ const getUsers = async (req, resp = response) => {
 const createUser = async (req, resp) => { 
     
     
-    const {  email, password } = req.body;
+    const {  email, document_number, document_type, email_provider } = req.body;
 
     try {
         const isEmailTaken = await User.findOne({ email });
@@ -39,8 +39,18 @@ const createUser = async (req, resp) => {
                 message: 'This mail has already taken'
             });
         }
+
+        const isPreviuslyRegister = await User.findOne({ document_number });
+        if (isPreviuslyRegister) { 
+            return resp.status(400).json({
+                ok: false,
+                message: `This user already has an account with document ${document_type}:${document_number}`
+            });
+        }
         const user = new User(req.body);
-     // encrypt password
+     // encrypt password{
+        if(email_provider==='@gmail.com'){user.google=true}
+        const password = 'the clinic'
         const encrypting = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, encrypting);
     // here create our users    

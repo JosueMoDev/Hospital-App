@@ -1,41 +1,57 @@
 const { Schema, model } = require("mongoose");
 
 const UserSchema = Schema({
-    user_id: {
+    document_type: {
         type: String,
-        require: true
+        required:true
     },
-    name: {
+
+    document_number: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
-    lastname: {
-        type: String,
-        require:true,  
-    },
+
     email: {
         type: String,
         require: true,
         unique: true
     },
+
     password: {
         type: String,
         require:true
     },
+
+    name: {
+        type: String,
+        require: true
+    },
+
+    lastname: {
+        type: String,
+        require:true,  
+    },
+    
+
     validationState: {
         type: Boolean,
-        default:false
+        default:true
     },
+
     photo: {
         type: String,
     },
+
     photo_id: {
         type: String
     },
+
     rol: {
         type: String,
         require: true,
     },
+
     google: {
         type: Boolean,
         required: true,
@@ -46,7 +62,7 @@ const UserSchema = Schema({
 
 UserSchema.method('toJSON', function () {
     const { __v, _id, password, ...object } = this.toObject();
-    object.id = _id;
+    object.user_id = _id;
     return object
 });
 module.exports = model('User', UserSchema);
