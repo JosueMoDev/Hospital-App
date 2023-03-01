@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/user.controller');
+const { getPatient, createPatient, updatePatient, deletePatient } = require('../controllers/patient.controller');
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middleware');
@@ -7,8 +7,8 @@ const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middl
 const router = Router();
 // Route => users
 // router.get('/',isJwtValid, getUsers);
+
 router.post('/patient', [
-    // isJwtValid,
     check('document_type', 'document type is a mandatory field').not().isEmpty(),
     check('document_number', 'document number is a mandatory field').not().isEmpty(),
     check('email', 'email is a mandatory field').isEmail(),
@@ -17,7 +17,8 @@ router.post('/patient', [
     check('gender', 'gender is a mandatory field').not().isEmpty(),
     check('rol', 'rol is a mandatory field').not().isEmpty(),
     fieldsValidation
-], createUser);
+], createPatient);
+
 // router.put('/:id', [
 //     isJwtValid,
 //     isAdminUser,

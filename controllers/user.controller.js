@@ -32,7 +32,7 @@ const createUser = async (req, resp) => {
     const {  email, document_number, document_type, email_provider, rol } = req.body;
 
     try {
-        const isPathAvailable = ['patient', 'doctor', 'operador'];
+        const isPathAvailable = ['doctor', 'operador'];
         //  validate if one those folders are avilable on claudinary
         if (!isPathAvailable.includes(rol)) {    
             return resp.status(403).json({
