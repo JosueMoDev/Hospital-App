@@ -22,7 +22,7 @@ const getPatient = async (req, resp = response) => {
 
 const createPatient = async (req, resp ) => { 
 
-    const {  email, document_number, document_type, email_provider, rol } = req.body;
+    const { email, document_number, document_type, email_provider, rol} = req.body;
     try {
         
         //  validate if one those folders are avilable on claudinary
@@ -40,7 +40,7 @@ const createPatient = async (req, resp ) => {
                 message: 'This mail has already taken'
             });
         }
-
+        
         const isPreviuslyRegister = await Patient.findOne({ document_number });
         if (isPreviuslyRegister) { 
             return resp.status(400).json({
@@ -49,9 +49,10 @@ const createPatient = async (req, resp ) => {
             });
         }
         const patient = new Patient(req.body);
-     // encrypt password{
-        if(email_provider==='@gmail.com'){patient.google=true}
-        const password = 'the clinic'
+        // encrypt password{
+            if(email_provider==='@gmail.com'){patient.google=true}
+        const password = patient.password ||= 'the clinic'
+        console.log( req.body)
         const encrypting = bcrypt.genSaltSync();
         patient.password = bcrypt.hashSync(password, encrypting);
         patient.rol='patient'
