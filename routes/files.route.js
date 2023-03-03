@@ -11,7 +11,7 @@ const router = Router();
 
 // router.get('/:schema/:file', returnImage );
 
-router.post('/photo/upload/:folder/:id', isJwtValid, uploadPhoto);
+router.post('/photo/upload/:folder/:id',  uploadPhoto);
 router.delete('/photo/destroy/:folder/:id', isJwtValid, deletePhoto);
 
 

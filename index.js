@@ -41,7 +41,7 @@ app.use(multer({
         }
     },
     storage
-}).single('image'));
+}).single('photo'));
 
 //Routes 
 

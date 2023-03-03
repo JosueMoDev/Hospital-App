@@ -31,6 +31,7 @@ const uploadPhoto = async (req, resp = response) => {
         const schema = await handlerFolder(folder, id);
     
         if (schema) {
+            console.log(file.originalname)
             const cloudinary_response = await handlerPhoto.uploadPhoto(folder, schema, file.originalname, file.path)
             await fs.unlink(file.path)
             if (cloudinary_response) {
