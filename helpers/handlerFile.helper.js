@@ -5,12 +5,11 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const Doctor = require('../models/doctor.model');
 const Hospital = require('../models/hospital.model');
 const User = require('../models/user.model');
 const Patient = require('../models/patient.model');
 
-const uploadPhotoToCloudinary = async (folder, photoName, filePath) => {     
+const uploadPhotoToCloudinary = async (folder, photoName, filePath) => { 
     const res = await cloudinary.uploader.upload(filePath, { folder: folder, public_id: photoName });
     const { secure_url, public_id} = res
     return { secure_url, public_id }
@@ -28,7 +27,7 @@ const handlerPhotoValidation = (file ) => {
 }
 const handlerPhoto = {
     
-    uploadPhoto: async (folder, schema,  fileName, filePath) => { 
+    uploadPhoto: async (schema, filePath) => { 
         
         const { collection, document } = schema;
         if (!collection && !document) { 
@@ -38,10 +37,10 @@ const handlerPhoto = {
             let collection = document;
 
             
-            const  photoName = `${collection._id}${collection.name}${fileName}`
+            const  photoName = `${collection.email}${collection._id}`
             if (collection.photo_id) { await cloudinary.uploader.destroy(collection.photo_id);}
             
-            const { secure_url, public_id } = await uploadPhotoToCloudinary(folder, photoName, filePath);
+            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol+'s', photoName, filePath);
             
             collection.photo = secure_url;
             collection.photo_id = public_id 
@@ -75,14 +74,7 @@ const handlerPhoto = {
 const handlerFolder = async (folder, id ) => {
 
     switch (folder) {
-        case 'doctors':
-            let doctor = await Doctor.findById(id);
-            if (!doctor) {
-                return false;
-            } else {  
-                return { collection:'doctor', document:doctor }
-            }
-        break;
+    
         case 'hospitals':
             let hospital = await Hospital.findById(id);
             if (!hospital) {
@@ -99,7 +91,7 @@ const handlerFolder = async (folder, id ) => {
                 return { collection:'user', document:user }
             }
         break;
-        case 'patient':
+        case 'patients':
             let patient = await Patient.findById(id);
             if (!patient) {
                 return false;

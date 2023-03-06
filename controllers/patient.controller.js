@@ -52,7 +52,6 @@ const createPatient = async (req, resp ) => {
         // encrypt password{
             if(email_provider==='@gmail.com'){patient.google=true}
         const password = patient.password ||= 'the clinic'
-        console.log( req.body)
         const encrypting = bcrypt.genSaltSync();
         patient.password = bcrypt.hashSync(password, encrypting);
         patient.rol='patient'
@@ -63,7 +62,7 @@ const createPatient = async (req, resp ) => {
     // Generate a JWT 
         const token = await JWTGenerated(patient.id);
 
-        resp.json({
+        resp.status(200).json({
             ok: true,
             message: 'Patient has been created success',
             patient,

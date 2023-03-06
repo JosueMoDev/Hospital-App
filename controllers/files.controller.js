@@ -10,6 +10,7 @@ const uploadPhoto = async (req, resp = response) => {
     const file = req.file
     try {
         if (!file) {    
+            await fs.unlink(file.path)
             return resp.status(400).json({
                 ok: false,
                 message: `you don't provide any photo or file extension forbidden`,
@@ -17,9 +18,10 @@ const uploadPhoto = async (req, resp = response) => {
             });
         }
             
-        const isPathAvailable = ['hospitals', 'doctors', 'users', 'patients'];
+        const isPathAvailable = ['users', 'patients'];
         //  validate if one those folders are avilable on claudinary
-        if (!isPathAvailable.includes(folder)) {    
+        if (!isPathAvailable.includes(folder)) {  
+            await fs.unlink(file.path)
             return resp.status(403).json({
                 ok: false,
                 message: 'path not found',
@@ -29,10 +31,8 @@ const uploadPhoto = async (req, resp = response) => {
         
         
         const schema = await handlerFolder(folder, id);
-    
         if (schema) {
-            console.log(file.originalname)
-            const cloudinary_response = await handlerPhoto.uploadPhoto(folder, schema, file.originalname, file.path)
+            const cloudinary_response = await handlerPhoto.uploadPhoto(schema, file.path)
             await fs.unlink(file.path)
             if (cloudinary_response) {
                 
@@ -51,13 +51,14 @@ const uploadPhoto = async (req, resp = response) => {
             await fs.unlink(file.path)
             return resp.status(404).json({
                 ok: false,
-                message: `we could'nt fould any document at ${folder} in db`,
+                message: `we could'nt found any document at ${schema.document.rol+'s'} in db`,
             });
         }
 
     
         
     } catch (error) {
+        await fs.unlink(file.path)
         return resp.status(500).json({
             ok: true,
             message: `Sorry something wrong `, error,
