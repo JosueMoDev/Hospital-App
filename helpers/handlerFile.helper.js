@@ -37,10 +37,10 @@ const handlerPhoto = {
             let collection = document;
 
             
-            const  photoName = `${collection.email}${collection._id}`
+            const  photoName = `${collection.email||collection.name}${collection._id}`
             if (collection.photo_id) { await cloudinary.uploader.destroy(collection.photo_id);}
             
-            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol||'clinic'+'s', photoName, filePath);
+            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol+'s'||'clinics', photoName, filePath);
             
             collection.photo = secure_url;
             collection.photo_id = public_id 
