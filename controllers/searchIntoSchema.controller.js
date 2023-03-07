@@ -1,6 +1,6 @@
 const { response } = require('express');
 const User = require('../models/user.model');
-const Hospital = require('../models/hospital.model');
+const Clinic = require('../models/clinic.model');
 const Doctor = require('../models/doctor.model')
 
 const getDocumentsCollection = async (req, resp = response) => { 
@@ -17,7 +17,7 @@ const getDocumentsCollection = async (req, resp = response) => {
                     .find({ name: regexpresion });
                 break;
             case 'hospitals':
-                data = await Hospital
+                data = await Clinic
                     .find({ name: regexpresion })
                     .populate('user', 'name, img');
                 break;

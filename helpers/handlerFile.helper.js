@@ -5,7 +5,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const Hospital = require('../models/hospital.model');
+const Clinic = require('../models/clinic.model');
 const User = require('../models/user.model');
 const Patient = require('../models/patient.model');
 
@@ -19,7 +19,7 @@ const handlerPhotoValidation = (file ) => {
     const nameChunck = file.originalname.split('.');
     const fileExtension = nameChunck[nameChunck.length - 1];
     // validate extesion 
-    const allowedExtension = ['jpg', 'png', 'jpeg', 'gif'];
+    const allowedExtension = ['jpg', 'png', 'jpeg'];
     if (!allowedExtension.includes(fileExtension)) { 
         return false;
     }
@@ -40,7 +40,7 @@ const handlerPhoto = {
             const  photoName = `${collection.email}${collection._id}`
             if (collection.photo_id) { await cloudinary.uploader.destroy(collection.photo_id);}
             
-            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol+'s', photoName, filePath);
+            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol||'clinic'+'s', photoName, filePath);
             
             collection.photo = secure_url;
             collection.photo_id = public_id 
@@ -75,12 +75,12 @@ const handlerFolder = async (folder, id ) => {
 
     switch (folder) {
     
-        case 'hospitals':
-            let hospital = await Hospital.findById(id);
-            if (!hospital) {
+        case 'clinics':
+            let clinic = await Clinic.findById(id);
+            if (!clinic) {
                 return false;
             } else { 
-                return { collection:'hospital', document:hospital }
+                return { collection:'clinic', document:clinic }
             }
         break;
         case 'users':

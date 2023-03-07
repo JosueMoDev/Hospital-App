@@ -18,7 +18,7 @@ const uploadPhoto = async (req, resp = response) => {
             });
         }
             
-        const isPathAvailable = ['users', 'patients'];
+        const isPathAvailable = ['users', 'patients','clinics'];
         //  validate if one those folders are avilable on claudinary
         if (!isPathAvailable.includes(folder)) {  
             await fs.unlink(file.path)

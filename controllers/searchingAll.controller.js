@@ -1,15 +1,15 @@
 const { response } = require('express');
 const User = require('../models/user.model');
-const Hospital = require('../models/hospital.model');
+const Clinic = require('../models/clinic.model');
 const Doctor = require('../models/doctor.model')
 
 const getSearchingRespose = async (req, resp = response) => { 
     
     const query = req.params.query;
     const regexpresion = new RegExp(query, 'i');
-    const [users, hospitals, doctors] = await Promise.all([
+    const [users, clinics, doctors] = await Promise.all([
         User.find({ name: regexpresion }),
-        Hospital.find({ name: regexpresion }),
+        Clinic.find({ name: regexpresion }),
         Doctor.find({ name: regexpresion }),
     ]);
     try {
@@ -17,7 +17,7 @@ const getSearchingRespose = async (req, resp = response) => {
             ok: true,
             message: ' Getting Respose for ....',
             users,
-            hospitals,
+            hospitals: clinics,
             doctors
         });
     } catch (error) {
