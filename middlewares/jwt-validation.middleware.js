@@ -1,10 +1,13 @@
 const { response } = require('express');
+const fs = require('fs-extra');
 const  jwt  = require('jsonwebtoken');
 const User = require('../models/user.model');
 
-const isJwtValid = (req, resp = response, next) => {
+const isJwtValid = async (req, resp = response, next) => {
     const token = req.header('x-token');
+    const file = req.file
     if (!token) { 
+        await fs.unlink(file.path)
         return resp.status(401).json({
             ok: false,
             message: ' No token was sent by user'
@@ -15,6 +18,7 @@ const isJwtValid = (req, resp = response, next) => {
         req.user_id = user_id;
         next();
     } catch (error) {
+        await fs.unlink(file.path)
         return resp.status(403).json({
             ok: false,
             message:'Invalid token'

@@ -8,7 +8,7 @@ const router = Router();
 // Route => Hospitals
 router.get('/', [isJwtValid], getClinics);
 router.post('/', [
-    // isJwtValid,
+    isJwtValid,
     check('register_number', `Clinic's register number is a required field`).not().isEmpty(),
     check('phone', `Clinic's phone number is a required field`).not().isEmpty(),
     check('name', `Clinic's name is a required field`).not().isEmpty(),

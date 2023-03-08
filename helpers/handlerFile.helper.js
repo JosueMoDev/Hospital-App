@@ -10,7 +10,8 @@ const User = require('../models/user.model');
 const Patient = require('../models/patient.model');
 
 const uploadPhotoToCloudinary = async (folder, photoName, filePath) => { 
-    const res = await cloudinary.uploader.upload(filePath, { folder: folder, public_id: photoName });
+    const newfolder = folder ||= 'clinic'
+    const res = await cloudinary.uploader.upload(filePath, { folder: newfolder+'s', public_id: photoName });
     const { secure_url, public_id} = res
     return { secure_url, public_id }
 }
@@ -40,7 +41,7 @@ const handlerPhoto = {
             const  photoName = `${collection.email||collection.name}${collection._id}`
             if (collection.photo_id) { await cloudinary.uploader.destroy(collection.photo_id);}
             
-            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol+'s'||'clinics', photoName, filePath);
+            const { secure_url, public_id } = await uploadPhotoToCloudinary(document.rol, photoName, filePath);
             
             collection.photo = secure_url;
             collection.photo_id = public_id 
