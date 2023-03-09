@@ -32,7 +32,14 @@ const UserSchema = Schema({
         type: String,
         require:true,  
     },
-    
+    gender: {
+        type: String,
+        require:true,  
+    },
+    phone: {
+        type: String,
+        require:true,  
+    },
 
     validationState: {
         type: Boolean,
@@ -52,10 +59,9 @@ const UserSchema = Schema({
         require: true,
     },
 
-    google: {
-        type: Boolean,
+    email_provider: {
+        type: String,
         required: true,
-        default: false
     }
 
 });

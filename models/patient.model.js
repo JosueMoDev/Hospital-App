@@ -32,7 +32,14 @@ const PatientSchema = Schema({
         type: String,
         require:true,  
     },
-    
+    gender: {
+        type: String,
+        require:true,  
+    },
+    phone: {
+        type: String,
+        require:true,  
+    },
 
     validationState: {
         type: Boolean,
@@ -53,10 +60,9 @@ const PatientSchema = Schema({
         default:'patient'
     },
 
-    google: {
-        type: Boolean,
+    email_provider: {
+        type: String,
         required: true,
-        default: false
     }
     //if you want to change the plural name in spanish you can use { collection : 'Plural_Name_Collection'}
 

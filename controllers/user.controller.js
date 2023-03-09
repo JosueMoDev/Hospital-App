@@ -65,7 +65,7 @@ const createUser = async (req, resp) => {
         }
         const user = new User(req.body);
      // encrypt password{
-        if(email_provider==='@gmail.com'){user.google=true}
+        user.email_provider = email_provider
         const password = 'the clinic'
         const encrypting = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, encrypting);
