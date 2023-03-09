@@ -2,20 +2,32 @@ const { response } = require('express');
 const Clinic = require('../models/clinic.model');
 
 const getClinics = async (req, resp = response) => { 
-    const clinics = await Clinic.find().populate('user','name');
     try {
-        resp.status(200).json({
+        const pagination = Number(req.query.pagination) || 0;
+        const [clinics, total] = await Promise.all([
+
+            Clinic
+                .find()
+                .skip(pagination)
+                .limit(5)
+                .populate('user','name'),
+            
+            Clinic.count()
+
+        ]);
+    
+        resp.json({
             ok: true,
-            message: ' Getting Hospitals ....',
-            hospitals: clinics
-        });
+            message:'getting Clinics ....',
+            clinics,
+            total
+        })
     } catch (error) {
         resp.status(500).json({
             ok: false,
-            message:' We Couldnt Get Any Hospitals'
+            message:' We Couldnt Get Any Clinics'
         });
     }
-
 }
 
 const createClinic = async (req, resp = response) => { 

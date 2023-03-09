@@ -4,28 +4,35 @@ const bcrypt = require('bcryptjs');
 const { response } = require('express');
 const { JWTGenerated } = require('../helpers/JWT.helpers');
 
-const getUsers = async (req, resp = response) => { 
+const getUsers = async (req, resp = response) => {
     
-    const pagination = Number(req.query.pagination) || 0;
-    const [users, total] = await Promise.all([
+    try {
+        const pagination = Number(req.query.pagination) || 0;
+        const [users, total] = await Promise.all([
 
-        User
-            .find()
-            .skip(pagination)
-            .limit(5),
-        
-        User.count()
+            User
+                .find()
+                .skip(pagination)
+                .limit(5),
+                // .populate('user','id'),
+            
+            User.count()
 
-    ]);
-   
-    resp.json({
-        ok: true,
-        message:'getting users ....',
-        users,
-        total
-    })
+        ]);
+    
+        resp.json({
+            ok: true,
+            message:'Getting Users ....',
+            users,
+            total
+        })
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:' We Couldnt Get Any Users'
+        });
+    }
 }
-
 const createUser = async (req, resp) => { 
     
     
