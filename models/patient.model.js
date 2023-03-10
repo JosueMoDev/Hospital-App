@@ -70,7 +70,7 @@ const PatientSchema = Schema({
 
 PatientSchema.method('toJSON', function () {
     const { __v, _id,  ...object } = this.toObject();
-    object.patient_id = _id;
+    object.id = _id;
     return object
 });
 module.exports = model('Patient', PatientSchema);

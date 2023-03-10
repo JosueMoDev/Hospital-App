@@ -33,6 +33,7 @@ const uploadPhoto = async (req, resp = response) => {
         const schema = await handlerFolder(folder, id);
         if (schema) {
             const cloudinary_response = await handlerPhoto.uploadPhoto(schema, file.path)
+            console.log(cloudinary_response)
             await fs.unlink(file.path)
             if (cloudinary_response) {
                 
@@ -60,7 +61,7 @@ const uploadPhoto = async (req, resp = response) => {
     } catch (error) {
         await fs.unlink(file.path)
         return resp.status(500).json({
-            ok: true,
+            ok: false,
             message: `Sorry something wrong `, error,
         })
     }
@@ -88,7 +89,7 @@ const deletePhoto = async (req, resp) =>{
         } else {
             return resp.status(404).json({
                 ok: false,
-                message: `we could'nt delete photo` ,
+                message: `we could'nt found any photo` ,
             }); 
         }
 
@@ -102,25 +103,10 @@ const deletePhoto = async (req, resp) =>{
     } catch (error) {
         return resp.status(500).json({
             ok: true,
-            message: `something wrong`,
+            message: `something wrong we could'nt delete photo`,
         });
     }
     
 }
 
-returnImage = async (req, resp = response) => { 
-    const schema = req.params.schema;
-    const file = req.params.file
-
-    const imgPath = path.join(__dirname, `../uploads/${schema}/${file}`);
-    if (fs.existsSync(imgPath)) {
-        resp.sendFile(imgPath);
-    } else { 
-       //could be other static path// const imgPath = path.join(__dirname, `../uploads/${schema}/${file}`);
-        resp.status(404).json({
-            message:'we could find this img on path'
-        });
-    }
-}
-
-module.exports = { uploadPhoto, deletePhoto,  returnImage };
+module.exports = { uploadPhoto, deletePhoto };

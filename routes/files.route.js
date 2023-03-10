@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const { uploadPhoto, deletePhoto } = require('../controllers/files.controller');
 
-
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
