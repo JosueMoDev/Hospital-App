@@ -1,7 +1,7 @@
 const { response } = require('express');
 const User = require('../models/user.model');
 const Clinic = require('../models/clinic.model');
-const Doctor = require('../models/doctor.model')
+
 
 const getDocumentsCollection = async (req, resp = response) => { 
     

@@ -1,7 +1,6 @@
 const { response } = require('express');
 const User = require('../models/user.model');
 const Clinic = require('../models/clinic.model');
-const Doctor = require('../models/doctor.model')
 
 const getSearchingRespose = async (req, resp = response) => { 
     
@@ -10,7 +9,6 @@ const getSearchingRespose = async (req, resp = response) => {
     const [users, clinics, doctors] = await Promise.all([
         User.find({ name: regexpresion }),
         Clinic.find({ name: regexpresion }),
-        Doctor.find({ name: regexpresion }),
     ]);
     try {
         resp.status(200).json({

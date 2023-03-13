@@ -47,7 +47,6 @@ app.use(multer({
 
 app.use('/api/users', require('./routes/users.route'));
 app.use('/api/clinics', require('./routes/clinics.route'));
-app.use('/api/doctors', require('./routes/doctors.route'));
 app.use('/api/login', require('./routes/auth.route'));
 app.use('/api/appointment', require('./routes/appointment.route'));
 app.use('/api/patients', require('./routes/patient.route'));
