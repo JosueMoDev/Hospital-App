@@ -69,6 +69,7 @@ const createUser = async (req, resp) => {
         const password = 'the clinic'
         const encrypting = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, encrypting);
+        user.photo = '';
     // here create our users    
         await user.save();
 

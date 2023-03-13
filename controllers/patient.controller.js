@@ -69,7 +69,8 @@ const createPatient = async (req, resp ) => {
         const password = patient.password ||= 'the clinic'
         const encrypting = bcrypt.genSaltSync();
         patient.password = bcrypt.hashSync(password, encrypting);
-        patient.rol='patient'
+        patient.rol = 'patient';
+        patient.photo = '';
     // here create our patients    
         await patient.save();
 

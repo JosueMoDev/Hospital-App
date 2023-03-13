@@ -52,8 +52,9 @@ const createClinic = async (req, resp = response) => {
         clinic.country = 'EL Salvador';
         clinic.province = address.province;
         clinic.city = address.city;
-        clinic.street = address.street
-        clinic.user = user_id
+        clinic.street = address.street;
+        clinic.user = user_id;
+        clinic.photo = '';
         await clinic.save();
   
 
