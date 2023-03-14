@@ -28,19 +28,25 @@ router.post('/outside', [
     check('name', 'user name is a mandatory field').not().isEmpty(),
     check('lastname', 'user lastname is a mandatory field').not().isEmpty(),
     check('gender', 'gender is a mandatory field').not().isEmpty(),
+    check('phone', 'Phone is a mandatory field').not().isEmpty(),
     check('rol', 'rol is a mandatory field').not().isEmpty(),
     fieldsValidation
 ], createPatient);
 
 
 
-// router.put('/:id', [
-//     isJwtValid,
-//     isAdminUser,
-//     check('name', 'user name is a mandatory field').not().isEmpty(),
-//     check('email', 'email is a mandatory field').isEmail(),
-//     fieldsValidation
-// ], updateUser);
+router.put('/:id', [
+    isJwtValid,
+    // isAdminUser,
+    check('document_type', 'document type is a mandatory field').not().isEmpty(),
+    check('document_number', 'document number is a mandatory field').not().isEmpty(),
+    check('email', 'email is a mandatory field').isEmail(),
+    check('name', 'user name is a mandatory field').not().isEmpty(),
+    check('lastname', 'user lastname is a mandatory field').not().isEmpty(),
+    check('gender', 'gender is a mandatory field').not().isEmpty(),
+    check('phone', 'Phone is a mandatory field').not().isEmpty(),
+    fieldsValidation
+], updatePatient);
 // router.delete('/:id', [isJwtValid, isAdminUser], deleteUser);
 
 

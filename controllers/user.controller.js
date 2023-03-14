@@ -77,7 +77,7 @@ const createUser = async (req, resp) => {
     // Generate a JWT 
         const token = await JWTGenerated(user.id);
 
-        resp.json({
+       return resp.json({
             ok: true,
             message: 'user has been created success',
             user,
@@ -85,7 +85,7 @@ const createUser = async (req, resp) => {
         });
         
     } catch (error) {
-        resp.status(500).json({
+       return resp.status(500).json({
             ok: false,
             message: 'unexpercted error'
         });
@@ -97,10 +97,10 @@ const createUser = async (req, resp) => {
 }
 const updateUser = async (req, resp) => {
     
-    const user_id = req.params.id;
+    const id = req.params.id;
     try {
         //Database users
-        const user = await User.findById(user_id);
+        const user = await User.findById(id);
         if (!user) { 
             return resp.status(404).json({
                 ok: false,
@@ -109,7 +109,7 @@ const updateUser = async (req, resp) => {
         } 
    
         // Updating user
-        const { password, google, email, ...fields } = req.body;
+        const { email, document_number, ...fields } = req.body;
 
         if (user.email !== email) { 
             const isEmailTaken = await User.findOne({ email });
@@ -121,13 +121,23 @@ const updateUser = async (req, resp) => {
             }
             fields.email = email;
         }
+        if (user.document_number !== document_number) { 
+            const isDocumentExitent = await User.findOne({ email });
+            if (isDocumentExitent) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message: `There is somebody already enrrolled with document:  ${user.document_number}`
+                });
+            }
+            fields.document_number = document_number;
+        }
 
 
-        const userUpdated = await User.findByIdAndUpdate(user_id, fields,{ new:true})
+        const userUpdated = await User.findByIdAndUpdate(id, fields,{ new:true})
  
-        resp.json({
+        return resp.status(200).json({
             ok: true,
-            massage:'data has been updated success',
+            message:` ${user.rol} has been updated success`,
             user: userUpdated
         })
         

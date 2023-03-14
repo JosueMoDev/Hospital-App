@@ -95,19 +95,55 @@ const createPatient = async (req, resp ) => {
 }
 
 const updatePatient = async (req, resp = response) => { 
-    const patient_id = req.params.id;
-
+    const id = req.params.id;
     try {
-        resp.status(200).json({
+        //Database users
+        const patient = await Patient.findById(id);
+        if (!patient) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'unknown patient at database'
+            })
+        } 
+   
+        // Updating user
+        const { email, document_number, ...fields } = req.body;
+
+        if (patient.email !== email) { 
+            const isEmailTaken = await User.findOne({ email });
+            if (isEmailTaken) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message: 'This mail has been already taken'
+                });
+            }
+            fields.email = email;
+        }
+        if (patient.document_number !== document_number) { 
+            const isDocumentExitent = await User.findOne({ email });
+            if (isDocumentExitent) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message: `There is somebody already enrrolled with document: ${patient.document_number}`
+                });
+            }
+            fields.document_number = document_number;
+        }
+
+
+        const patientUpdated = await Patient.findByIdAndUpdate(id, fields,{ new:true})
+ 
+        return resp.status(200).json({
             ok: true,
-            message: `patient ${ patient_id } has updated success`,
-        });
-    } catch (error) {   
-        resp.status(500).json({
-            ok: false,
-            message:'something was wrong'
-        });
+            message:` ${patient.rol} has been updated success`,
+            patient: patientUpdated
+        })
         
+    } catch (error) {
+        return resp.status(500).json({
+            ok: false,
+            message:'unexpected error'
+        })
     }
 }
     

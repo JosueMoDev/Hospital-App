@@ -73,7 +73,7 @@ const createClinic = async (req, resp = response) => {
 }
 
 const updateClinic = async (req, resp = response) => { 
-    const user_id = req.user_id;
+    const id = req.id;
     const clinic_id = req.params.id;
 
     try {
@@ -81,27 +81,38 @@ const updateClinic = async (req, resp = response) => {
         if (!clinic) { 
             return resp.status(404).json({
                 ok: false,
-                message:'We couldnt find this hospial'
+                message:'We couldnt find any Clinic'
             });
         }
         
-        const { name, user, ...fields } = req.body;
+        const { name, user, register_number, ...fields } = req.body;
         if (clinic.name !== name) { 
             const clinicExist = await Clinic.findOne({ name });
             if (clinicExist) { 
                 return resp.status(400).json({
                     ok: false,
-                    message:'One hospital has already registered with this name'
+                    message:'One Clinic has already enrolled with this name'
                 });
             }
             fields.name = name;
         }
-        fields.user = user_id;
-        const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id,  fields, { new: true }).populate('user', 'name').populate('user', 'img');
+        if (clinic.register_number !== register_number) { 
+            const clinicExist = await Clinic.findOne({ register_number });
+            if (clinicExist) { 
+                return resp.status(400).json({
+                    ok: false,
+                    message:`One Clinic has already enrolled with number: ${register_number}`
+                });
+            }
+            fields.register_number = register_number;
+        }
+        fields.user = id;
+        const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, fields, { new: true }).populate('user', 'name');
+            // .populate('user', 'img');
         resp.status(200).json({
             ok: true,
-            message: 'Hospitals was updated success',
-            success: clinicUpdated
+            message: 'Clinic has been updated',
+            clinic: clinicUpdated
         });
     } catch (error) {   
         resp.status(500).json({

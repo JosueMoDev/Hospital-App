@@ -38,6 +38,7 @@ const uploadPhoto = async (req, resp = response) => {
                 
                 return resp.status(200).json({
                     ok: true,
+                    photo:schema.document.photo,
                     message: 'Photo upload success',
                 });
             } else {
@@ -83,6 +84,7 @@ const deletePhoto = async (req, resp) =>{
         if (cloudinary_response) {
             return resp.status(200).json({
                 ok: true,
+                photo:'',
                 message: 'Photo delete success',
                 });
         } else {
