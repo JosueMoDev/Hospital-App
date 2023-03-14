@@ -109,13 +109,13 @@ const updateClinic = async (req, resp = response) => {
         fields.user = id;
         const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, fields, { new: true }).populate('user', 'name');
             // .populate('user', 'img');
-        resp.status(200).json({
+        return resp.status(200).json({
             ok: true,
             message: 'Clinic has been updated',
             clinic: clinicUpdated
         });
     } catch (error) {   
-        resp.status(500).json({
+        return resp.status(500).json({
             ok: false,
             message:'something was wrong'
         });
