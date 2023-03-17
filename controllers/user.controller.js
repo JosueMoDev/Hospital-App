@@ -150,29 +150,47 @@ const updateUser = async (req, resp) => {
 }
 
 const deleteUser = async (req, resp) => {
-    const user_id = req.params.id;    
+    const user_id = req.params.id; 
+    const user_logged_id = req.body.user_logged
     try {
-        const user = await User.findById(user_id);
-        if (!user) { 
+        const user_to_delete = await User.findById(user_id);
+        const user_logged = await User.findById(user_logged_id);
+        
+        if (!user_to_delete) { 
             return resp.status(404).json({
                 ok: false,
                 message: `unknown user '${user_id}' at database`
             })
-        } 
-        if (user.role === 'ADMIN_ROLE') { 
-
-            // await User.findByIdAndDelete(user.id);
-            return resp.status(200).json({
-                 ok: true,
-                 massage:'user has been deleted success',
-                 user_id
-             }) 
         }
-        resp.status(400).json({
+        
+        if (user_logged.rol ==='doctor'|| user_logged.rol === 'patient') { 
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        } 
+        if (user_to_delete.rol === 'admin') { 
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        
+        }
+        if (user_logged.id === user_to_delete.id) {
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        } 
+        
+        user_to_delete.validationState = !user_to_delete.validationState;
+        const user_updated = await User.findByIdAndUpdate(user_id, user_to_delete,{ new:true});
+ 
+        return resp.status(200).json({
             ok: true,
-            massage:'to delete user you must be admin',
-            user_id
-        }) 
+            message:`${user_updated.rol } has been ${ (user_updated.validationState)?'Anabled':'Disabled'}`,
+        })
+      
 
     } catch (error) {
         resp.status(500).json({

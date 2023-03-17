@@ -73,6 +73,7 @@ const googleSignIn = async (req, resp = response) => {
 
         resp.status(200).json({
             ok: true,
+            user:userIntoDB.name,
             token, userIntoDB
         });
 

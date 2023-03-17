@@ -30,7 +30,10 @@ const ClinicSchema = Schema({
         type: String,
         required: true
     },
-
+    validationState: {
+        type: Boolean,
+        default:true
+    },
     photo: {
         type: String
     },
