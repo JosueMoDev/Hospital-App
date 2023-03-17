@@ -163,7 +163,7 @@ const deleteUser = async (req, resp) => {
             })
         }
         
-        if (user_logged.rol ==='doctor'|| user_logged.rol === 'patient') { 
+        if (user_logged.rol !=='admin') { 
             return resp.status(404).json({
                 ok: false,
                 message: `Forbidden action`
@@ -195,7 +195,7 @@ const deleteUser = async (req, resp) => {
     } catch (error) {
         resp.status(500).json({
             ok: false,
-            message:'We could perform this action'
+            message:'Something was wrong'
         });
     }
   

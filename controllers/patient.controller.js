@@ -2,7 +2,8 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
 const { JWTGenerated } = require('../helpers/JWT.helpers');
-const Patient = require('../models/patient.model') 
+const Patient = require('../models/patient.model');
+const User = require('../models/user.model')  
 
 const getPatients = async (req, resp = response) => { 
    
@@ -147,23 +148,45 @@ const updatePatient = async (req, resp = response) => {
     }
 }
     
-    const deletePatient = async (req, resp = response) => { 
+const deletePatient = async (req, resp = response) => {
+    const patient_id = req.params.id;
+    const user_logged_id = req.body.user_logged
+    try {
+        const patient_to_delete = await Patient.findById(patient_id);
+        const user_logged = await User.findById(user_logged_id);
         
-        const patient_id = req.params.id;
-        try {
-            resp.status(200).json({
-                ok: true,
-                message: ` Patient ${patient_id} deleted`, 
-            });
-
-        } catch (error) {  
-            console.log(error)
-            resp.status(500).json({
+        if (!patient_to_delete) {
+            return resp.status(404).json({
                 ok: false,
-                message:'something was wrong'
-            });
-            
+                message: `unknown patient '${patient_id}' at database`
+            })
         }
+        
+        if (user_logged.rol === 'doctor' || user_logged.rol==='patient') {
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        }
+       
+       
+     
+        
+        patient_to_delete.validationState = !patient_to_delete.validationState;
+        const user_updated = await Patient.findByIdAndUpdate(patient_id, patient_to_delete, { new: true });
+ 
+        return resp.status(200).json({
+            ok: true,
+            message: `Patient has been ${(user_updated.validationState) ? 'Anabled' : 'Disabled'}`,
+        })
+      
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message: 'Something was wrong'
+        });
     }
+}
         
 module.exports = { getPatients, createPatient, updatePatient, deletePatient }

@@ -31,7 +31,7 @@ router.put('/:id', [
     check('phone', 'Phone is a mandatory field').not().isEmpty(),
     fieldsValidation
 ], updateUser);
-router.put('/delete/:id', [isJwtValid, check('user', 'user is a mandatory field').not().isEmpty(),], deleteUser);
+router.put('/delete/:id', [isJwtValid], deleteUser);
 
 
 module.exports = router;

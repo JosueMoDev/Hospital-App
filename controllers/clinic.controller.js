@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Clinic = require('../models/clinic.model');
+const User = require('../models/user.model');
 
 const getClinics = async (req, resp = response) => { 
     try {
@@ -123,32 +124,41 @@ const updateClinic = async (req, resp = response) => {
     }
 }
     
-    const deleteClinic = async (req, resp = response) => { 
+const deleteClinic = async (req, resp = response) => {
         
-        const hospital_id = req.params.id;
-        try {
-            const hospital = await Clinic.findById(hospital_id);   
-            if (!hospital) { 
-                return resp.status(400).json({
-                    ok: false,
-                    message:'we could not find hospital'
-                });
-            }
- 
-            await Clinic.findByIdAndDelete(hospital.id);
-            resp.status(200).json({
-                ok: true,
-                message: 'hospital deleted', 
-            });
-
-        } catch (error) {  
-            console.log(error)
-            resp.status(500).json({
-                ok: false,
-                message:'something was wrong'
-            });
+    const clinic_id = req.params.id;
+    const user_logged_id = req.body.user_logged
+    try {
+        const clinic_to_delete = await Clinic.findById(clinic_id);
+        const user_logged = await User.findById(user_logged_id);
             
+        if (!clinic_to_delete) {
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown clinic'${clinic_id}' at database`
+            })
         }
+            
+        if (user_logged.rol !== 'admin') {
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        }
+           
+            
+        clinic_to_delete.validationState = !clinic_to_delete.validationState;
+        const clinic_updated = await Clinic.findByIdAndUpdate(clinic_id, clinic_to_delete, { new: true });
+     
+        return resp.status(200).json({
+            ok: true,
+            message: `Clinic has been ${(clinic_updated.validationState) ? 'Anabled' : 'Disabled'}`,
+        })
+    }catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
     }
-        
+}     
 module.exports = { getClinics, createClinic, updateClinic, deleteClinic }

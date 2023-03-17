@@ -30,7 +30,7 @@ router.put('/:id', [
 
     fieldsValidation
 ], updateClinic);
-router.delete('/:id', [isJwtValid, isAdminUser], deleteClinic);
+router.put('/delete/:id', [isJwtValid], deleteClinic);
 
 
 module.exports = router;
