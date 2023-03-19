@@ -188,5 +188,67 @@ const deletePatient = async (req, resp = response) => {
         });
     }
 }
+const confirmatePassword = async (req, resp) => {
+    const id = req.params.id; 
+    const oldPassoword = req.body.oldPassword
+    try {
+        const patient = await Patient.findById(id);
+        if (!patient) { 
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown patient at database`
+            })
+        }
         
-module.exports = { getPatients, createPatient, updatePatient, deletePatient }
+        const validatePassword = bcrypt.compareSync(oldPassoword, patient.password);
+        
+
+        if (!!validatePassword) { 
+            return resp.status(400).json({
+                ok: false,
+                message:'Incorrect Password'
+            });
+        }
+        
+        return resp.status(200).json({
+            ok: true,
+        })
+      
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
+    }
+}
+const changePassword = async (req, resp) => {
+    const id = req.params.id; 
+    const newPassword = req.body.newPassword
+    try {
+        const patient = await Patient.findById(id);
+        if (!patient) { 
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown patient at database`
+            })
+        }
+        
+        const encrypting = bcrypt.genSaltSync();
+        patient.password = bcrypt.hashSync(newPassword, encrypting);
+        await Patient.findByIdAndUpdate(id, patient,{ new:true});
+        return resp.status(200).json({
+            ok: true,
+            message:'Password has been changed'
+        })
+      
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
+    }
+}
+        
+module.exports = { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword }

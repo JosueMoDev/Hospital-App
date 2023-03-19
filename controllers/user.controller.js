@@ -200,4 +200,66 @@ const deleteUser = async (req, resp) => {
     }
   
 }
-module.exports = { getUsers, createUser, updateUser, deleteUser };
+
+const confirmatePassword = async (req, resp) => {
+    const id = req.params.id; 
+    const oldPassoword = req.body.oldPassword
+    try {
+        const user = await User.findById(id);
+        if (!user) { 
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown user at database`
+            })
+        }
+        
+        const validatePassword = bcrypt.compareSync(oldPassoword, user.password);
+
+        if (!validatePassword) { 
+            return resp.status(400).json({
+                ok: false,
+                message:'Incorrect Password'
+            });
+        }
+        
+        return resp.status(200).json({
+            ok: true,
+        })
+      
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
+    }
+}
+const changePassword = async (req, resp) => {
+    const id = req.params.id; 
+    const newPassword = req.body.newPassword
+    try {
+        const user = await User.findById(id);
+        if (!user) { 
+            return resp.status(404).json({
+                ok: false,
+                message: `unknown user at database`
+            })
+        }
+        
+        const encrypting = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(newPassword, encrypting);
+        await User.findByIdAndUpdate(id, user,{ new:true});
+        return resp.status(200).json({
+            ok: true,
+            message:'Password has been changed'
+        })
+      
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
+    }
+}
+module.exports = { getUsers, createUser, updateUser, deleteUser, confirmatePassword, changePassword };

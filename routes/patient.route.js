@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getPatients, createPatient, updatePatient, deletePatient } = require('../controllers/patient.controller');
+const { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword } = require('../controllers/patient.controller');
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
@@ -48,6 +48,7 @@ router.put('/:id', [
     fieldsValidation
 ], updatePatient);
 router.put('/delete/:id', [isJwtValid], deletePatient);
-
+router.post('/confirm-password/:id',[isJwtValid, check('oldPassword', 'Old passoword is a mandatory field').not().isEmpty(), ], confirmatePassword);
+router.put('/change-password/:id',[isJwtValid, check('newPassword', 'New passoword is a mandatory field').not().isEmpty(), ], changePassword);
 
 module.exports = router;
