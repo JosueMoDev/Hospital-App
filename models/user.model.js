@@ -62,7 +62,11 @@ const UserSchema = Schema({
     email_provider: {
         type: String,
         required: true,
-    }
+    },
+    email_name:{
+        type: String,
+        required: true,
+    },
 
 });
 

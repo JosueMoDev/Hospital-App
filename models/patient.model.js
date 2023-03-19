@@ -63,7 +63,11 @@ const PatientSchema = Schema({
     email_provider: {
         type: String,
         required: true,
-    }
+    },
+    email_name:{
+        type: String,
+        required: true,
+    },
     //if you want to change the plural name in spanish you can use { collection : 'Plural_Name_Collection'}
 
 });

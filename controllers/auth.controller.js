@@ -37,8 +37,8 @@ const login = async (req, resp = response) => {
         }
 
         // Generate a JWT 
-        const token = await JWTGenerated(user.id, user.role);
-        const menu = getMenuFrontEnd(user.role)
+        const token = await JWTGenerated(user.id, user.rol);
+        const menu = getMenuFrontEnd(user.rol)
 
         resp.status(200).json({
             ok: true,
@@ -115,8 +115,8 @@ const loginPatient = async (req, resp = response) => {
         }
 
         // Generate a JWT 
-        const token = await JWTGenerated(user.id, user.role);
-        const menu = getMenuFrontEnd(user.role)
+        const token = await JWTGenerated(user.id, user.rol);
+        const menu = getMenuFrontEnd(user.rol)
 
         resp.status(200).json({
             ok: true,

@@ -108,10 +108,9 @@ const updatePatient = async (req, resp = response) => {
         } 
    
         // Updating user
-        const { email, document_number, ...fields } = req.body;
-
+        const { email, document_number, email_name, rol, ...fields } = req.body;
         if (patient.email !== email) { 
-            const isEmailTaken = await User.findOne({ email });
+            const isEmailTaken = await Patient.findOne({ email });
             if (isEmailTaken) { 
                 return resp.status(400).json({
                     ok: false,
