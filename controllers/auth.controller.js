@@ -62,7 +62,6 @@ const googleSignIn = async (req, resp = response) => {
         const userIntoDB = await User.findOne({ email });
 
         if (!userIntoDB) {
-            console.log( 'user forbidden')
            return resp.status(403).json({
                 ok: false,
                 message:' User Forbidden'
