@@ -44,7 +44,8 @@ const login = async (req, resp = response) => {
             ok: true,
             message: ' Welcome ',
             token,
-            menu
+            menu,
+            user:user.name,
         });
 
     } catch (error) {
@@ -121,7 +122,8 @@ const loginPatient = async (req, resp = response) => {
             ok: true,
             message: ' Welcome ',
             token,
-            menu
+            menu,
+            user:user.name,
         });
 
     } catch (error) {
@@ -150,7 +152,8 @@ const googleSignInPatient = async (req, resp = response) => {
 
         resp.status(200).json({
             ok: true,
-            token, userIntoDB
+            token, userIntoDB,
+            user:userIntoDB.name,
         });
 
     } catch (error) {
