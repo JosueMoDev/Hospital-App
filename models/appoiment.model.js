@@ -1,19 +1,20 @@
 const { Schema, model } = require("mongoose");
 
 const AppointmentSchema = Schema({
-    id: {
-        type: String,
-        require: true
-    },
     date: {
         type: String,
         require: true
     },
    
-    hospital: {
+    clinic: {
         require: true,
         type: Schema.Types.ObjectId,
-        ref:'Hospital'
+        ref:'Clinic'
+    },
+    doctor: {
+        require: true,
+        type: Schema.Types.ObjectId,
+        ref:'User'
     },
     patient: {
         require: true,
@@ -21,7 +22,7 @@ const AppointmentSchema = Schema({
         ref: 'Patient'
     },
 
-    user: {
+    createdby: {
         require: true,
         type: Schema.Types.ObjectId,
         ref:'User'

@@ -4,7 +4,30 @@ const bcrypt = require('bcryptjs');
 const { JWTGenerated } = require('../helpers/JWT.helpers');
 const Patient = require('../models/patient.model');
 const User = require('../models/user.model')  
+const getPatient = async (req, resp = response) => { 
+    const document_number = req.params.document_number;
+    try {
+        const patient = await Patient.findOne({document_number});
+        if (!patient) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'unknown patient at database'
+            })
+        } 
+    
+        return resp.json({
+            ok: true,
+            patient,
+        })
 
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
+    }
+
+}
 const getPatients = async (req, resp = response) => { 
    
     try {
@@ -21,7 +44,7 @@ const getPatients = async (req, resp = response) => {
 
         ]);
     
-        resp.json({
+        return resp.json({
             ok: true,
             message:'Getting Patients ....',
             patients,
@@ -250,4 +273,4 @@ const changePassword = async (req, resp) => {
     }
 }
         
-module.exports = { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword }
+module.exports = { getPatient , getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword }

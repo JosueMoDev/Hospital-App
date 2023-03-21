@@ -1,5 +1,7 @@
 const { response } = require('express');
-
+const Clinic = require('../models/clinic.model');
+const Appointment  = require('../models/appoiment.model');
+const { JWTGenerated } = require('../helpers/JWT.helpers');
 
 const getAppointments = async (req, resp = response) => { 
    
@@ -18,21 +20,46 @@ const getAppointments = async (req, resp = response) => {
 }
 
 const createAppointment = async (req, resp = response) => { 
-
-    const appointment = req.body;
-  
+    const { clinic, doctor, date, patient, createdby } = req.body;
     try {
-        resp.status(200).json({
+        
+        const isClinicAvilable =  await Clinic.findById(clinic);
+        if (!isClinicAvilable) { 
+            return resp.status(400).json({
+                ok: false,
+                message: 'This clinic is not avilable to make an appointment'
+            });
+        }
+        // const isDateAvilable = await Appointment.findOne({ date });
+        // if (isDateAvilable) { 
+        //     return resp.status(400).json({
+        //         ok: false,
+        //         message: `this date it not avilable`
+        //     });
+        // }
+        // console.log('error')
+        
+        const appointment = new Appointment(req.body);  
+        await appointment.save();
+        
+        
+        // Generate a JWT 
+        const token = await JWTGenerated(appointment.createdby);     
+        return resp.status(200).json({
             ok: true,
-            message: ' Appointment created success',
-            appointment
+            message: 'Appoitment has been created success',
+            appointment,
+            token
         });
+        
     } catch (error) {
-        resp.status(500).json({
+        return resp.status(500).json({
             ok: false,
-            message:'Comunicate with a system admin, we couldnt create an Appointment'
-        });  
+            message: 'Something was wrong'
+        });
     }
+
+ 
 }
 
 const updateAppointment = async (req, resp = response) => { 

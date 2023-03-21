@@ -1,13 +1,13 @@
 const { Router } = require('express');
-const { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword } = require('../controllers/patient.controller');
+const { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword, getPatient } = require('../controllers/patient.controller');
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
 // Route => users
+router.get('/:document_number',isJwtValid, getPatient);
 router.get('/',isJwtValid, getPatients);
-
 router.post('/', [
     isJwtValid,
     check('document_type', 'document type is a mandatory field').not().isEmpty(),
