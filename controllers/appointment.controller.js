@@ -60,7 +60,6 @@ const createAppointment = async (req, resp = response) => {
         
         // Generate a JWT 
         const token = await JWTGenerated(appointment.createdby);   
-        console.log('done')
         return resp.status(200).json({
             ok: true,
             message: 'Appoitment has been created success',
