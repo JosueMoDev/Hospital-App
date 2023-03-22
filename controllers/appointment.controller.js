@@ -6,10 +6,25 @@ const { JWTGenerated } = require('../helpers/JWT.helpers');
 const getAppointments = async (req, resp = response) => { 
    
     try {
-        resp.status(200).json({
+        // const pagination = Number(req.query.pagination) || 0;
+        const [appointments, total] = await Promise.all([
+
+            Appointment
+                .find()
+                // .skip(pagination)
+                // .limit(5)
+                .populate('patient','id'),
+            
+            Appointment.count()
+
+        ]);
+    
+        resp.json({
             ok: true,
-            message: ' Getting All Appointments ....',
-        });
+            message:'getting Appointments ....',
+            appointments,
+            total
+        })
     } catch (error) {
         resp.status(500).json({
             ok: false,
@@ -20,7 +35,7 @@ const getAppointments = async (req, resp = response) => {
 }
 
 const createAppointment = async (req, resp = response) => { 
-    const { clinic, doctor, date, patient, createdby } = req.body;
+    const { clinic, doctor, start, end, title, patient, createdby } = req.body;
     try {
         
         const isClinicAvilable =  await Clinic.findById(clinic);
@@ -37,14 +52,15 @@ const createAppointment = async (req, resp = response) => {
         //         message: `this date it not avilable`
         //     });
         // }
-        // console.log('error')
+        
         
         const appointment = new Appointment(req.body);  
         await appointment.save();
         
         
         // Generate a JWT 
-        const token = await JWTGenerated(appointment.createdby);     
+        const token = await JWTGenerated(appointment.createdby);   
+        console.log('done')
         return resp.status(200).json({
             ok: true,
             message: 'Appoitment has been created success',

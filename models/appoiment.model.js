@@ -1,11 +1,18 @@
 const { Schema, model } = require("mongoose");
 
 const AppointmentSchema = Schema({
-    date: {
+    start: {
+        type: Date,
+        require: true
+    },
+    end: {
+        type: Date,
+        require: true
+    },
+    title: {
         type: String,
         require: true
     },
-   
     clinic: {
         require: true,
         type: Schema.Types.ObjectId,

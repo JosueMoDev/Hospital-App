@@ -9,7 +9,9 @@ const { fieldsValidation } = require('../middlewares/fields-validations.middlewa
 router.get('/', isJwtValid, getAppointments);
 router.post('/', [
     isJwtValid,
-    check('date', 'date is a mandatory field').not().isEmpty(),
+    check('start', 'date start is a mandatory field').not().isEmpty(),
+    check('end', 'date end is a mandatory field').not().isEmpty(),
+    check('title', 'date title is a mandatory field').not().isEmpty(),
     check('clinic', 'clinic is a mandatory field').not().isEmpty(),
     check('doctor', 'doctor is a mandatory field').not().isEmpty(),
     check('patient', 'patient is a mandatory field').not().isEmpty(),
