@@ -1,6 +1,8 @@
 const { response } = require('express');
 const Clinic = require('../models/clinic.model');
-const Appointment  = require('../models/appoiment.model');
+const Appointment = require('../models/appoiment.model');
+const User = require('../models/user.model');
+
 const { JWTGenerated } = require('../helpers/JWT.helpers');
 
 const getAppointments = async (req, resp = response) => { 
@@ -45,13 +47,8 @@ const createAppointment = async (req, resp = response) => {
                 message: 'This clinic is not avilable to make an appointment'
             });
         }
-        // const isDateAvilable = await Appointment.findOne({ date });
-        // if (isDateAvilable) { 
-        //     return resp.status(400).json({
-        //         ok: false,
-        //         message: `this date it not avilable`
-        //     });
-        // }
+       
+        //TODO: validate date befero created 
         
         
         const appointment = new Appointment(req.body);  
@@ -78,15 +75,49 @@ const createAppointment = async (req, resp = response) => {
 }
 
 const updateAppointment = async (req, resp = response) => { 
-    const appointment_id = req.params.id;
+    const appointment = req.params.id;
 
     try {
-        resp.status(200).json({
+        const { start, end, clinic, doctor, ...fields } = req.body;
+        const curret_appointment = await Appointment.findById(appointment);
+        const curret_clinic = await Clinic.findById(clinic);
+        const curret_doctor = await User.findById(doctor);
+
+
+        if (!curret_appointment) { 
+            return resp.status(404).json({
+                ok: false,
+                message:'We couldnt find any Appointment'
+            });
+        }
+        if (!curret_clinic) { 
+            return resp.status(404).json({
+                ok: false,
+                message:'We couldnt find Clinic'
+            });
+        }
+        if (!curret_doctor && curret_doctor.rol!=='doctor') { 
+            return resp.status(404).json({
+                ok: false,
+                message:'We couldnt find Doctor'
+            });
+        }
+        
+        //TODO: validate date befero edit
+
+        fields.start = start;
+        fields.end = end;
+        fields.clinic = clinic;
+        fields.doctor = doctor;  
+            
+        await Appointment.findByIdAndUpdate(appointment, fields, { new: true });
+
+        return resp.status(200).json({
             ok: true,
-            message: `Appointment ${ appointment_id } has updated success`,
+            message: 'Appointment has been updated',
         });
     } catch (error) {   
-        resp.status(500).json({
+        return resp.status(500).json({
             ok: false,
             message:'something was wrong'
         });
@@ -94,23 +125,41 @@ const updateAppointment = async (req, resp = response) => {
     }
 }
     
-    const deleteAppointement = async (req, resp = response) => { 
-        
-        const appointment_id = req.params.id;
-        try {
-            resp.status(200).json({
-                ok: true,
-                message: ` Appointment ${appointment_id} deleted`, 
-            });
-
-        } catch (error) {  
-            console.log(error)
-            resp.status(500).json({
+const deleteAppointement = async (req, resp = response) => { 
+    
+    const appointment = req.params.id;
+    const user_logged_id = req.query.user
+    
+    try {
+        const appointment_to_delete = await Appointment.findById(appointment);
+        const user_logged = await User.findById(user_logged_id);
+        if (!appointment_to_delete) {
+            return resp.status(404).json({
                 ok: false,
-                message:'something was wrong'
-            });
-            
+                message: `We couldn't find any appointment at database`
+            })
         }
+        
+        if (user_logged.rol === 'doctor' ) {
+            return resp.status(404).json({
+                ok: false,
+                message: `Forbidden action`
+            })
+        }
+   
+        await Appointment.findByIdAndDelete(appointment);
+     
+        return resp.status(200).json({
+            ok: true,
+            message: `Appointment has been deleted`,
+        })
+
+    }catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:'Something was wrong'
+        });
     }
+}
         
 module.exports = { getAppointments, createAppointment, updateAppointment, deleteAppointement }

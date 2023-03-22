@@ -18,8 +18,14 @@ router.post('/', [
     check('createdby', 'user is a mandatory field').not().isEmpty(),       
     fieldsValidation,
 ], createAppointment);
-router.put('/:id', isJwtValid, updateAppointment);
-router.delete('/:id', isJwtValid, deleteAppointement);
+router.put('/:id', [
+    isJwtValid,
+    check('start', 'date start is a mandatory field').not().isEmpty(),
+    check('end', 'date end is a mandatory field').not().isEmpty(),
+    check('clinic', 'clinic is a mandatory field').not().isEmpty(),
+    check('doctor', 'doctor is a mandatory field').not().isEmpty(),
+], updateAppointment);
+router.delete('/:id', [isJwtValid], deleteAppointement);
 
 
 module.exports = router;
