@@ -149,14 +149,14 @@ const assingDoctorsToClinic = async (req, resp = response) => {
                 message: 'something wrong',
             });
         }
-        
         const doctors_to_assigned = await User.find({ _id: doctors.selectedStaff })
-        clinic.doctors_assigned = [...doctors_to_assigned];
+        clinic.doctors_assigned = [ ...clinic.doctors_assigned, ...doctors_to_assigned];
         const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
+
         return resp.status(200).json({
             ok: true,
-            message: 'done',
-            clinicUpdated
+            message: 'Doctors has been assigned',
+            clinic:clinicUpdated
         });
        
     } catch (error) {   
