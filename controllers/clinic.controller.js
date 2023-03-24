@@ -212,6 +212,54 @@ const removeAllAssingDoctorsToClinic = async (req, resp = response) => {
         
     }
 }
+const removeADoctorassignedToClinic = async (req, resp = response) => {
+    const clinic_id = req.params.id;
+    const doctors = req.body.doctors_assigned;
+    const doctor = req.body.doctor_remove;
+
+    try {
+        const clinic = await Clinic.findById(clinic_id);
+        if (!clinic) {
+            return resp.status(404).json({
+                ok: false,
+                message: 'We couldnt find any Clinic'
+            });
+        }
+        const doctors_db = await User.find({ _id: doctors })
+        const doctor_remove = await User.findById(doctor);
+
+        
+        if(!doctor_remove || !doctors_db) {
+            return resp.status(404).json({
+                ok: false,
+                message: 'Any doctor has been found'
+            });
+        }
+    
+        if (!doctors_db) {
+            clinic.doctors_assigned = [];
+        } else {
+            clinic.doctors_assigned = [...doctors_db];
+        }
+        doctor_remove.isAssigned = false;
+
+        const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
+        await User.findByIdAndUpdate(doctor, doctor_remove, { new: true });
+ 
+        return resp.status(200).json({
+            ok: true,
+            message: 'Doctors has been removed',
+            clinic:clinicUpdated
+        });
+       
+    } catch (error) {   
+        return resp.status(500).json({
+            ok: false,
+            message:'something was wrong'
+        });
+        
+    }
+}
     
 const deleteClinic = async (req, resp = response) => {
         
@@ -250,4 +298,4 @@ const deleteClinic = async (req, resp = response) => {
         });
     }
 }     
-module.exports = { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic, removeAllAssingDoctorsToClinic }
+module.exports = { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic, removeAllAssingDoctorsToClinic, removeADoctorassignedToClinic }
