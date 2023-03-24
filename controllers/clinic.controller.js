@@ -167,6 +167,51 @@ const assingDoctorsToClinic = async (req, resp = response) => {
         
     }
 }
+
+const removeAllAssingDoctorsToClinic = async (req, resp = response) => {
+    const clinic_id = req.params.id;
+    const doctors = req.body.doctors_assigned;
+    
+    try {
+        const clinic = await Clinic.findById(clinic_id);
+        if (!clinic) {
+            return resp.status(404).json({
+                ok: false,
+                message: 'We couldnt find any Clinic'
+            });
+        }
+        const doctors_db = await User.find({ _id: doctors })
+        const doctorsAssigned = doctors_db.map(doctor => doctor._id)
+        const updatedDoctors = await User.updateMany(
+            { _id: { $in: doctorsAssigned } },
+            { $set: { isAssigned: false } },
+            { multi: true }
+            )
+        if (!updatedDoctors.acknowledged) {
+            return resp.status(404).json({
+                ok: false,
+                message: 'something wrong',
+            });
+        }
+        
+        clinic.doctors_assigned = [];
+
+        const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
+
+        return resp.status(200).json({
+            ok: true,
+            message: 'Doctors have been removed',
+            clinic:clinicUpdated
+        });
+       
+    } catch (error) {   
+        return resp.status(500).json({
+            ok: false,
+            message:'something was wrong'
+        });
+        
+    }
+}
     
 const deleteClinic = async (req, resp = response) => {
         
@@ -205,4 +250,4 @@ const deleteClinic = async (req, resp = response) => {
         });
     }
 }     
-module.exports = { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic }
+module.exports = { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic, removeAllAssingDoctorsToClinic }
