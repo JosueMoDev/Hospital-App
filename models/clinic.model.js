@@ -46,6 +46,9 @@ const ClinicSchema = Schema({
         type: Schema.Types.ObjectId,
         ref:'User'
     },
+    doctors_assigned: {
+        type: Array,
+    }
     //if you want to change the plural name in spanish you can use { collection : 'Plural_Name_Collection'}
 
 });

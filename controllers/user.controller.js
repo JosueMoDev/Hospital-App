@@ -33,6 +33,34 @@ const getUsers = async (req, resp = response) => {
         });
     }
 }
+const getUsersWithRolDoctor = async (req, resp = response) => {
+    
+    try {
+        const pagination = Number(req.query.pagination) || 0;
+        const [doctors] = await Promise.all([
+
+            User
+                .find({ rol: "doctor", isAssigned:'false'})
+                .skip(pagination)
+                .limit(5),
+
+        ]);
+
+        const total = doctors.length
+    
+        resp.json({
+            ok: true,
+            message:'Getting Doctors ....',
+            doctors,
+            total
+        })
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:' We Couldnt Get Any Users'
+        });
+    }
+}
 const createUser = async (req, resp) => { 
     
     
@@ -262,4 +290,4 @@ const changePassword = async (req, resp) => {
         });
     }
 }
-module.exports = { getUsers, createUser, updateUser, deleteUser, confirmatePassword, changePassword };
+module.exports = { getUsers, createUser, updateUser, deleteUser, confirmatePassword, changePassword, getUsersWithRolDoctor };

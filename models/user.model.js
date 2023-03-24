@@ -67,6 +67,11 @@ const UserSchema = Schema({
         type: String,
         required: true,
     },
+    isAssigned: {
+        type: Boolean,
+        required: true,
+        default:false
+    }
 
 });
 

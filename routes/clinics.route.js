@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getClinics, createClinic, updateClinic, deleteClinic } = require('../controllers/clinic.controller')
+const { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic } = require('../controllers/clinic.controller')
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middleware');
@@ -25,11 +25,14 @@ router.put('/:id', [
     check('province', `Clinic's province is a required field`).not().isEmpty(),
     check('city', `Clinic's city is a required field`).not().isEmpty(),
     check('street', `Clinic's street is a required field`).not().isEmpty(),
-
-
-
     fieldsValidation
 ], updateClinic);
+
+router.put('/assignment/:id', [
+    isJwtValid,
+    check('doctors_assigned', `Doctors is a required field`).not().isEmpty(),
+    fieldsValidation
+], assingDoctorsToClinic);
 router.put('/delete/:id', [isJwtValid], deleteClinic);
 
 

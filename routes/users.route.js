@@ -1,12 +1,13 @@
 const { Router } = require('express');
-const { getUsers, createUser, updateUser, deleteUser, confirmatePassword, changePassword } = require('../controllers/user.controller');
+const { getUsers, createUser, updateUser, deleteUser, confirmatePassword, changePassword, getUsersWithRolDoctor } = require('../controllers/user.controller');
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
 // Route => users
-router.get('/',isJwtValid, getUsers);
+router.get('/', isJwtValid, getUsers);
+router.get('/doctors/',isJwtValid, getUsersWithRolDoctor);
 router.post('/', [
     // isJwtValid,
     check('document_type', 'document type is a mandatory field').not().isEmpty(),
