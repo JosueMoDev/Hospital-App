@@ -18,10 +18,18 @@ const AppointmentSchema = Schema({
         type: Schema.Types.ObjectId,
         ref:'Clinic'
     },
+    clinic_info: {
+        require: true,
+        type: String
+    },
     doctor: {
         require: true,
         type: Schema.Types.ObjectId,
         ref:'User'
+    },
+    doctor_info:{
+        require: true,
+        type: String
     },
     patient: {
         require: true,

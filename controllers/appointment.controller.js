@@ -47,11 +47,17 @@ const createAppointment = async (req, resp = response) => {
                 message: 'This clinic is not avilable to make an appointment'
             });
         }
-       
-        //TODO: validate date befero created 
-        
-        
+        const isDoctorAvilable =  await User.findById(doctor);
+        if (!isDoctorAvilable) { 
+            return resp.status(400).json({
+                ok: false,
+                message: 'This Doctor is not avilable to make an appointment'
+            });
+        }
+               
         const appointment = new Appointment(req.body);  
+        appointment.doctor_info = `${isDoctorAvilable.name} ${isDoctorAvilable.lastname}`
+        appointment.clinic_info = `${isClinicAvilable.name} - ${isClinicAvilable.province}/${isClinicAvilable.city}`
         await appointment.save();
         
         
@@ -83,7 +89,6 @@ const updateAppointment = async (req, resp = response) => {
         const curret_clinic = await Clinic.findById(clinic);
         const curret_doctor = await User.findById(doctor);
 
-
         if (!curret_appointment) { 
             return resp.status(404).json({
                 ok: false,
@@ -102,14 +107,14 @@ const updateAppointment = async (req, resp = response) => {
                 message:'We couldnt find Doctor'
             });
         }
-        
-        //TODO: validate date befero edit
 
         fields.start = start;
         fields.end = end;
         fields.clinic = clinic;
+        fields.clinic_info = `${curret_clinic.name} - ${curret_clinic.province}/${curret_clinic.city}`;   
         fields.doctor = doctor;  
-            
+        fields.doctor_info = `${curret_doctor.name} ${curret_doctor.lastname}`;
+        
         await Appointment.findByIdAndUpdate(appointment, fields, { new: true });
 
         return resp.status(200).json({
