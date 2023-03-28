@@ -30,6 +30,22 @@ const getClinics = async (req, resp = response) => {
         });
     }
 }
+const getClinicsForAppointment = async (req, resp = response) => { 
+    try {
+        const clinics = await Clinic.find()
+        resp.json({
+            ok: true,
+            message: 'getting Clinics ....',
+            clinics
+        })
+
+    } catch (error) {
+        resp.status(500).json({
+            ok: false,
+            message:' We Couldnt Get Any Clinics'
+        });
+    }
+}
 
 const createClinic = async (req, resp = response) => { 
 
@@ -298,4 +314,8 @@ const deleteClinic = async (req, resp = response) => {
         });
     }
 }     
-module.exports = { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic, removeAllAssingDoctorsToClinic, removeADoctorassignedToClinic }
+module.exports = {
+    getClinics, createClinic, updateClinic, deleteClinic,
+    assingDoctorsToClinic, removeAllAssingDoctorsToClinic,
+    removeADoctorassignedToClinic, getClinicsForAppointment
+}

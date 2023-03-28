@@ -68,7 +68,9 @@ const PatientSchema = Schema({
         type: String,
         required: true,
     },
-    //if you want to change the plural name in spanish you can use { collection : 'Plural_Name_Collection'}
+    medical_records: {
+        type: Array,
+    }
 
 });
 

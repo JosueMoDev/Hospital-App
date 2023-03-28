@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 
 const { JWTGenerated } = require('../helpers/JWT.helpers');
 const Patient = require('../models/patient.model');
-const User = require('../models/user.model')  
+const User = require('../models/user.model');
+
 const getPatient = async (req, resp = response) => { 
     const document_number = req.params.document_number;
     try {
@@ -158,7 +159,46 @@ const updatePatient = async (req, resp = response) => {
  
         return resp.status(200).json({
             ok: true,
-            message:` ${patient.rol} has been updated success`,
+            message:` Patient has been updated success`,
+            patient: patientUpdated
+        })
+        
+    } catch (error) {
+        return resp.status(500).json({
+            ok: false,
+            message:'unexpected error'
+        })
+    }
+}
+
+const medicalRecord = async (req, resp = response) => { 
+    const id = req.params.id;
+    const new_record = req.body.medical_record;
+    const document_number = req.body.document_number;
+    try {
+        //Database users
+        const patient = await Patient.findById(id);
+        if (!patient) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'unknown patient at database'
+            })
+        } 
+        if (patient.document_number !== document_number) { 
+            return resp.status(404).json({
+                ok: false,
+                message: 'Forbidden Action'
+            })
+        } 
+        // console.log(id, new_record, document_number);
+        
+        patient.medical_records = [ new_record , ...patient.medical_records ];
+
+        const patientUpdated = await Patient.findByIdAndUpdate(id, patient,{ new:true})
+ 
+        return resp.status(200).json({
+            ok: true,
+            message:` Patient records history has been updated success`,
             patient: patientUpdated
         })
         
@@ -273,4 +313,4 @@ const changePassword = async (req, resp) => {
     }
 }
         
-module.exports = { getPatient , getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword }
+module.exports = { getPatient , getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword, medicalRecord }

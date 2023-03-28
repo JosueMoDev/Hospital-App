@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Clinic = require('../models/clinic.model');
 
 const bcrypt = require('bcryptjs');
 const { response } = require('express');
@@ -40,7 +41,7 @@ const getUsersWithRolDoctor = async (req, resp = response) => {
         const [doctors] = await Promise.all([
 
             User
-                .find({ rol: "doctor", isAssigned:'false'})
+                .find({ rol: "doctor", isAssigned:false, validationState: true})
                 .skip(pagination)
                 .limit(5),
 
@@ -159,6 +160,14 @@ const updateUser = async (req, resp) => {
             }
             fields.document_number = document_number;
         }
+
+        // if (user.rol === 'doctor') {
+        //     console.log(id)
+        //     const clinic = await Clinic.find()
+        //     const userAtClinic = clinic.map(clinic => clinic.doctors_assigned);
+        //     const userExistAtClinic = userAtClinic.filter(user => console.log(user));
+        //     console.log(userExistAtClinic)
+        // }
 
 
         const userUpdated = await User.findByIdAndUpdate(id, fields,{ new:true})
