@@ -35,25 +35,18 @@ const getUsers = async (req, resp = response) => {
     }
 }
 const getUsersWithRolDoctor = async (req, resp = response) => {
-    
+    const clinic_id = req.query.clinic
     try {
-        const pagination = Number(req.query.pagination) || 0;
-        const [doctors] = await Promise.all([
-
-            User
-                .find({ rol: "doctor", isAssigned:false, validationState: true})
-                .skip(pagination)
-                .limit(5),
-
-        ]);
-
-        const total = doctors.length
-    
+        
+        const clinic = await Clinic.findById(clinic_id)
+        const doctors_assigned = await User.find({ _id: clinic.doctors_assigned });
+        const doctors_avilable = await User.find({ rol: "doctor", isAssigned: false, validationState: true });
+        
         resp.json({
             ok: true,
             message:'Getting Doctors ....',
-            doctors,
-            total
+            doctors_assigned,
+            doctors_avilable
         })
     } catch (error) {
         resp.status(500).json({
@@ -160,15 +153,6 @@ const updateUser = async (req, resp) => {
             }
             fields.document_number = document_number;
         }
-
-        // if (user.rol === 'doctor') {
-        //     console.log(id)
-        //     const clinic = await Clinic.find()
-        //     const userAtClinic = clinic.map(clinic => clinic.doctors_assigned);
-        //     const userExistAtClinic = userAtClinic.filter(user => console.log(user));
-        //     console.log(userExistAtClinic)
-        // }
-
 
         const userUpdated = await User.findByIdAndUpdate(id, fields,{ new:true})
  

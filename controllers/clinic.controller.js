@@ -165,8 +165,7 @@ const assingDoctorsToClinic = async (req, resp = response) => {
                 message: 'something wrong',
             });
         }
-        const doctors_to_assigned = await User.find({ _id: doctors.selectedStaff })
-        clinic.doctors_assigned = [ ...clinic.doctors_assigned, ...doctors_to_assigned];
+        clinic.doctors_assigned = [ ...clinic.doctors_assigned, ...doctorsToAssing];
         const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
 
         return resp.status(200).json({
@@ -187,7 +186,7 @@ const assingDoctorsToClinic = async (req, resp = response) => {
 const removeAllAssingDoctorsToClinic = async (req, resp = response) => {
     const clinic_id = req.params.id;
     const doctors = req.body.doctors_assigned;
-    
+
     try {
         const clinic = await Clinic.findById(clinic_id);
         if (!clinic) {
@@ -197,12 +196,13 @@ const removeAllAssingDoctorsToClinic = async (req, resp = response) => {
             });
         }
         const doctors_db = await User.find({ _id: doctors })
-        const doctorsAssigned = doctors_db.map(doctor => doctor._id)
+        const doctorsAssigned = doctors_db.map(doctor => doctor)
         const updatedDoctors = await User.updateMany(
             { _id: { $in: doctorsAssigned } },
             { $set: { isAssigned: false } },
             { multi: true }
-            )
+        )
+        console.log(updatedDoctors, 'Updated')
         if (!updatedDoctors.acknowledged) {
             return resp.status(404).json({
                 ok: false,

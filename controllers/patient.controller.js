@@ -175,6 +175,7 @@ const medicalRecord = async (req, resp = response) => {
     const id = req.params.id;
     const new_record = req.body.medical_record;
     const document_number = req.body.document_number;
+   
     try {
         //Database users
         const patient = await Patient.findById(id);
@@ -190,9 +191,9 @@ const medicalRecord = async (req, resp = response) => {
                 message: 'Forbidden Action'
             })
         } 
-        // console.log(id, new_record, document_number);
+        const new_medical_record = { date: new Date(), ...new_record}
         
-        patient.medical_records = [ new_record , ...patient.medical_records ];
+        patient.medical_records = [ new_medical_record , ...patient.medical_records ];
 
         const patientUpdated = await Patient.findByIdAndUpdate(id, patient,{ new:true})
  
