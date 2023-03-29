@@ -27,6 +27,12 @@ const MedicalRecordsSchema = Schema({
     body: {
         require: true,
         type: String
+    },
+    edited_by: {
+        type: Schema.Types.ObjectId,
+    },
+    last_edited_date: {
+        type: Date,
     }
 
 });

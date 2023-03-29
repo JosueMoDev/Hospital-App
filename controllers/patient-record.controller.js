@@ -2,7 +2,7 @@ const { response } = require('express');
 const Patient = require('../models/patient.model');
 const PatientRecord = require('../models/medical_record.model');
 
-const getPatientRecord = async (req, resp = response) => { 
+const getMedicalRecords = async (req, resp = response) => { 
     const document_number = req.query.document_number;
     const _pagination = req.query.pagination;
     
@@ -41,7 +41,7 @@ const getPatientRecord = async (req, resp = response) => {
 
 }
 
-const getASinglePatientRecord = async (req, resp = response) => { 
+const getASingleMedicalRecord = async (req, resp = response) => { 
     const record_id = req.params.id
     try {
         const record = await PatientRecord.findById(record_id).populate('doctor', 'name')
@@ -68,7 +68,7 @@ const getASinglePatientRecord = async (req, resp = response) => {
 
 
 
-const createPatientRecord = async (req, resp = response) => { 
+const createMedicalRecord = async (req, resp = response) => { 
 
     const patient_id = req.body.patient;
     const patient_document_number = req.body.document_number
@@ -106,14 +106,29 @@ const createPatientRecord = async (req, resp = response) => {
     }
 }
 
-const updatePatientRecord = async (req, resp = response) => { 
-    const patient_id = req.params.id;
-
+const updateMedicalRecord = async (req, resp = response) => { 
+    const medical_record_id = req.params.id;
+    const {title, body, edited_by, last_edited_date} = req.body
     try {
-        resp.status(200).json({
+        const medical_record = await PatientRecord.findById(medical_record_id);
+        if (!medical_record) {
+            return resp.status(404).json({
+                ok: false,
+                message: `We couldn't find any medical record`,
+            });
+        }
+        medical_record.title = title;
+        medical_record.body = body;
+        medical_record.edited_by = edited_by;
+        medical_record.last_edited_date = last_edited_date;
+        
+        await PatientRecord.findByIdAndUpdate(medical_record_id, medical_record, { new: true });
+
+        return resp.status(200).json({
             ok: true,
-            message: `patient record  ${ patient_id } has updated success`,
+            message: `Medical record has been updated success`,
         });
+
     } catch (error) {   
         resp.status(500).json({
             ok: false,
@@ -123,7 +138,7 @@ const updatePatientRecord = async (req, resp = response) => {
     }
 }
     
-    const deletePatientRecord = async (req, resp = response) => { 
+    const deleteMedicalRecord = async (req, resp = response) => { 
         
         const patient_id = req.params.id;
         try {
@@ -142,4 +157,4 @@ const updatePatientRecord = async (req, resp = response) => {
         }
     }
         
-module.exports = { getPatientRecord, createPatientRecord, updatePatientRecord, deletePatientRecord, getASinglePatientRecord }
+module.exports = { getMedicalRecords, createMedicalRecord, updateMedicalRecord, deleteMedicalRecord, getASingleMedicalRecord }
