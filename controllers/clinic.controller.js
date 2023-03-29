@@ -202,7 +202,6 @@ const removeAllAssingDoctorsToClinic = async (req, resp = response) => {
             { $set: { isAssigned: false } },
             { multi: true }
         )
-        console.log(updatedDoctors, 'Updated')
         if (!updatedDoctors.acknowledged) {
             return resp.status(404).json({
                 ok: false,
@@ -243,7 +242,7 @@ const removeADoctorassignedToClinic = async (req, resp = response) => {
         }
         const doctors_db = await User.find({ _id: doctors })
         const doctor_remove = await User.findById(doctor);
-
+        const doctors_without_removed = doctors_db.map( doctor => doctor.id)
         
         if(!doctor_remove || !doctors_db) {
             return resp.status(404).json({
@@ -255,7 +254,7 @@ const removeADoctorassignedToClinic = async (req, resp = response) => {
         if (!doctors_db) {
             clinic.doctors_assigned = [];
         } else {
-            clinic.doctors_assigned = [...doctors_db];
+            clinic.doctors_assigned = [...doctors_without_removed];
         }
         doctor_remove.isAssigned = false;
 

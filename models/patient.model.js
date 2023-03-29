@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 
+
 const PatientSchema = Schema({
     document_type: {
         type: String,
@@ -68,9 +69,6 @@ const PatientSchema = Schema({
         type: String,
         required: true,
     },
-    medical_records: {
-        type: Array,
-    }
 
 });
 

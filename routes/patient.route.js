@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword, getPatient, medicalRecord } = require('../controllers/patient.controller');
+const { getPatients, createPatient, updatePatient, deletePatient, confirmatePassword, changePassword, getPatient} = require('../controllers/patient.controller');
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
@@ -37,7 +37,6 @@ router.post('/outside', [
 
 router.put('/:id', [
     isJwtValid,
-    // isAdminUser,
     check('document_type', 'document type is a mandatory field').not().isEmpty(),
     check('document_number', 'document number is a mandatory field').not().isEmpty(),
     check('email', 'email is a mandatory field').isEmail(),
@@ -48,7 +47,6 @@ router.put('/:id', [
     fieldsValidation
 ], updatePatient);
 router.put('/delete/:id', [isJwtValid], deletePatient);
-router.put('/save-medical-record/:id', [isJwtValid], medicalRecord);
 router.post('/confirm-password/:id',[isJwtValid, check('oldPassword', 'Old passoword is a mandatory field').not().isEmpty(), ], confirmatePassword);
 router.put('/change-password/:id',[isJwtValid, check('newPassword', 'New passoword is a mandatory field').not().isEmpty(), ], changePassword);
 
