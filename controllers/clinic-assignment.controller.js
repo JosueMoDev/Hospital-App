@@ -36,10 +36,43 @@ const getAllDoctorsAssigned = async (req, resp = response) => {
     });
 
   } catch (error) {
-    resp.status(500).json({
+    return resp.status(500).json({
       ok: false,
-      message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+    });
+  }
+};
+const getDoctorsAvailableToMakeAnAppointment = async (req, resp = response) => {
+  const clinic_id = req.params.id;
+
+  try {
+    const clinic = await Clinic.findById(clinic_id);
+    if (!clinic) {
+      return resp.status(404).json({
+        ok: false,
+        message:`Sorry! we couldn't found this clinic`
+      });
+    }
+    
+    const doctors = await ClinicAssignments.find( { clinic: clinic_id} ).populate("doctor", "name lastname photo")
+    
+    const doctors_available = doctors.map(({ doctor }) => ({
+      id: doctor._id,
+      name: doctor.name,
+      lastname: doctor.lastname,
+      photo: doctor.photo,
+    }));
+    
+    return resp.status(200).json({
+      ok: true,
+      message: "Getting doctors ....",
+      doctors: doctors_available
+    });
+
+  } catch (error) {
+    return resp.status(500).json({
+      ok: false,
+      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
     });
   }
 };
@@ -210,4 +243,5 @@ module.exports = {
   assingDoctorsToClinic,
   removeAllDoctorsAssignedToClinic,
   removeADoctorAssignedToClinic,
+  getDoctorsAvailableToMakeAnAppointment
 };

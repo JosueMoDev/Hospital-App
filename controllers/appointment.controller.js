@@ -21,7 +21,7 @@ const getAppointments = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: `We couldn't get any appointment`,
+      message: `Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it`,
     });
   }
 };
@@ -151,9 +151,26 @@ const deleteAppointement = async (req, resp = response) => {
   }
 };
 
+const getAllClinicsAvailableToMakeAnAppointment = async (req, resp = response ) => {
+  try {
+    const clinics = await Clinic.find({ hasAssignments: true })
+    return resp.status(200).json({
+      ok: true,
+      message: "Getting clinics ....",
+      clinics
+    });
+  } catch (error) {
+    return resp.status(500).json({
+      ok: false,
+      message: `Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it`,
+    });
+  }
+}
+
 module.exports = {
   getAppointments,
   createAppointment,
   updateAppointment,
   deleteAppointement,
+  getAllClinicsAvailableToMakeAnAppointment
 };

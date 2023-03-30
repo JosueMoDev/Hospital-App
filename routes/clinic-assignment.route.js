@@ -5,6 +5,7 @@ const {
   assingDoctorsToClinic,
   removeAllDoctorsAssignedToClinic,
   removeADoctorAssignedToClinic,
+  getDoctorsAvailableToMakeAnAppointment
 } = require("../controllers/clinic-assignment.controller");
 const { check } = require("express-validator");
 const {
@@ -17,6 +18,8 @@ const router = Router();
 router.get("/all-assigned", [isJwtValid], getAllDoctorsAssigned );
 
 router.get("/all-available", isJwtValid, getAllDoctorsAvailableToBeAssigned);
+
+router.get("/doctors-available/:id", isJwtValid, getDoctorsAvailableToMakeAnAppointment);
 
 router.post("/:id",[
     isJwtValid,

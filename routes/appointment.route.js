@@ -5,12 +5,15 @@ const {
     getAppointments,
     createAppointment,
     updateAppointment,
-    deleteAppointement
+    deleteAppointement,
+    getAllClinicsAvailableToMakeAnAppointment
 } = require("../controllers/appointment.controller");
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 
 router.get('/', isJwtValid, getAppointments);
+
+router.get('/clinic-available', isJwtValid, getAllClinicsAvailableToMakeAnAppointment);
 
 router.post('/', [
     isJwtValid,
