@@ -3,57 +3,48 @@ const { Schema, model } = require("mongoose");
 const UserSchema = Schema({
     document_type: {
         type: String,
-        required:true
+        required: true
     },
-
     document_number: {
         type: String,
         require: true,
         unique: true
     },
-
     email: {
         type: String,
         require: true,
         unique: true
     },
-
     password: {
         type: String,
-        require:true
+        require: true
     },
-
     name: {
         type: String,
         require: true
     },
-
     lastname: {
         type: String,
-        require:true,  
+        require: true,
     },
     gender: {
         type: String,
-        require:true,  
+        require: true,
     },
     phone: {
         type: String,
-        require:true,  
+        require: true,
     },
-
     validationState: {
         type: Boolean,
-        default:true
+        default: true
     },
-
     photo: {
         type: String,
     },
-
     photo_id: {
         type: String
     },
-
     rol: {
         type: String,
         require: true,
@@ -63,14 +54,14 @@ const UserSchema = Schema({
         type: String,
         required: true,
     },
-    email_name:{
+    email_name: {
         type: String,
         required: true,
     },
     isAssigned: {
         type: Boolean,
         required: true,
-        default:false
+        default: false
     }
 
 });

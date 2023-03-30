@@ -1,13 +1,24 @@
 const { Router } = require('express');
-const { getClinics, createClinic, updateClinic, deleteClinic, assingDoctorsToClinic, removeAllAssingDoctorsToClinic, removeADoctorassignedToClinic, getClinicsForAppointment } = require('../controllers/clinic.controller')
+const {
+    getClinics,
+    createClinic,
+    updateClinic,
+    deleteClinic,
+    assingDoctorsToClinic,
+    removeAllAssingDoctorsToClinic,
+    removeADoctorassignedToClinic,
+    getClinicsForAppointment
+} = require("../controllers/clinic.controller");
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
-const { isJwtValid, isAdminUser } = require('../middlewares/jwt-validation.middleware');
+const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
-// Route => Hospitals
+
 router.get('/', [isJwtValid], getClinics);
+
 router.get('/appointments', [isJwtValid], getClinicsForAppointment);
+
 router.post('/', [
     isJwtValid,
     check('register_number', `Clinic's register number is a required field`).not().isEmpty(),
@@ -16,9 +27,9 @@ router.post('/', [
     check('address', `Clinic's address is a required field`).not().isEmpty(),
     fieldsValidation
 ], createClinic);
+
 router.put('/:id', [
     isJwtValid,
-    // isAdminUser,
     check('register_number', `Clinic's register number is a required field`).not().isEmpty(),
     check('phone', `Clinic's phone number is a required field`).not().isEmpty(),
     check('name', `Clinic's name is a required field`).not().isEmpty(),
@@ -37,9 +48,8 @@ router.put('/assignment/:id', [
 
 router.put('/remove-all-assigned/:id', isJwtValid, removeAllAssingDoctorsToClinic);
 
-router.put('/remove-doctor-assigned/:id', isJwtValid, removeADoctorassignedToClinic );
+router.put('/remove-doctor-assigned/:id', isJwtValid, removeADoctorassignedToClinic);
 
 router.put('/delete/:id', [isJwtValid], deleteClinic);
-
 
 module.exports = router;

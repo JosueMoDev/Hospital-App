@@ -1,15 +1,23 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { getMedicalRecords, createMedicalRecord, updateMedicalRecord, deleteMedicalRecord, getASingleMedicalRecord} = require("../controllers/patient-record.controller");
+const {
+  getMedicalRecords,
+  createMedicalRecord,
+  updateMedicalRecord,
+  deleteMedicalRecord,
+  getASingleMedicalRecord,
+} = require("../controllers/patient-record.controller");
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
 const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 
 const router = Router();
-// Route => Hospitals
+
 router.get('/', isJwtValid, getMedicalRecords);
-router.get('/record/:id', isJwtValid,  getASingleMedicalRecord);
+
+router.get('/record/:id', isJwtValid, getASingleMedicalRecord);
+
 router.post('/', [
-    isJwtValid, 
+    isJwtValid,
     check('doctor', 'doctor is a required field').not().isEmpty(),
     check('patient', 'patient is a required field').not().isEmpty(),
     check('date', 'date is a required field').not().isEmpty(),
@@ -17,7 +25,8 @@ router.post('/', [
     check('title', 'title is a required field').not().isEmpty(),
     check('body', 'body is a required field').not().isEmpty(),
     fieldsValidation
-],createMedicalRecord);
+], createMedicalRecord);
+
 router.put('/:id', [
     isJwtValid,
     check('title', 'title is a required field').not().isEmpty(),
@@ -26,7 +35,7 @@ router.put('/:id', [
     check('last_edited_date', 'last time edited is a required field').not().isEmpty(),
     fieldsValidation,
 ], updateMedicalRecord);
-router.delete('/:id', deleteMedicalRecord);
 
+router.delete('/:id', deleteMedicalRecord);
 
 module.exports = router;

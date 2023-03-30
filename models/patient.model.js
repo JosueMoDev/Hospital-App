@@ -1,80 +1,69 @@
 const { Schema, model } = require("mongoose");
 
-
 const PatientSchema = Schema({
-    document_type: {
-        type: String,
-        required:true
-    },
-
-    document_number: {
-        type: String,
-        require: true,
-        unique: true
-    },
-
-    email: {
-        type: String,
-        require: true,
-        unique: true
-    },
-
-    password: {
-        type: String,
-        require:true
-    },
-
-    name: {
-        type: String,
-        require: true
-    },
-
-    lastname: {
-        type: String,
-        require:true,  
-    },
-    gender: {
-        type: String,
-        require:true,  
-    },
-    phone: {
-        type: String,
-        require:true,  
-    },
-
-    validationState: {
-        type: Boolean,
-        default:true
-    },
-
-    photo: {
-        type: String,
-    },
-
-    photo_id: {
-        type: String
-    },
-
-    rol: {
-        type: String,
-        require: true,
-        default:'patient'
-    },
-
-    email_provider: {
-        type: String,
-        required: true,
-    },
-    email_name:{
-        type: String,
-        required: true,
-    },
-
+  document_type: {
+    type: String,
+    required: true,
+  },
+  document_number: {
+    type: String,
+    require: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    require: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    require: true,
+  },
+  name: {
+    type: String,
+    require: true,
+  },
+  lastname: {
+    type: String,
+    require: true,
+  },
+  gender: {
+    type: String,
+    require: true,
+  },
+  phone: {
+    type: String,
+    require: true,
+  },
+  validationState: {
+    type: Boolean,
+    default: true,
+  },
+  photo: {
+    type: String,
+  },
+  photo_id: {
+    type: String,
+  },
+  rol: {
+    type: String,
+    require: true,
+    default: "patient",
+  },
+  email_provider: {
+    type: String,
+    required: true,
+  },
+  email_name: {
+    type: String,
+    required: true,
+  },
 });
 
-PatientSchema.method('toJSON', function () {
-    const { __v, _id,  ...object } = this.toObject();
-    object.id = _id;
-    return object
+PatientSchema.method("toJSON", function () {
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
 });
-module.exports = model('Patient', PatientSchema);
+
+module.exports = model("Patient", PatientSchema);
