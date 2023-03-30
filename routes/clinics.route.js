@@ -4,10 +4,6 @@ const {
     createClinic,
     updateClinic,
     deleteClinic,
-    assingDoctorsToClinic,
-    removeAllAssingDoctorsToClinic,
-    removeADoctorassignedToClinic,
-    getClinicsForAppointment
 } = require("../controllers/clinic.controller");
 const { check } = require('express-validator');
 const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
@@ -16,8 +12,6 @@ const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
 const router = Router();
 
 router.get('/', [isJwtValid], getClinics);
-
-router.get('/appointments', [isJwtValid], getClinicsForAppointment);
 
 router.post('/', [
     isJwtValid,
@@ -39,16 +33,6 @@ router.put('/:id', [
     check('street', `Clinic's street is a required field`).not().isEmpty(),
     fieldsValidation
 ], updateClinic);
-
-router.put('/assignment/:id', [
-    isJwtValid,
-    check('doctors_assigned', `Doctors is a required field`).not().isEmpty(),
-    fieldsValidation
-], assingDoctorsToClinic);
-
-router.put('/remove-all-assigned/:id', isJwtValid, removeAllAssingDoctorsToClinic);
-
-router.put('/remove-doctor-assigned/:id', isJwtValid, removeADoctorassignedToClinic);
 
 router.put('/delete/:id', [isJwtValid], deleteClinic);
 

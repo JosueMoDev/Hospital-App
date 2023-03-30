@@ -1,6 +1,6 @@
 const { response } = require("express");
 const Patient = require("../models/patient.model");
-const PatientRecord = require("../models/medical_record.model");
+const MedicalRecords = require("../models/medical_record.model");
 
 const getMedicalRecords = async (req, resp = response) => {
   const document_number = req.query.document_number;
@@ -16,11 +16,11 @@ const getMedicalRecords = async (req, resp = response) => {
     }
     const pagination = Number(_pagination) || 0;
     const [records, total] = await Promise.all([
-      PatientRecord.find({ id: patient.id })
+      MedicalRecords.find({ id: patient.id })
         .skip(pagination)
         .limit(5)
         .populate("doctor", "name"),
-      PatientRecord.count(),
+      MedicalRecords.count(),
     ]);
 
     return resp.json({
@@ -40,7 +40,7 @@ const getMedicalRecords = async (req, resp = response) => {
 const getASingleMedicalRecord = async (req, resp = response) => {
   const record_id = req.params.id;
   try {
-    const record = await PatientRecord.findById(record_id).populate("doctor", "name");
+    const record = await MedicalRecords.findById(record_id).populate("doctor", "name");
     if (!record) {
       return resp.status(404).json({
         ok: false,
@@ -82,7 +82,7 @@ const createMedicalRecord = async (req, resp = response) => {
       });
     }
 
-    const patient_record = new PatientRecord(req.body);
+    const patient_record = new MedicalRecords(req.body);
     await patient_record.save();
 
     return resp.status(200).json({
@@ -102,7 +102,7 @@ const updateMedicalRecord = async (req, resp = response) => {
   const medical_record_id = req.params.id;
   const { title, body, edited_by, last_edited_date } = req.body;
   try {
-    const medical_record = await PatientRecord.findById(medical_record_id);
+    const medical_record = await MedicalRecords.findById(medical_record_id);
     if (!medical_record) {
       return resp.status(404).json({
         ok: false,
@@ -114,7 +114,7 @@ const updateMedicalRecord = async (req, resp = response) => {
     medical_record.edited_by = edited_by;
     medical_record.last_edited_date = last_edited_date;
 
-    await PatientRecord.findByIdAndUpdate(medical_record_id, medical_record, { new: true });
+    await MedicalRecords.findByIdAndUpdate(medical_record_id, medical_record, { new: true });
 
     return resp.status(200).json({
       ok: true,

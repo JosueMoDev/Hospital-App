@@ -44,14 +44,15 @@ app.use(
 
 //Routes
 
-app.use("/api/users", require("./routes/users.route"));
-app.use("/api/clinics", require("./routes/clinics.route"));
-app.use("/api/login", require("./routes/auth.route"));
-app.use("/api/appointments", require("./routes/appointment.route"));
-app.use("/api/patients", require("./routes/patient.route"));
-app.use("/api/patient-records", require("./routes/patient-record.route"));
 app.use("/api/all", require("./routes/searchingAll.route"));
+app.use("/api/appointments", require("./routes/appointment.route"));
+app.use("/api/clinics", require("./routes/clinics.route"));
+app.use("/api/clinic-assignments", require("./routes/clinic-assignment.route"));
 app.use("/api/file", require("./routes/files.route"));
+app.use("/api/login", require("./routes/auth.route"));
+app.use("/api/patient-records", require("./routes/patient-record.route"));
+app.use("/api/patients", require("./routes/patient.route"));
+app.use("/api/users", require("./routes/users.route"));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "public/index.html"));
 });

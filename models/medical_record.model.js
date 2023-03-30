@@ -40,4 +40,4 @@ MedicalRecordsSchema.method("toJSON", function () {
   return object;
 });
 
-module.exports = model("PatientRecord", MedicalRecordsSchema);
+module.exports = model("MedicalRecords", MedicalRecordsSchema);

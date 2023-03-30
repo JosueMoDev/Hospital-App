@@ -43,7 +43,10 @@ const ClinicSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  doctors_assigned: Array,
+  hasAssignments: {
+    type: Boolean,
+    default: false
+  }
 });
 
 ClinicSchema.method("toJSON", function () {

@@ -26,30 +26,7 @@ const getUsers = async (req, resp = response) => {
     });
   }
 };
-const getUsersWithRolDoctor = async (req, resp = response) => {
-  const clinic_id = req.query.clinic;
-  try {
-    const clinic = await Clinic.findById(clinic_id);
-    const doctors_assigned = await User.find({ _id: clinic.doctors_assigned });
-    const doctors_avilable = await User.find({
-      rol: "doctor",
-      isAssigned: false,
-      validationState: true,
-    });
 
-    return resp.status(200).json({
-      ok: true,
-      message: "Getting Doctors ....",
-      doctors_assigned,
-      doctors_avilable,
-    });
-  } catch (error) {
-    return resp.status(500).json({
-      ok: false,
-      message: `We cound't get any doctor at data base`,
-    });
-  }
-};
 const createUser = async (req, resp) => {
   const { email, document_number, document_type, email_provider, rol } = req.body;
   try {
@@ -269,6 +246,5 @@ module.exports = {
   updateUser,
   deleteUser,
   confirmatePassword,
-  changePassword,
-  getUsersWithRolDoctor,
+  changePassword
 };

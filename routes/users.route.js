@@ -5,8 +5,7 @@ const {
   updateUser,
   deleteUser,
   confirmatePassword,
-  changePassword,
-  getUsersWithRolDoctor,
+  changePassword
 } = require("../controllers/user.controller");
 const { check } = require("express-validator");
 const { fieldsValidation } = require("../middlewares/fields-validations.middleware");
@@ -15,8 +14,6 @@ const { isJwtValid } = require("../middlewares/jwt-validation.middleware");
 const router = Router();
 
 router.get("/", isJwtValid, getUsers);
-
-router.get("/doctors/", isJwtValid, getUsersWithRolDoctor);
 
 router.post("/",[
     isJwtValid,
