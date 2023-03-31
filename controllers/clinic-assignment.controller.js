@@ -5,40 +5,42 @@ const User = require("../models/user.model");
 
 const getAllDoctorsAssigned = async (req, resp = response) => {
   const clinic_id = req.query.clinic;
-  const _pagination = req.query.pagination
+  const _pagination = req.query.pagination;
   try {
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
       return resp.status(404).json({
         ok: false,
-        message:`Sorry! we couldn't found this clinic`
+        message: `Sorry! we couldn't found this clinic`,
       });
     }
     const pagination = Number(_pagination) || 0;
     const [doctors_assigned, total] = await Promise.all([
-      ClinicAssignments.find({ clinic: clinic_id }).skip(pagination).limit(5).populate("doctor", "name lastname photo"),
-      ClinicAssignments.find( { clinic: clinic_id} ).count()
+      ClinicAssignments.find({ clinic: clinic_id })
+        .skip(pagination)
+        .limit(5)
+        .populate("doctor", "name lastname photo"),
+      ClinicAssignments.find({ clinic: clinic_id }).count(),
     ]);
-   
-    const doctors = doctors_assigned.map(({doctor, _id}) => ({
+
+    const doctors = doctors_assigned.map(({ doctor, _id }) => ({
       doctor_id: doctor._id,
       name: doctor.name,
       lastname: doctor.lastname,
       photo: doctor.photo,
-      reference: _id
+      reference: _id,
     }));
-    
+
     return resp.status(200).json({
       ok: true,
       message: "Getting clinics ....",
-      doctors_assigned:doctors,
-      total
+      doctors_assigned: doctors,
+      total,
     });
-
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
     });
   }
 };
@@ -50,25 +52,29 @@ const getDoctorsAvailableToMakeAnAppointment = async (req, resp = response) => {
     if (!clinic) {
       return resp.status(404).json({
         ok: false,
-        message:`Sorry! we couldn't found this clinic`
+        message: `Sorry! we couldn't found this clinic`,
       });
     }
-    
-    const doctors = await ClinicAssignments.find( { clinic: clinic_id} ).populate("doctor", "name lastname photo")
-    
-    const doctors_available = doctors.map(({ doctor }) => ({
+
+    const doctors = await ClinicAssignments.find({
+      clinic: clinic_id,
+    }).populate({
+      path: "doctor",
+      match: { validationState: true },
+      select: "name lastname photo",
+    });
+    const doctors_whioutDisabled = doctors.filter(assignment => assignment.doctor !== null);
+    const doctors_available = doctors_whioutDisabled.map(({ doctor }) => ({
       id: doctor._id,
       name: doctor.name,
       lastname: doctor.lastname,
       photo: doctor.photo,
     }));
-    
     return resp.status(200).json({
       ok: true,
       message: "Getting doctors ....",
-      doctors: doctors_available
+      doctors: doctors_available,
     });
-
   } catch (error) {
     return resp.status(500).json({
       ok: false,
@@ -77,16 +83,18 @@ const getDoctorsAvailableToMakeAnAppointment = async (req, resp = response) => {
   }
 };
 const getAllDoctorsAvailableToBeAssigned = async (req, resp = response) => {
-  
   try {
-    const doctors_available = await User.find({ rol: "doctor", isAssigned: false, validationState: true });
+    const doctors_available = await User.find({
+      rol: "doctor",
+      isAssigned: false,
+      validationState: true,
+    });
 
     return resp.status(200).json({
       ok: true,
       message: "Getting Doctors ....",
       doctors_available,
     });
-
   } catch (error) {
     return resp.status(500).json({
       ok: false,
@@ -97,7 +105,7 @@ const getAllDoctorsAvailableToBeAssigned = async (req, resp = response) => {
 const assingDoctorsToClinic = async (req, resp = response) => {
   const clinic_id = req.params.id;
   const doctors = req.body.doctors_assigned;
- 
+
   try {
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
@@ -106,26 +114,27 @@ const assingDoctorsToClinic = async (req, resp = response) => {
         message: `We couldn't find any clinic`,
       });
     }
-    const doctors_db = await User.find({ _id: doctors.selectedStaff, isAssigned: false }, "_id")
+    const doctors_db = await User.find(
+      { _id: doctors.selectedStaff, isAssigned: false },
+      "_id"
+    );
     if (!doctors_db) {
       return resp.status(404).json({
         ok: false,
         message: `We couldn't find any doctor`,
       });
     }
-    const doctors_to_assign = doctors_db.map(doctor => ({
+    const doctors_to_assign = doctors_db.map((doctor) => ({
       doctor: doctor,
-      clinic:clinic_id 
-    }))
-    const saveDoctors = await ClinicAssignments.insertMany( doctors_to_assign );
+      clinic: clinic_id,
+    }));
+    const saveDoctors = await ClinicAssignments.insertMany(doctors_to_assign);
     const updatedDoctors = await User.updateMany(
-      { _id: { $in: doctors_db} },
+      { _id: { $in: doctors_db } },
       { $set: { isAssigned: true } },
       { multi: true }
     );
 
-    
-    
     if (!saveDoctors) {
       return resp.status(404).json({
         ok: false,
@@ -140,14 +149,15 @@ const assingDoctorsToClinic = async (req, resp = response) => {
       });
     }
     clinic.hasAssignments = true;
-    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
+    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, {
+      new: true,
+    });
 
     return resp.status(200).json({
       ok: true,
       message: "Doctors has been assigned",
-      clinic: clinicUpdated
+      clinic: clinicUpdated,
     });
-
   } catch (error) {
     return resp.status(500).json({
       ok: false,
@@ -158,7 +168,7 @@ const assingDoctorsToClinic = async (req, resp = response) => {
 
 const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
   const clinic_id = req.params.id;
- 
+
   try {
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
@@ -167,25 +177,29 @@ const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
         message: `We couldn't find any clinic`,
       });
     }
-    const clinicAssigments = await ClinicAssignments.find({ clinic: clinic_id }, ["_id", "doctor"]);
-    const doctors = clinicAssigments.map(assignment => assignment.doctor);
-    const assignments = clinicAssigments.map(assignment => assignment._id);
+    const clinicAssigments = await ClinicAssignments.find(
+      { clinic: clinic_id },
+      ["_id", "doctor"]
+    );
+    const doctors = clinicAssigments.map((assignment) => assignment.doctor);
+    const assignments = clinicAssigments.map((assignment) => assignment._id);
     await User.updateMany(
       { _id: { $in: doctors } },
       { $set: { isAssigned: false } },
       { multi: true }
     );
-    
-    await ClinicAssignments.deleteMany({ _id: { $in: assignments } })
-    
+
+    await ClinicAssignments.deleteMany({ _id: { $in: assignments } });
+
     clinic.hasAssignments = false;
-    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, { new: true });
+    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, {
+      new: true,
+    });
     return resp.status(200).json({
       ok: true,
       message: "Doctors have been removed",
-      clinic: clinicUpdated
+      clinic: clinicUpdated,
     });
-
   } catch (error) {
     return resp.status(500).json({
       ok: false,
@@ -198,22 +212,33 @@ const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
 const removeADoctorAssignedToClinic = async (req, resp = response) => {
   const reference = req.params.id;
   const doctor = req.query.doctor;
-  const clinic_id = req.query.clinic
-  
-  try {
+  const clinic_id = req.query.clinic;
 
-    const assignment_deleted = await ClinicAssignments.findByIdAndDelete(reference);
+  try {
+    const assignment_deleted = await ClinicAssignments.findByIdAndDelete(
+      reference
+    );
     if (!assignment_deleted) {
       return resp.status(404).json({
         ok: false,
         message: `We couldn't find any doctor assigned to clinic`,
       });
     }
-  
-    await User.findByIdAndUpdate({ _id: doctor }, { $set: { isAssigned: false } }, { new: true });
-    const hasMoreAssignments = await ClinicAssignments.find({ clinic: clinic_id });
+
+    await User.findByIdAndUpdate(
+      { _id: doctor },
+      { $set: { isAssigned: false } },
+      { new: true }
+    );
+    const hasMoreAssignments = await ClinicAssignments.find({
+      clinic: clinic_id,
+    });
     if (!hasMoreAssignments.length) {
-      await Clinic.findByIdAndUpdate({ _id: clinic_id }, { $set: { hasAssignments: false } }, { new: true });
+      await Clinic.findByIdAndUpdate(
+        { _id: clinic_id },
+        { $set: { hasAssignments: false } },
+        { new: true }
+      );
     }
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
@@ -222,7 +247,7 @@ const removeADoctorAssignedToClinic = async (req, resp = response) => {
         message: `We couldn't find any clinic`,
       });
     }
-    
+
     return resp.status(200).json({
       ok: true,
       message: "Doctor has been removed",
@@ -231,8 +256,7 @@ const removeADoctorAssignedToClinic = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
     });
   }
 };
@@ -243,5 +267,5 @@ module.exports = {
   assingDoctorsToClinic,
   removeAllDoctorsAssignedToClinic,
   removeADoctorAssignedToClinic,
-  getDoctorsAvailableToMakeAnAppointment
+  getDoctorsAvailableToMakeAnAppointment,
 };
