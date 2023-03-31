@@ -16,8 +16,8 @@ const getAllDoctorsAssigned = async (req, resp = response) => {
     }
     const pagination = Number(_pagination) || 0;
     const [doctors_assigned, total] = await Promise.all([
-      ClinicAssignments.find( { clinic: clinic_id} ).skip(pagination).limit(5).populate("doctor", "name lastname photo"),
-      ClinicAssignments.count(),
+      ClinicAssignments.find({ clinic: clinic_id }).skip(pagination).limit(5).populate("doctor", "name lastname photo"),
+      ClinicAssignments.find( { clinic: clinic_id} ).count()
     ]);
    
     const doctors = doctors_assigned.map(({doctor, _id}) => ({
@@ -27,7 +27,7 @@ const getAllDoctorsAssigned = async (req, resp = response) => {
       photo: doctor.photo,
       reference: _id
     }));
-   
+    
     return resp.status(200).json({
       ok: true,
       message: "Getting clinics ....",
