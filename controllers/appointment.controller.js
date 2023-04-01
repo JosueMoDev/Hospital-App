@@ -1,6 +1,6 @@
 const { response } = require("express");
 const Clinic = require("../models/clinic.model");
-const Appointment = require("../models/appoiment.model");
+const Appointment = require("../models/appointment.model");
 const User = require("../models/user.model");
 
 const { JWTGenerated } = require("../helpers/JWT.helpers");

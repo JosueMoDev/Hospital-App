@@ -21,7 +21,6 @@ app.use(express.static("public"));
 // data base
 dbConnection();
 
-// Multer Upload files
 app.use(express.urlencoded({ extended: false }));
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "./public/uploads"),
@@ -44,7 +43,7 @@ app.use(
 
 //Routes
 
-app.use("/api/all", require("./routes/searchingAll.route"));
+app.use("/api/search", require("./routes/searching.route"));
 app.use("/api/appointments", require("./routes/appointment.route"));
 app.use("/api/clinics", require("./routes/clinics.route"));
 app.use("/api/clinic-assignments", require("./routes/clinic-assignment.route"));
