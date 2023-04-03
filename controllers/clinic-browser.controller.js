@@ -5,33 +5,17 @@ const Appointment = require("../models/appointment.model");
 const Patient = require("../models/patient.model");
 
 const clinicBrowser = async (req, resp = response) => {
-  const filter = req.params.filter;
   const query = req.params.query;
   const regexpresion = new RegExp(query, "i");
+  console.log(regexpresion)
   try {
-    let data = [];
-    switch (schema='person') {
-      case "person":
-        const [users, patients ] = await Promise.all([
-          User.find({ name: regexpresion }),
-          Patient.find({ name: regexpresion }),
-        ]);
-        data = [...users, ...patients]
-        break
-      case "clinic":
-        data = await Clinic.find({ name: query });
-        break;
-      
-      case "appointment":
-        data = await Appointment.find({ name: query });
-        break;
-      
-      default:
-        return resp.status(400).json({
-          ok: false,
-          message: `You should search into the following paths `,
-        });
-    }
+    const [users, patients, clinics, appointments] = await Promise.all([
+      User.find({ name: regexpresion }),
+      Patient.find({ name: regexpresion }),
+      Clinic.find({ name: regexpresion }),
+      Appointment.find({ title: regexpresion }).populate('patient', 'photo name lastname phone')
+    ]);
+    data = [...users,...patients,...clinics, ...appointments]
     return resp.status(200).json({
       ok: true,
       data,
