@@ -4,7 +4,7 @@ const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const { JWTGenerated } = require("../helpers/JWT.helpers");
 const { googleTokenVerify } = require("../helpers/google-token-verify.helpers");
-const { getMenuFrontEnd } = require("../helpers/menu-frontend.helpers");
+const { getSideNavOptions } = require("../helpers/sideNavOptions");
 
 const login = async (req, resp = response) => {
   const { email, password } = req.body;
@@ -29,14 +29,14 @@ const login = async (req, resp = response) => {
     }
 
     const token = await JWTGenerated(user.id, user.rol);
-    const menu = getMenuFrontEnd(user.rol);
+    const menu = getSideNavOptions(user.rol);
 
     return resp.status(200).json({
       ok: true,
-      message: "Welcome",
+      message:`Wellcome ${user.name} ${user.lastname}`,
       token,
       menu,
-      user: user.name,
+      user,
     });
   } catch (error) {
     return resp.status(500).json({
@@ -49,22 +49,24 @@ const login = async (req, resp = response) => {
 const googleSignIn = async (req, resp = response) => {
   try {
     const { email } = await googleTokenVerify(req.body.token);
-    const userIntoDB = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-    if (!userIntoDB) {
+    if (!user) {
       return resp.status(403).json({
         ok: false,
         message: "User Forbidden",
       });
     }
 
-    const token = await JWTGenerated(userIntoDB.id);
-
+    const token = await JWTGenerated(user.id);
+    const menu = getSideNavOptions(user.rol);
+    
     return resp.status(200).json({
       ok: true,
-      user: userIntoDB.name,
+      message:`Wellcome ${user.name} ${user.lastname}`,
       token,
-      userIntoDB,
+      user,
+      menu
     });
       
   } catch (error) {
@@ -98,14 +100,14 @@ const loginPatient = async (req, resp = response) => {
     }
 
     const token = await JWTGenerated(user.id, user.rol);
-    const menu = getMenuFrontEnd(user.rol);
+    const menu = getSideNavOptions(user.rol);
 
     return resp.status(200).json({
       ok: true,
-      message: " Welcome ",
+      message: `Wellcome ${user.name} ${user.lastname}`,
       token,
-      menu,
-      user: user.name,
+      user,
+      menu
     });
       
   } catch (error) {
@@ -119,22 +121,24 @@ const loginPatient = async (req, resp = response) => {
 const googleSignInPatient = async (req, resp = response) => {
   try {
     const { email } = await googleTokenVerify(req.body.token);
-    const userIntoDB = await Patient.findOne({ email });
+    const user = await Patient.findOne({ email });
 
-    if (!userIntoDB) {
+    if (!user) {
       return resp.status(403).json({
         ok: false,
         message: " User Forbidden",
       });
     }
 
-    const token = await JWTGenerated(userIntoDB.id);
-
+    const token = await JWTGenerated(user.id);
+    const menu = getSideNavOptions(user.rol);
+    console.log(menu);
     return resp.status(200).json({
       ok: true,
+      message:`Wellcome ${user.name} ${user.lastname}`,
       token,
-      userIntoDB,
-      user: userIntoDB.name,
+      user,
+      menu
     });
       
   } catch (error) {
@@ -151,7 +155,7 @@ const renewToken = async (req, resp = response) => {
   const user = await User.findById(user_id);
   if (!user) {
     const user = await Patient.findById(user_id);
-    const menu = getMenuFrontEnd(user.rol);
+    const menu = getSideNavOptions(user.rol);
 
     return resp.status(200).json({
       ok: true,
@@ -161,7 +165,7 @@ const renewToken = async (req, resp = response) => {
       menu,
     });
   }
-  const menu = getMenuFrontEnd(user.rol);
+  const menu = getSideNavOptions(user.rol);
 
   return resp.status(200).json({
     ok: true,
