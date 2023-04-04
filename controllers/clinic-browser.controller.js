@@ -7,7 +7,6 @@ const Patient = require("../models/patient.model");
 const clinicBrowser = async (req, resp = response) => {
   const query = req.params.query;
   const regexpresion = new RegExp(query, "i");
-  console.log(regexpresion)
   try {
     const [users, patients, clinics, appointments] = await Promise.all([
       User.find({ name: regexpresion }),
