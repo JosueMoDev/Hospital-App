@@ -3,15 +3,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path  from 'path';
 import multer from 'multer';
-const { handlerPhotoValidation } = require("./helpers/handlerFile.helper");
-const { dbConnection } = require("./database/config");
+import  { handlerPhotoValidation } from './helpers';
+import { dbConnection } from './database/config';
 
 dotenv.config();
 
 const app = express();
 
 
-const { response } = express();
 //cors
 app.use(cors());
 
@@ -27,7 +26,7 @@ dbConnection();
 app.use(express.urlencoded({ extended: false }));
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "./public/uploads"),
-  filename: (req: any, file : any, callback: any ) => {
+  filename: (req, file, callback ) => {
     callback(null, new Date().getTime() + file.originalname);
   },
 });

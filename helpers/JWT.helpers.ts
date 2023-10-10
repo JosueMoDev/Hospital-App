@@ -1,13 +1,12 @@
-const jwt = require("jsonwebtoken");
-
-const JWTGenerated = (user_id) => {
+import jwt, { JwtPayload } from 'jsonwebtoken';
+export const JWTGenerated = (user_id : string) => {
   return new Promise((resolve, reject) => {
-    const payload = {
+    const payload : JwtPayload = {
       user_id,
     };
     jwt.sign(
       payload,
-      process.env.SECRET_KEY_JWT,
+      process.env.SECRET_KEY_JWT!,
       {
         expiresIn: "12h",
       },
@@ -22,5 +21,3 @@ const JWTGenerated = (user_id) => {
     );
   });
 };
-
-module.exports = { JWTGenerated };
