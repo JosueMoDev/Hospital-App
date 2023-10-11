@@ -1,4 +1,4 @@
-const getSideNavOptions = (rol) => {
+export const getSideNavOptions = (rol: string) => {
   const menu = [
     {
       title: "Appointments",
@@ -42,5 +42,3 @@ const getSideNavOptions = (rol) => {
   }
   return menu;
 };
-
-module.exports = { getSideNavOptions };
