@@ -1,9 +1,8 @@
-const { response } = require("express");
-const fs = require("fs-extra");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
+import {Request, Response, NextFunction} from 'express';
+import fs from 'fs-extra';
+import jwt from 'jsonwebtoken'
 
-const isJwtValid = async (req, resp = response, next) => {
+export const isJwtValid = async (req: Request, resp: Response, next: NextFunction) => {
   const token = req.header("x-token");
   const file = req.file;
   if (!token) {
@@ -16,7 +15,7 @@ const isJwtValid = async (req, resp = response, next) => {
     });
   }
   try {
-    const { user_id } = jwt.verify(token, process.env.SECRET_KEY_JWT);
+    const { user_id } = jwt.verify(token, process.env.SECRET_KEY_JWT!);
     req.user_id = user_id;
     next();
   } catch (error) {
@@ -31,4 +30,3 @@ const isJwtValid = async (req, resp = response, next) => {
 };
 
 
-module.exports = { isJwtValid };
