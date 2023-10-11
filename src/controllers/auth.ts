@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { JWTGenerated } from "../helpers/JWT.helpers";
+import { JWTGenerated } from "../helpers/JWT";
 import { googleTokenVerify , getSideNavOptions} from "../helpers";
 import { Patient, User } from '../models';
 

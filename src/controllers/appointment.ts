@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Appointment, Clinic, User } from "../models";
-import { JWTGenerated } from "../helpers/JWT.helpers";
+import { JWTGenerated } from "../helpers/JWT";
 
 export const getAppointments = async (req: Request, resp: Response) => {
   try {

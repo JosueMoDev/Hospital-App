@@ -1,4 +1,4 @@
 export { getSideNavOptions } from './sideNavOptions';
-export * from './handlerFile.helper';
-export { googleTokenVerify } from './google-token-verify.helpers';
-export {JWTGenerated} from './JWT.helpers'
+export * from './handlerFile';
+export { googleTokenVerify } from './google-token-verify';
+export {JWTGenerated} from './JWT'

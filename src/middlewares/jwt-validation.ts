@@ -15,8 +15,8 @@ export const isJwtValid = async (req: Request, resp: Response, next: NextFunctio
     });
   }
   try {
-    const { user_id } = jwt.verify(token, process.env.SECRET_KEY_JWT!);
-    req.user_id = user_id;
+    const { user_id }: any = jwt.verify(token, process.env.SECRET_KEY_JWT!);
+    req.params.user_id = user_id;
     next();
   } catch (error) {
     if (file) {

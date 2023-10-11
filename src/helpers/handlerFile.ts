@@ -5,9 +5,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const Clinic = require("../models/clinic.model");
-const User = require("../models/user.model");
-const Patient = require("../models/patient.model");
+import { User, Clinic, Patient } from "../models"; 
 
 const uploadPhotoToCloudinary = async (folder: string, photoName: string, filePath: string) => {
   const newfolder = (folder ||= "clinic");
