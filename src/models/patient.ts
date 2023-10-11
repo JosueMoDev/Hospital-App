@@ -1,39 +1,56 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model, Document, Model } from "mongoose";
 
-const PatientSchema = Schema({
+interface IPatient extends Document {
+  document_type: string;
+  document_number: string;
+  email: string;
+  password: string;
+  name: string;
+  lastname: string;
+  gender: string;
+  phone: string;
+  validationState: boolean;
+  photo?: string;
+  photo_id?: string;
+  rol: string;
+  email_provider: string;
+  email_name: string;
+}
+
+const PatientSchema = new Schema<IPatient>({
   document_type: {
     type: String,
     required: true,
   },
   document_number: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   lastname: {
     type: String,
-    require: true,
+    required: true,
   },
   gender: {
     type: String,
-    require: true,
+    required: true,
   },
   phone: {
     type: String,
-    require: true,
+    required: true,
   },
   validationState: {
     type: Boolean,
@@ -47,7 +64,7 @@ const PatientSchema = Schema({
   },
   rol: {
     type: String,
-    require: true,
+    required: true,
     default: "patient",
   },
   email_provider: {
@@ -60,10 +77,11 @@ const PatientSchema = Schema({
   },
 });
 
-PatientSchema.method("toJSON", function () {
+PatientSchema.method("toJSON", function (this: IPatient) {
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;
   return object;
 });
 
-module.exports = model("Patient", PatientSchema);
+export const Patient: Model<IPatient> = model("Patient", PatientSchema);
+
