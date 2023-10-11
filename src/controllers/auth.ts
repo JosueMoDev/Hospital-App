@@ -1,12 +1,10 @@
-const { response } = require("express");
-const User = require("../models/user.model");
-const Patient = require("../models/patient.model");
-const bcrypt = require("bcryptjs");
-const { JWTGenerated } = require("../helpers/JWT.helpers");
-const { googleTokenVerify } = require("../helpers/google-token-verify.helpers");
-const { getSideNavOptions } = require("../helpers/sideNavOptions");
+import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+import { JWTGenerated } from "../helpers/JWT.helpers";
+import { googleTokenVerify , getSideNavOptions} from "../helpers";
+import { Patient, User } from '../models';
 
-const login = async (req, resp = response) => {
+const login = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -28,12 +26,12 @@ const login = async (req, resp = response) => {
       });
     }
 
-    const token = await JWTGenerated(user.id, user.rol);
+    const token = await JWTGenerated(user.id);
     const menu = getSideNavOptions(user.rol);
 
     return resp.status(200).json({
       ok: true,
-      message:`Wellcome ${user.name} ${user.lastname}`,
+      message: `Welcome ${user.name} ${user.lastname}`,
       token,
       menu,
       user,
@@ -42,11 +40,12 @@ const login = async (req, resp = response) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
-const googleSignIn = async (req, resp = response) => {
+
+const googleSignIn = async (req: Request, resp: Response) => {
   try {
     const { email } = await googleTokenVerify(req.body.token);
     const user = await User.findOne({ email });
@@ -60,15 +59,14 @@ const googleSignIn = async (req, resp = response) => {
 
     const token = await JWTGenerated(user.id);
     const menu = getSideNavOptions(user.rol);
-    
+
     return resp.status(200).json({
       ok: true,
-      message:`Wellcome ${user.name} ${user.lastname}`,
+      message: `Welcome ${user.name} ${user.lastname}`,
       token,
       user,
-      menu
+      menu,
     });
-      
   } catch (error) {
     return resp.status(400).json({
       ok: false,
@@ -77,7 +75,7 @@ const googleSignIn = async (req, resp = response) => {
   }
 };
 
-const loginPatient = async (req, resp = response) => {
+const loginPatient = async (req: Request, resp: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -99,26 +97,26 @@ const loginPatient = async (req, resp = response) => {
       });
     }
 
-    const token = await JWTGenerated(user.id, user.rol);
+    const token = await JWTGenerated(user.id);
     const menu = getSideNavOptions(user.rol);
 
     return resp.status(200).json({
       ok: true,
-      message: `Wellcome ${user.name} ${user.lastname}`,
+      message: `Welcome ${user.name} ${user.lastname}`,
       token,
       user,
-      menu
+      menu,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
 
-const googleSignInPatient = async (req, resp = response) => {
+const googleSignInPatient = async (req: Request, resp: Response) => {
   try {
     const { email } = await googleTokenVerify(req.body.token);
     const user = await Patient.findOne({ email });
@@ -135,12 +133,11 @@ const googleSignInPatient = async (req, resp = response) => {
     console.log(menu);
     return resp.status(200).json({
       ok: true,
-      message:`Wellcome ${user.name} ${user.lastname}`,
+      message: `Welcome ${user.name} ${user.lastname}`,
       token,
       user,
-      menu
+      menu,
     });
-      
   } catch (error) {
     return resp.status(400).json({
       ok: false,
@@ -149,13 +146,13 @@ const googleSignInPatient = async (req, resp = response) => {
   }
 };
 
-const renewToken = async (req, resp = response) => {
+const renewToken = async (req: Request, resp: Response) => {
   const user_id = req.user_id;
   const token = await JWTGenerated(user_id);
   const user = await User.findById(user_id);
   if (!user) {
     const user = await Patient.findById(user_id);
-    const menu = getSideNavOptions(user.rol);
+    const menu = getSideNavOptions(user?.rol ||'');
 
     return resp.status(200).json({
       ok: true,
@@ -176,10 +173,4 @@ const renewToken = async (req, resp = response) => {
   });
 };
 
-module.exports = {
-  login,
-  googleSignIn,
-  renewToken,
-  loginPatient,
-  googleSignInPatient,
-};
+export { login, googleSignIn, renewToken, loginPatient, googleSignInPatient };

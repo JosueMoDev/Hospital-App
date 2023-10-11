@@ -1,13 +1,11 @@
-const { response } = require("express");
-const Clinic = require("../models/clinic.model");
-const User = require("../models/user.model");
-
-const getClinics = async (req, resp = response) => {
+import { Request, Response } from "express";
+import { Clinic, User } from "../models"; 
+export const getClinics = async (req: Request, resp: Response) => {
   try {
     const pagination = Number(req.query.pagination) || 0;
     const [clinics, total] = await Promise.all([
       Clinic.find().skip(pagination).limit(5).populate("user", "name"),
-      Clinic.count(),
+      Clinic.countDocuments(),
     ]);
     return resp.status(200).json({
       ok: true,
@@ -18,13 +16,22 @@ const getClinics = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: `Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it`,
+      message: `Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it`,
     });
   }
 };
 
-const createClinic = async (req, resp = response) => {
-  const { register_number, user_id, user_rol, address } = req.body;
+export const createClinic = async (req: Request, resp: Response) => {
+  const { register_number, user_id, user_rol, address } = req.body as {
+    register_number: string;
+    user_id: string;
+    user_rol: string;
+    address: {
+      province: string;
+      city: string;
+      street: string;
+    };
+  };
 
   try {
     const isPreviuslyRegister = await Clinic.findOne({ register_number });
@@ -37,35 +44,35 @@ const createClinic = async (req, resp = response) => {
     if (isPreviuslyRegister) {
       return resp.status(400).json({
         ok: false,
-        message: `One clinic has been already enrrolled with this register number before :${register_number}`,
+        message: `One clinic has been already enrolled with this register number before :${register_number}`,
       });
     }
     const clinic = new Clinic(req.body);
-    clinic.country = "EL Salvador";
+    clinic.country = "El Salvador";
     clinic.province = address.province;
     clinic.city = address.city;
     clinic.street = address.street;
-    clinic.user = user_id;
+    clinic.id = user_id;
     clinic.photo = "";
     await clinic.save();
 
     return resp.status(200).json({
       ok: true,
-      message: "Clinic has been created success",
+      message: "Clinic has been created successfully",
       clinic,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
 
-const updateClinic = async (req, resp = response) => {
+export const updateClinic = async (req: Request, resp: Response) => {
   const id = req.id;
-  const clinic_id = req.params.id;
+  const clinic_id = req.params.id as string;
 
   try {
     const clinic = await Clinic.findById(clinic_id);
@@ -98,7 +105,9 @@ const updateClinic = async (req, resp = response) => {
       fields.register_number = register_number;
     }
     fields.user = id;
-    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, fields, { new: true }).populate("user", "name");
+    const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, fields, {
+      new: true,
+    }).populate("user", "name");
 
     return resp.status(200).json({
       ok: true,
@@ -108,14 +117,15 @@ const updateClinic = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
 
-const deleteClinic = async (req, resp = response) => {
-  const clinic_id = req.params.id;
-  const user_logged_id = req.body.user_logged;
+export const deleteClinic = async (req: Request, resp: Response) => {
+  const clinic_id = req.params.id as string;
+  const user_logged_id = req.body.user_logged as string;
   try {
     const clinic_to_delete = await Clinic.findById(clinic_id);
     const user_logged = await User.findById(user_logged_id);
@@ -123,11 +133,11 @@ const deleteClinic = async (req, resp = response) => {
     if (!clinic_to_delete) {
       return resp.status(404).json({
         ok: false,
-        message: `Unknown clinic  at database`,
+        message: `Unknown clinic  at the database`,
       });
     }
 
-    if (user_logged.rol !== "admin") {
+    if (user_logged?.rol !== "admin") {
       return resp.status(404).json({
         ok: false,
         message: `Forbidden action`,
@@ -135,24 +145,23 @@ const deleteClinic = async (req, resp = response) => {
     }
 
     clinic_to_delete.validationState = !clinic_to_delete.validationState;
-    const clinic_updated = await Clinic.findByIdAndUpdate( clinic_id, clinic_to_delete, { new: true } );
+    const clinic_updated = await Clinic.findByIdAndUpdate(
+      clinic_id,
+      clinic_to_delete,
+      { new: true }
+    );
 
     return resp.status(200).json({
       ok: true,
-        message: `Clinic has been ${clinic_updated.validationState ? "Anabled" : "Disabled"}`,
+      message: `Clinic has been ${
+        clinic_updated?.validationState ? "Enabled" : "Disabled"
+      }`,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
-};
-
-module.exports = {
-  getClinics,
-  createClinic,
-  updateClinic,
-  deleteClinic,
 };

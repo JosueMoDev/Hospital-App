@@ -1,29 +1,27 @@
-const { response } = require("express");
-const ClinicAssignments = require("../models/clinic_assignment.model");
-const Clinic = require("../models/clinic.model");
-const User = require("../models/user.model");
+import { Request, Response } from "express";
+import { Clinic, ClinicAssignment, User} from '../models'
 
-const getAllDoctorsAssigned = async (req, resp = response) => {
-  const clinic_id = req.query.clinic;
-  const _pagination = req.query.pagination;
+export const getAllDoctorsAssigned = async (req: Request, resp: Response) => {
+  const clinic_id = req.query.clinic as string;
+  const _pagination = req.query.pagination as string;
   try {
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
       return resp.status(404).json({
         ok: false,
-        message: `Sorry! we couldn't found this clinic`,
+        message: `Sorry! we couldn't find this clinic`,
       });
     }
     const pagination = Number(_pagination) || 0;
     const [doctors_assigned, total] = await Promise.all([
-      ClinicAssignments.find({ clinic: clinic_id })
+      ClinicAssignment.find({ clinic: clinic_id })
         .skip(pagination)
         .limit(5)
         .populate("doctor", "name lastname photo"),
-      ClinicAssignments.find({ clinic: clinic_id }).count(),
+      ClinicAssignment.find({ clinic: clinic_id }).countDocuments(),
     ]);
 
-    const doctors = doctors_assigned.map(({ doctor, _id }) => ({
+    const doctors = doctors_assigned.map(({ doctor, _id }: any) => ({
       doctor_id: doctor._id,
       name: doctor.name,
       lastname: doctor.lastname,
@@ -40,31 +38,38 @@ const getAllDoctorsAssigned = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
-const getDoctorsAvailableToMakeAnAppointment = async (req, resp = response) => {
-  const clinic_id = req.params.id;
+
+export const getDoctorsAvailableToMakeAnAppointment = async (
+  req: Request,
+  resp: Response
+) => {
+  const clinic_id = req.params.id as string;
 
   try {
     const clinic = await Clinic.findById(clinic_id);
     if (!clinic) {
       return resp.status(404).json({
         ok: false,
-        message: `Sorry! we couldn't found this clinic`,
+        message: `Sorry! we couldn't find this clinic`,
       });
     }
 
-    const doctors = await ClinicAssignments.find({
+    const doctors = await ClinicAssignment.find({
       clinic: clinic_id,
     }).populate({
       path: "doctor",
       match: { validationState: true },
       select: "name lastname photo",
     });
-    const doctors_whioutDisabled = doctors.filter(assignment => assignment.doctor !== null);
-    const doctors_available = doctors_whioutDisabled.map(({ doctor }) => ({
+    const doctors_whioutDisabled = doctors.filter(
+      (assignment) => assignment.doctor !== null
+    );
+    const doctors_available = doctors_whioutDisabled.map(({ doctor }: any) => ({
       id: doctor._id,
       name: doctor.name,
       lastname: doctor.lastname,
@@ -78,11 +83,16 @@ const getDoctorsAvailableToMakeAnAppointment = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
-const getAllDoctorsAvailableToBeAssigned = async (req, resp = response) => {
+
+export const getAllDoctorsAvailableToBeAssigned = async (
+  req: Request,
+  resp: Response
+) => {
   try {
     const doctors_available = await User.find({
       rol: "doctor",
@@ -98,13 +108,15 @@ const getAllDoctorsAvailableToBeAssigned = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: `Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it`,
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
-const assingDoctorsToClinic = async (req, resp = response) => {
-  const clinic_id = req.params.id;
-  const doctors = req.body.doctors_assigned;
+
+export const assingDoctorsToClinic = async (req: Request, resp: Response) => {
+  const clinic_id = req.params.id as string;
+  const doctors = req.body.doctors_assigned as { selectedStaff: string[] };
 
   try {
     const clinic = await Clinic.findById(clinic_id);
@@ -115,7 +127,7 @@ const assingDoctorsToClinic = async (req, resp = response) => {
       });
     }
     const doctors_db = await User.find(
-      { _id: doctors.selectedStaff, isAssigned: false },
+      { _id: { $in: doctors.selectedStaff }, isAssigned: false },
       "_id"
     );
     if (!doctors_db) {
@@ -128,7 +140,7 @@ const assingDoctorsToClinic = async (req, resp = response) => {
       doctor: doctor,
       clinic: clinic_id,
     }));
-    const saveDoctors = await ClinicAssignments.insertMany(doctors_to_assign);
+    const saveDoctors = await ClinicAssignment.insertMany(doctors_to_assign);
     const updatedDoctors = await User.updateMany(
       { _id: { $in: doctors_db } },
       { $set: { isAssigned: true } },
@@ -155,19 +167,23 @@ const assingDoctorsToClinic = async (req, resp = response) => {
 
     return resp.status(200).json({
       ok: true,
-      message: "Doctors has been assigned",
+      message: "Doctors have been assigned",
       clinic: clinicUpdated,
     });
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
 
-const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
-  const clinic_id = req.params.id;
+export const removeAllDoctorsAssignedToClinic = async (
+  req: Request,
+  resp: Response
+) => {
+  const clinic_id = req.params.id as string;
 
   try {
     const clinic = await Clinic.findById(clinic_id);
@@ -177,7 +193,7 @@ const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
         message: `We couldn't find any clinic`,
       });
     }
-    const clinicAssigments = await ClinicAssignments.find(
+    const clinicAssigments = await ClinicAssignment.find(
       { clinic: clinic_id },
       ["_id", "doctor"]
     );
@@ -189,7 +205,7 @@ const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
       { multi: true }
     );
 
-    await ClinicAssignments.deleteMany({ _id: { $in: assignments } });
+    await ClinicAssignment.deleteMany({ _id: { $in: assignments } });
 
     clinic.hasAssignments = false;
     const clinicUpdated = await Clinic.findByIdAndUpdate(clinic_id, clinic, {
@@ -204,24 +220,24 @@ const removeAllDoctorsAssignedToClinic = async (req, resp = response) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
 };
 
-const removeADoctorAssignedToClinic = async (req, resp = response) => {
-  const reference = req.params.id;
-  const doctor = req.query.doctor;
-  const clinic_id = req.query.clinic;
+export const removeADoctorAssignedToClinic = async (req: Request, resp: Response) => {
+  const reference = req.params.id as string;
+  const doctor = req.query.doctor as string;
+  const clinic_id = req.query.clinic as string;
 
   try {
-    const assignment_deleted = await ClinicAssignments.findByIdAndDelete(
+    const assignment_deleted = await ClinicAssignment.findByIdAndDelete(
       reference
     );
     if (!assignment_deleted) {
       return resp.status(404).json({
         ok: false,
-        message: `We couldn't find any doctor assigned to clinic`,
+        message: `We couldn't find any doctor assigned to the clinic`,
       });
     }
 
@@ -230,7 +246,7 @@ const removeADoctorAssignedToClinic = async (req, resp = response) => {
       { $set: { isAssigned: false } },
       { new: true }
     );
-    const hasMoreAssignments = await ClinicAssignments.find({
+    const hasMoreAssignments = await ClinicAssignment.find({
       clinic: clinic_id,
     });
     if (!hasMoreAssignments.length) {
@@ -256,16 +272,8 @@ const removeADoctorAssignedToClinic = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it",
     });
   }
-};
-
-module.exports = {
-  getAllDoctorsAssigned,
-  getAllDoctorsAvailableToBeAssigned,
-  assingDoctorsToClinic,
-  removeAllDoctorsAssignedToClinic,
-  removeADoctorAssignedToClinic,
-  getDoctorsAvailableToMakeAnAppointment,
 };

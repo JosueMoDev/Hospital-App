@@ -1,15 +1,14 @@
-const User = require("../models/user.model");
-const Clinic = require("../models/clinic.model");
-const bcrypt = require("bcryptjs");
-const { response } = require("express");
-const { JWTGenerated } = require("../helpers/JWT.helpers");
+import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+import { JWTGenerated } from "../helpers/JWT.helpers";
+import { User } from "../models";
 
-const getUsers = async (req, resp = response) => {
+export const getUsers = async (req: Request, resp: Response) => {
   try {
     const pagination = Number(req.query.pagination) || 0;
     const [users, total] = await Promise.all([
       User.find().skip(pagination).limit(5),
-      User.count(),
+      User.countDocuments(),
     ]);
 
     return resp.status(200).json({
@@ -22,13 +21,14 @@ const getUsers = async (req, resp = response) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const createUser = async (req, resp) => {
-  const { email, document_number, document_type, email_provider, rol } = req.body;
+export const createUser = async (req: Request, resp: Response) => {
+  const { email, document_number, document_type, email_provider, rol } =
+    req.body;
   try {
     const isPathAvailable = ["doctor", "operator"];
 
@@ -50,7 +50,7 @@ const createUser = async (req, resp) => {
     if (isPreviuslyRegister) {
       return resp.status(400).json({
         ok: false,
-        message: `One user has been already enrrolled with this document before, ${document_type}:${document_number}`,
+        message: `One user has been already enrolled with this document before, ${document_type}:${document_number}`,
       });
     }
     const user = new User(req.body);
@@ -65,7 +65,7 @@ const createUser = async (req, resp) => {
 
     const token = await JWTGenerated(user.id);
 
-    return resp.json({
+    return resp.status(200).json({
       ok: true,
       message: "User has been created success",
       user,
@@ -75,12 +75,12 @@ const createUser = async (req, resp) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const updateUser = async (req, resp) => {
+export const updateUser = async (req: Request, resp: Response) => {
   const id = req.params.id;
   try {
     const user = await User.findById(id);
@@ -104,11 +104,11 @@ const updateUser = async (req, resp) => {
       fields.email = email;
     }
     if (user.document_number !== document_number) {
-      const isDocumentExitent = await User.findOne({ email });
-      if (isDocumentExitent) {
+      const isDocumentExistence = await User.findOne({ email });
+      if (isDocumentExistence) {
         return resp.status(400).json({
           ok: false,
-          message: `There is somebody already enrrolled with document:  ${user.document_number}`,
+          message: `There is somebody already enrolled with document:  ${user.document_number}`,
         });
       }
       fields.document_number = document_number;
@@ -118,19 +118,19 @@ const updateUser = async (req, resp) => {
 
     return resp.status(200).json({
       ok: true,
-      message: ` ${user.rol} has been updated success`,
+      message: `${user.rol} has been updated success`,
       user: userUpdated,
     });
   } catch (error) {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const deleteUser = async (req, resp) => {
+export const deleteUser = async (req: Request, resp: Response) => {
   const user_id = req.params.id;
   const user_logged_id = req.body.user_logged;
   try {
@@ -144,7 +144,7 @@ const deleteUser = async (req, resp) => {
       });
     }
 
-    if (user_logged.rol !== "admin") {
+    if (user_logged?.rol !== "admin") {
       return resp.status(404).json({
         ok: false,
         message: `Forbidden action`,
@@ -164,24 +164,28 @@ const deleteUser = async (req, resp) => {
     }
 
     user_to_delete.validationState = !user_to_delete.validationState;
-    const user_updated = await User.findByIdAndUpdate(user_id, user_to_delete, {new: true});
+    const user_updated = await User.findByIdAndUpdate(user_id, user_to_delete, {
+      new: true,
+    });
 
     return resp.status(200).json({
       ok: true,
-      message: `${user_updated.rol} has been ${user_updated.validationState ? "Anabled" : "Disabled"}`,
+      message: `${user_updated?.rol} has been ${
+        user_updated?.validationState ? "Anabled" : "Disabled"
+      }`,
     });
   } catch (error) {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const confirmatePassword = async (req, resp) => {
+export const confirmPassword = async (req: Request, resp: Response) => {
   const id = req.params.id;
-  const oldPassoword = req.body.oldPassword;
+  const oldPassword = req.body.oldPassword;
   try {
     const user = await User.findById(id);
     if (!user) {
@@ -191,7 +195,7 @@ const confirmatePassword = async (req, resp) => {
       });
     }
 
-    const validatePassword = bcrypt.compareSync(oldPassoword, user.password);
+    const validatePassword = bcrypt.compareSync(oldPassword, user.password);
 
     if (!validatePassword) {
       return resp.status(400).json({
@@ -207,12 +211,12 @@ const confirmatePassword = async (req, resp) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const changePassword = async (req, resp) => {
+export const changePassword = async (req: Request, resp: Response) => {
   const id = req.params.id;
   const newPassword = req.body.newPassword;
   try {
@@ -235,16 +239,7 @@ const changePassword = async (req, resp) => {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
-};
-
-module.exports = {
-  getUsers,
-  createUser,
-  updateUser,
-  deleteUser,
-  confirmatePassword,
-  changePassword
 };

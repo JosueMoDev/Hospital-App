@@ -1,38 +1,34 @@
-const response = require("express");
-const path = require("path");
-const fs = require("fs-extra");
+import { Request, Response } from "express";
+import fs from "fs-extra";
+import { handlerPhoto, handlerFolder } from "../helpers";
 
-const {
-  handlerPhoto,
-  handlerFolder,
-} = require("../helpers/handlerFile.helper");
+export const uploadPhoto = async (req: Request, resp: Response) => {
+  const folder = req.params.folder as string;
+  const id = req.params.id as string;
+  const file = req.file as Express.Multer.File;
 
-const uploadPhoto = async (req, resp = response) => {
-  const folder = req.params.folder;
-  const id = req.params.id;
-  const file = req.file;
   try {
     if (!file) {
       await fs.unlink(file.path);
       return resp.status(400).json({
         ok: false,
-        message: `You don't provide any photo or file extension forbidden`,
+        message: `You didn't provide any photo or the file extension is forbidden`,
       });
     }
 
     const isPathAvailable = ["users", "patients", "clinics"];
-    //?  validate if one those folders are avilable on claudinary
     if (!isPathAvailable.includes(folder)) {
       await fs.unlink(file.path);
       return resp.status(403).json({
         ok: false,
-        message: "path not found",
+        message: "Path not found",
       });
     }
 
     const schema = await handlerFolder(folder, id);
+
     if (schema) {
-      const cloudinary_response = await handlerPhoto.uploadPhoto( schema, file.path );
+      const cloudinary_response = await handlerPhoto.uploadPhoto(schema, file.path);
       await fs.unlink(file.path);
       if (cloudinary_response) {
         return resp.status(200).json({
@@ -43,29 +39,29 @@ const uploadPhoto = async (req, resp = response) => {
       } else {
         return resp.status(404).json({
           ok: false,
-          message: `we could'nt upload photo`,
+          message: `We couldn't upload the photo`,
         });
       }
     } else {
       await fs.unlink(file.path);
       return resp.status(404).json({
         ok: false,
-        message: `We could'nt found any document at ${schema.document.rol + "s"} in db`,
+        message: `We couldn't find any document in ${schema?.document.rol + "s"} in the database`,
       });
     }
-      
   } catch (error) {
     await fs.unlink(file.path);
     return resp.status(500).json({
       ok: false,
-      message: `Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it`, error
+      message: `Unexpected error, email to jonasjosuemoralese@gmail.com to discuss it`,
+      error,
     });
   }
 };
 
-const deletePhoto = async (req, resp) => {
-  const folder = req.params.folder;
-  const id = req.params.id;
+export const deletePhoto = async (req: Request, resp: Response) => {
+  const folder = req.params.folder as string;
+  const id = req.params.id as string;
 
   try {
     const schema = await handlerFolder(folder, id);
@@ -81,21 +77,18 @@ const deletePhoto = async (req, resp) => {
       } else {
         return resp.status(404).json({
           ok: false,
-          message: `we could'nt found any photo`,
+          message: `We couldn't find any photo`,
         });
       }
     }
     return resp.status(404).json({
       ok: false,
-      message: `we could'nt fould any document at ${folder} in db`,
+      message: `We couldn't find any document in ${folder} in the database`,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: true,
-      message: `something wrong we could'nt delete photo`,
+      message: `Something went wrong, we couldn't delete the photo`,
     });
   }
 };
-
-module.exports = { uploadPhoto, deletePhoto };

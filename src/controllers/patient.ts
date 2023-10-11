@@ -1,12 +1,10 @@
-const { response } = require("express");
-const bcrypt = require("bcryptjs");
+import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+import { JWTGenerated } from "../helpers/JWT.helpers";
+import { Patient, User } from "../models";
 
-const { JWTGenerated } = require("../helpers/JWT.helpers");
-const Patient = require("../models/patient.model");
-const User = require("../models/user.model");
-
-const getPatient = async (req, resp = response) => {
-  const document_number = req.params.document_number;
+export const getPatient = async (req: Request, resp: Response) => {
+  const document_number = req.params.document_number as string;
   try {
     const patient = await Patient.findOne({ document_number });
     if (!patient) {
@@ -23,17 +21,18 @@ const getPatient = async (req, resp = response) => {
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const getPatients = async (req, resp = response) => {
+export const getPatients = async (req: Request, resp: Response) => {
   try {
     const pagination = Number(req.query.pagination) || 0;
     const [patients, total] = await Promise.all([
       Patient.find().skip(pagination).limit(5),
-      Patient.count(),
+      Patient.countDocuments(),
     ]);
 
     return resp.json({
@@ -42,17 +41,17 @@ const getPatients = async (req, resp = response) => {
       patients,
       total,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message: `We cound't get any patient at data base`,
+      message: "We couldn't get any patient at the database",
     });
   }
 };
 
-const createPatient = async (req, resp) => {
-  const { email, document_number, document_type, email_provider, rol } = req.body;
+export const createPatient = async (req: Request, resp: Response) => {
+  const { email, document_number, document_type, email_provider, rol } =
+    req.body;
   try {
     if (rol !== "patient") {
       return resp.status(403).json({
@@ -68,11 +67,11 @@ const createPatient = async (req, resp) => {
       });
     }
 
-    const isPreviuslyRegister = await Patient.findOne({ document_number });
-    if (isPreviuslyRegister) {
+    const isPreviouslyRegister = await Patient.findOne({ document_number });
+    if (isPreviouslyRegister) {
       return resp.status(400).json({
         ok: false,
-        message: `There is somebody already enrrolled with document ${document_type}:${document_number}`,
+        message: `There is somebody already enrolled with document ${document_type}:${document_number}`,
       });
     }
     const patient = new Patient(req.body);
@@ -88,28 +87,27 @@ const createPatient = async (req, resp) => {
 
     return resp.status(200).json({
       ok: true,
-      message: "Patient has been created success",
+      message: "Patient has been created successfully",
       patient,
       token,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
       message:
-        "Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const updatePatient = async (req, resp = response) => {
-  const id = req.params.id;
+export const updatePatient = async (req: Request, resp: Response) => {
+  const id = req.params.id as string;
   try {
     const patient = await Patient.findById(id);
     if (!patient) {
       return resp.status(404).json({
         ok: false,
-        message: "Unknown patient at database",
+        message: "Unknown patient at the database",
       });
     }
 
@@ -119,17 +117,17 @@ const updatePatient = async (req, resp = response) => {
       if (isEmailTaken) {
         return resp.status(400).json({
           ok: false,
-          message: "This mail has been already taken",
+          message: "This email has been already taken",
         });
       }
       fields.email = email;
     }
     if (patient.document_number !== document_number) {
-      const isDocumentExitent = await User.findOne({ email });
-      if (isDocumentExitent) {
+      const isDocumentExistent = await User.findOne({ email });
+      if (isDocumentExistent) {
         return resp.status(400).json({
           ok: false,
-          message: `There is somebody already enrrolled with document: ${patient.document_number}`,
+          message: `There is somebody already enrolled with document: ${patient.document_number}`,
         });
       }
       fields.document_number = document_number;
@@ -141,20 +139,20 @@ const updatePatient = async (req, resp = response) => {
 
     return resp.status(200).json({
       ok: true,
-      message: `Patient has been updated success`,
+      message: "Patient has been updated successfully",
       patient: patientUpdated,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const deletePatient = async (req, resp = response) => {
-  const patient_id = req.params.id;
+export const deletePatient = async (req: Request, resp: Response) => {
+  const patient_id = req.params.id as string;
   const user_logged_id = req.body.user_logged;
   try {
     const patient_to_delete = await Patient.findById(patient_id);
@@ -163,73 +161,79 @@ const deletePatient = async (req, resp = response) => {
     if (!patient_to_delete) {
       return resp.status(404).json({
         ok: false,
-        message: `Unknown patient  at database`,
+        message: "Unknown patient at the database",
       });
     }
 
-    if (user_logged.rol === "doctor" || user_logged.rol === "patient") {
+    if (user_logged?.rol === "doctor" || user_logged?.rol === "patient") {
       return resp.status(404).json({
         ok: false,
-        message: `Forbidden action`,
+        message: "Forbidden action",
       });
     }
 
     patient_to_delete.validationState = !patient_to_delete.validationState;
-    const user_updated = await Patient.findByIdAndUpdate(patient_id, patient_to_delete, { new: true });
+    const user_updated = await Patient.findByIdAndUpdate(
+      patient_id,
+      patient_to_delete,
+      { new: true }
+    );
 
     return resp.status(200).json({
       ok: true,
-      message: `Patient has been ${user_updated.validationState ? "Anabled" : "Disabled"}`,
+      message: `Patient has been ${
+        user_updated?.validationState ? "Enabled" : "Disabled"
+      }`,
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const confirmatePassword = async (req, resp) => {
-  const id = req.params.id;
-  const oldPassoword = req.body.oldPassword;
+export const confirmPatientPassword = async (req: Request, resp: Response) => {
+  const id = req.params.id as string;
+  const oldPassword = req.body.oldPassword;
   try {
     const patient = await Patient.findById(id);
     if (!patient) {
       return resp.status(404).json({
         ok: false,
-        message: `Unknown patient at database`,
+        message: "Unknown patient at the database",
       });
     }
 
-    const validatePassword = bcrypt.compareSync(oldPassoword, patient.password);
+    const isPasswordValid = bcrypt.compareSync(oldPassword, patient.password);
 
-    if (!!validatePassword) {
+    if (!isPasswordValid) {
       return resp.status(400).json({
         ok: false,
         message: "Incorrect Password",
       });
     }
 
-    return resp.status(200).json({ ok: true, });
-      
+    return resp.status(200).json({ ok: true });
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
 };
 
-const changePassword = async (req, resp) => {
-  const id = req.params.id;
+export const changePatientPassword = async (req: Request, resp: Response) => {
+  const id = req.params.id as string;
   const newPassword = req.body.newPassword;
   try {
     const patient = await Patient.findById(id);
     if (!patient) {
       return resp.status(404).json({
         ok: false,
-        message: `Unknown patient at database`,
+        message: "Unknown patient at the database",
       });
     }
 
@@ -238,23 +242,13 @@ const changePassword = async (req, resp) => {
     await Patient.findByIdAndUpdate(id, patient, { new: true });
     return resp.status(200).json({
       ok: true,
-      message: "Password has been changed success",
+      message: "Password has been changed successfully",
     });
-      
   } catch (error) {
     return resp.status(500).json({
       ok: false,
-      message:"Unexpected error, mail to jonasjosuemoralese@gmail.com to talk out it",
+      message:
+        "Unexpected error, email to jonasjosuemoralese@gmail.com to talk it out",
     });
   }
-};
-
-module.exports = {
-  getPatient,
-  getPatients,
-  createPatient,
-  updatePatient,
-  deletePatient,
-  confirmatePassword,
-  changePassword,
 };
