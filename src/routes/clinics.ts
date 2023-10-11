@@ -1,13 +1,12 @@
-const { Router } = require('express');
-const {
+import { Router } from 'express';
+import {
     getClinics,
     createClinic,
     updateClinic,
     deleteClinic,
-} = require("../controllers/clinic.controller");
-const { check } = require('express-validator');
-const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
-const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
+} from "../controllers";
+import { check } from 'express-validator';
+import { fieldsValidation, isJwtValid } from '../middlewares';
 
 const router = Router();
 
@@ -34,6 +33,6 @@ router.put('/:id', [
     fieldsValidation
 ], updateClinic);
 
-router.put('/delete/:id', [isJwtValid], deleteClinic);
+router.delete('/delete/:id', [isJwtValid], deleteClinic);
 
-module.exports = router;
+export default router;

@@ -71,7 +71,7 @@ export const createClinic = async (req: Request, resp: Response) => {
 };
 
 export const updateClinic = async (req: Request, resp: Response) => {
-  const id = req.id;
+  const id = req.params.id;
   const clinic_id = req.params.id as string;
 
   try {

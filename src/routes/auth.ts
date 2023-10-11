@@ -1,14 +1,14 @@
-const { Router } = require('express');
-const { check } = require('express-validator');
-const {
+import { Router } from 'express';
+import { check } from 'express-validator';
+import {
     login,
     googleSignIn,
     renewToken,
     googleSignInPatient,
     loginPatient
-} = require("../controllers/auth.controller");
-const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
-const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
+} from "../controllers";
+import { fieldsValidation, isJwtValid } from '../middlewares';
+
 const router = Router();
 
 router.post('/', [
@@ -18,7 +18,7 @@ router.post('/', [
 ], login);
 
 router.post('/google', [
-    check('token', 'Token couldnt catch token').not().isEmpty(),
+    check(`token Token couldn't catch token`).not().isEmpty(),
     fieldsValidation
 ], googleSignIn);
 
@@ -29,12 +29,10 @@ router.post('/patient', [
 ], loginPatient);
 
 router.post('/google/patient', [
-    check('token', 'Token couldnt catch token').not().isEmpty(),
+    check(`token, 'Token couldn't catch token`).not().isEmpty(),
     fieldsValidation
 ], googleSignInPatient);
 
-
 router.get('/renew', isJwtValid, renewToken);
 
-
-module.exports = router;
+export default router;

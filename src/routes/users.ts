@@ -1,15 +1,16 @@
-const { Router } = require("express");
-const {
+
+import { Router } from 'express';
+import { check } from 'express-validator';
+import {
   getUsers,
   createUser,
   updateUser,
   deleteUser,
-  confirmatePassword,
+  confirmPassword,
   changePassword
-} = require("../controllers/user.controller");
-const { check } = require("express-validator");
-const { fieldsValidation } = require("../middlewares/fields-validations.middleware");
-const { isJwtValid } = require("../middlewares/jwt-validation.middleware");
+} from "../controllers";
+import { fieldsValidation } from "../middlewares";
+import { isJwtValid } from "../middlewares";
 
 const router = Router();
 
@@ -43,12 +44,12 @@ router.put("/delete/:id", [isJwtValid], deleteUser);
 
 router.post("/confirm-password/:id", [
     isJwtValid,
-    check("oldPassword", "Old passoword is a required field").not().isEmpty(),
-], confirmatePassword);
+    check("oldPassword", "Old password is a required field").not().isEmpty(),
+], confirmPassword);
   
 router.put("/change-password/:id",[
     isJwtValid,
-    check("newPassword", "New passoword is a required field").not().isEmpty(),
+    check("newPassword", "New password is a required field").not().isEmpty(),
 ], changePassword);
-  
-module.exports = router;
+
+export default router;

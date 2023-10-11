@@ -47,8 +47,8 @@ const login = async (req: Request, resp: Response) => {
 
 const googleSignIn = async (req: Request, resp: Response) => {
   try {
-    const { email } = await googleTokenVerify(req.body.token);
-    const user = await User.findOne({ email });
+    const payload = await googleTokenVerify(req.body.token);
+    const user = await User.findOne({ email: payload?.email });
 
     if (!user) {
       return resp.status(403).json({
@@ -118,8 +118,8 @@ const loginPatient = async (req: Request, resp: Response) => {
 
 const googleSignInPatient = async (req: Request, resp: Response) => {
   try {
-    const { email } = await googleTokenVerify(req.body.token);
-    const user = await Patient.findOne({ email });
+    const payload = await googleTokenVerify(req.body.token);
+    const user = await Patient.findOne({ email: payload?.email });
 
     if (!user) {
       return resp.status(403).json({
@@ -147,7 +147,7 @@ const googleSignInPatient = async (req: Request, resp: Response) => {
 };
 
 const renewToken = async (req: Request, resp: Response) => {
-  const user_id = req.user_id;
+  const user_id = req.params.id;
   const token = await JWTGenerated(user_id);
   const user = await User.findById(user_id);
   if (!user) {

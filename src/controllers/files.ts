@@ -5,7 +5,7 @@ import { handlerPhoto, handlerFolder } from "../helpers";
 export const uploadPhoto = async (req: Request, resp: Response) => {
   const folder = req.params.folder as string;
   const id = req.params.id as string;
-  const file = req.file as Express.Multer.File;
+  const file: any = req.file as Express.Multer.File;
 
   try {
     if (!file) {
@@ -25,7 +25,7 @@ export const uploadPhoto = async (req: Request, resp: Response) => {
       });
     }
 
-    const schema = await handlerFolder(folder, id);
+    const schema: any = await handlerFolder(folder, id);
 
     if (schema) {
       const cloudinary_response = await handlerPhoto.uploadPhoto(schema, file.path);

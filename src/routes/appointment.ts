@@ -1,15 +1,16 @@
-const { Router } = require('express');
-const router = Router();
-const { check } = require('express-validator');
-const {
+import { Router } from 'express';
+import { check } from 'express-validator';
+import {
     getAppointments,
     createAppointment,
     updateAppointment,
-    deleteAppointement,
+    deleteAppointment,
     getAllClinicsAvailableToMakeAnAppointment
-} = require("../controllers/appointment.controller");
-const { isJwtValid } = require('../middlewares/jwt-validation.middleware');
-const { fieldsValidation } = require('../middlewares/fields-validations.middleware');
+} from "../controllers";
+import { isJwtValid, fieldsValidation } from '../middlewares';
+
+
+const router = Router();
 
 router.get('/', isJwtValid, getAppointments);
 
@@ -35,6 +36,6 @@ router.put('/:id', [
     check('doctor', 'doctor is a required field').not().isEmpty(),
 ], updateAppointment);
 
-router.delete('/:id', [isJwtValid], deleteAppointement);
+router.delete('/:id', [isJwtValid], deleteAppointment);
 
-module.exports = router;
+export default router;
