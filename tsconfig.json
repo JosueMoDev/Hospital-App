@@ -108,6 +108,6 @@
     "strict": true,
     "esModuleInterop": true                               /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/routes/appointment.route.js"],
   "exclude": ["node_modules"]
 }
