@@ -22,7 +22,7 @@ enum Role {
 }
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  duiNumber String @unique
+  duiNumber Int @unique
   email String 
   password String
   name String
