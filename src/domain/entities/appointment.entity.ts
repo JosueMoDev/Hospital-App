@@ -1,4 +1,5 @@
 export interface AppointmentEntityOptions {
+    id: string;
     startDate: Date;
     endDate: Date;
     doctor: string;
@@ -8,6 +9,7 @@ export interface AppointmentEntityOptions {
 }
 
 export class AppointmentEntity {
+  public id: string;
   public startDate: Date;
   public endDate: Date;
   public doctor: string;
@@ -17,6 +19,7 @@ export class AppointmentEntity {
 
   constructor(options: AppointmentEntityOptions) {
     const {
+        id,
         startDate,
         endDate,
         doctor,
@@ -25,7 +28,7 @@ export class AppointmentEntity {
         createdBy
     } = options;
 
-     
+    this.id = id,
     this.startDate = startDate, 
     this.endDate = endDate, 
     this.doctor = doctor, 
@@ -36,8 +39,9 @@ export class AppointmentEntity {
   }
 
   static fromObject(object:{[key:string]: any}): AppointmentEntity {
-    const { startDate, endDate, doctor, patient, createdAt, createdBy } = object;
+    const { id, startDate, endDate, doctor, patient, createdAt, createdBy } = object;
     const appointment = new AppointmentEntity({
+      id,
       startDate,
       endDate,
       doctor,

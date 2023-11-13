@@ -1,8 +1,8 @@
 
 export interface Adress{
     city: string,
-    province: string,
-    details: string
+    state: string,
+    street: string
 }
 export interface ClinicOptions {
     id: string;
