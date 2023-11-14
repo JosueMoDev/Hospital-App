@@ -22,7 +22,7 @@ enum Role {
 }
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  duiNumber Int @unique
+  duiNumber String @unique
   email String 
   password String
   name String
@@ -53,7 +53,7 @@ type Address {
 }
 model Clinic {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  registerNumber Int @unique
+  registerNumber String @unique
   name String
   phone String
   address Address

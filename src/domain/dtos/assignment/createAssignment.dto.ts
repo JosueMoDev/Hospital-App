@@ -6,7 +6,7 @@ interface AssignmentDtoArgs {
     doctors: Doctors[]
 }
 
-class Doctors {
+export class Doctors {
     @IsMongoId()
     public readonly doctor: string;
 
@@ -33,14 +33,14 @@ export class createAssignmentDto {
 
     }
 
-    static create(object: AssignmentDtoArgs): [string?, createAssignmentDto?] {
+    static create(object: AssignmentDtoArgs): [undefined | {[key: string]: string}, createAssignmentDto?] {
         
         const assigntmentDto = new createAssignmentDto(object);
 
         const errors = validateSync(assigntmentDto);
 
         if (errors.length > 0) {
-            return [errors[0].toString()];
+            return [errors[0].constraints];
         }
 
         return [undefined, assigntmentDto];

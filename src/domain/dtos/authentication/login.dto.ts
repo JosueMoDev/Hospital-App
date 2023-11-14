@@ -17,7 +17,7 @@ export class LoginDto {
         this.password = password;
     }
 
-    static create(object: LoginDtoOptions): [string?, LoginDto?] {
+    static create(object: LoginDtoOptions): [ undefined| {[key:string]: string}, LoginDto?] {
         const { email, password } = object;
         
         const loginDto = new LoginDto(email, password);
@@ -25,7 +25,7 @@ export class LoginDto {
         const errors = validateSync(loginDto);
 
         if (errors.length > 0) {
-            return [errors[0].toString()];
+            return [errors[0].constraints];
         }
 
         return [undefined, loginDto];

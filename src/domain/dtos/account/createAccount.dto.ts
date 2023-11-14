@@ -12,33 +12,32 @@ import {
   validateSync,
 } from "class-validator";
 
-enum Gender {
-  female = "femaile",
+export enum Gender {
+  female = "female",
   male = "male",
 }
 
-enum Role {
+export enum Role {
   admin = "admin",
   doctor = "doctor",
   patient = "patient",
 }
 interface CreateAccountDtoArgs {
-  duiNumber: number;
+  duiNumber: string;
   email: string;
   password: string;
   name: string;
   lastname: string;
   gender: Gender;
   phone: string;
-  isValidated: boolean;
+  isValidated?: boolean;
   role: Role;
 }
 export class CreateAccountDto {
-  @IsNumber()
-  @IsPositive()
+
   @Length(9, 9, { message: "DUI Format not valid" })
   @IsNotEmpty({ message: "DUI is required" })
-  public duiNumber: number;
+  public duiNumber: string;
 
   @IsEmail({}, { message: "Email is not valid" })
   @IsNotEmpty({ message: "Email is required" })
@@ -95,13 +94,13 @@ export class CreateAccountDto {
     this.role = role
   }
 
-  static create(object: CreateAccountDtoArgs): [string?, CreateAccountDto?] {
+  static create(object: CreateAccountDtoArgs): [undefined | {[key: string]: string }, CreateAccountDto?] {
     const createAccountDto = new CreateAccountDto(object);
 
     const errors = validateSync(createAccountDto);
 
     if (errors.length > 0) {
-      return [errors[0].toString()];
+      return [errors[0].constraints];
     }
 
     return [undefined, createAccountDto];

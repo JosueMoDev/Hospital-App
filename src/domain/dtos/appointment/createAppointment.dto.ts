@@ -32,14 +32,14 @@ export class createAppointmentDto {
 
     }
 
-    static create(object: AppointmentDtoArgs): [string?, createAppointmentDto?] {
+    static create(object: AppointmentDtoArgs): [undefined | {[key:string]:string}, createAppointmentDto?] {
         
         const appointmentDto = new createAppointmentDto(object);
 
         const errors = validateSync(appointmentDto);
 
         if (errors.length > 0) {
-            return [errors[0].toString()];
+            return [errors[0].constraints];
         }
 
         return [undefined, appointmentDto];

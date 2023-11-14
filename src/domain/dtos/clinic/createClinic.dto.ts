@@ -2,10 +2,8 @@ import { Type } from "class-transformer";
 import {
   IsMongoId,
   IsNotEmpty,
-  IsNumber,
   IsObject,
   IsPhoneNumber,
-  IsPositive,
   IsString,
   Length,
   ValidateNested,
@@ -15,7 +13,7 @@ import {
 
 
 interface CreateClinicDtoArgs {
-    registerNumber: number,
+    registerNumber: string,
     name: string,
     phone: string,
     address: Address,
@@ -43,11 +41,10 @@ class Address {
     }
 }
 export class CreateClinicDto {
-    @IsNumber()
-    @IsPositive()
+
     @Length(9, 9, { message: "Register Number  Format not valid" })
     @IsNotEmpty({ message: "Register Number is required" })
-    public registerNumber: number;
+    public registerNumber: string;
 
     
     @IsString({ message: "Name should contain only letters" })
@@ -81,17 +78,17 @@ export class CreateClinicDto {
         this.registerNumber = registerNumber,
         this.name = name,
         this.phone = phone,
-        this.address = address,
+        this.address = new Address(address.city, address.province, address.street),
         this.createdBy = createdBy
     }
 
-    static create(object: CreateClinicDtoArgs): [string?, CreateClinicDto?] {
+    static create(object: CreateClinicDtoArgs): [ undefined | {[key: string]: string}, CreateClinicDto?] {
         const createClinicDto = new CreateClinicDto(object);
 
         const errors = validateSync(createClinicDto);
 
         if (errors.length > 0) {
-        return [errors[0].toString()];
+        return [errors[0].constraints];
         }
 
         return [undefined, createClinicDto];
