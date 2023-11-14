@@ -3,47 +3,60 @@ import { ArrayMinSize, IsArray, IsMongoId,  ValidateNested, validateSync } from 
 
 interface AssignmentDtoArgs {
     clinic: string,
-    doctors: Doctors[]
+    doctors: string[]
 }
 
-export class Doctors {
-    @IsMongoId()
+class Doctors {
+    
+    @IsMongoId({message: 'should be mongo id'})
     public readonly doctor: string;
 
     constructor(doctor: string) {
         this.doctor = doctor
     }
+
+    static hasError(id: string) { return validateSync(new Doctors(id))}
+
 }
 
 export class createAssignmentDto {
-   
-    @IsMongoId()
-    public readonly clinic: string;
+  @IsMongoId()
+  public readonly clinic: string;
+  @IsArray()
+  @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
+  @Type(() => Doctors)
+  @ValidateNested({ each: true })
+  public doctors: Doctors[];
 
-    @IsArray()
-    @ArrayMinSize(1, { message: 'An Assignment should have at least one doctor' })
-    @ValidateNested({ each: true })
-    @Type(() => Doctors)
-    public doctors: Doctors[];
+  constructor(args: AssignmentDtoArgs) {
+    const { clinic, doctors } = args;
+    const docs = doctors.map((doctor) =>  new Doctors(doctor));
+ 
+    this.clinic = clinic,
+    this.doctors = docs
+  }
 
-    constructor(args: AssignmentDtoArgs) {
-        const { clinic, doctors } = args;
-        this.clinic = clinic,
-        this.doctors = doctors
+  static create( object: AssignmentDtoArgs): [undefined | { [key: string]: string }, AssignmentDtoArgs?] {
+    const assignmentDto = new createAssignmentDto(object);
 
+    const errors = validateSync(assignmentDto);
+
+    const areMongoId = assignmentDto.doctors.map((doctor) => {
+        const hasError = validateSync(new Doctors(doctor.doctor));
+        if (hasError.length > 0) return hasError[0].constraints;
+    });
+    
+    if(areMongoId.filter(error=>error!==undefined).length >0 ) {
+        return [areMongoId.filter(error=>error!==undefined)[0]]
     }
 
-    static create(object: AssignmentDtoArgs): [undefined | {[key: string]: string}, createAssignmentDto?] {
-        
-        const assigntmentDto = new createAssignmentDto(object);
-
-        const errors = validateSync(assigntmentDto);
-
-        if (errors.length > 0) {
-            return [errors[0].constraints];
-        }
-
-        return [undefined, assigntmentDto];
-
+    if (errors.length > 0) {
+      return [errors[0].constraints];
     }
+    const assignmentDtoMapped = {
+        clinic: assignmentDto.clinic,
+        doctors: assignmentDto.doctors.map((doctor)=>doctor.doctor),
+    }
+    return [undefined, assignmentDtoMapped];
+  }
 }
