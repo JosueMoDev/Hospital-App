@@ -22,7 +22,7 @@ enum Role {
   doctor = "doctor",
   patient = "patient",
 }
-interface CreateAccountDtoOptions {
+interface CreateAccountDtoArgs {
   duiNumber: number;
   email: string;
   password: string;
@@ -71,7 +71,7 @@ export class CreateAccountDto {
   @IsNotEmpty({ message: "Role is required" })
   public role: Role;
 
-  constructor(args: CreateAccountDto) {
+  constructor(args: CreateAccountDtoArgs) {
     const {
       email,
       password,
@@ -95,7 +95,7 @@ export class CreateAccountDto {
     this.role = role
   }
 
-  static create(object: CreateAccountDtoOptions): [string?, CreateAccountDto?] {
+  static create(object: CreateAccountDtoArgs): [string?, CreateAccountDto?] {
     const createAccountDto = new CreateAccountDto(object);
 
     const errors = validateSync(createAccountDto);

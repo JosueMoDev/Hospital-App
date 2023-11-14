@@ -14,7 +14,7 @@ import {
 } from "class-validator";
 
 
-interface CreateClinicDtoOptions {
+interface CreateClinicDtoArgs {
     registerNumber: number,
     name: string,
     phone: string,
@@ -43,9 +43,9 @@ class Address {
     }
 }
 export class CreateClinicDto {
-  @IsNumber()
-  @IsPositive()
-  @Length(9, 9, { message: "Register Number  Format not valid" })
+    @IsNumber()
+    @IsPositive()
+    @Length(9, 9, { message: "Register Number  Format not valid" })
     @IsNotEmpty({ message: "Register Number is required" })
     public registerNumber: number;
 
@@ -66,10 +66,10 @@ export class CreateClinicDto {
     public address: Address
 
     @IsMongoId()
-    public createdBy: string
+    public readonly createdBy: string
 
 
-    constructor(args: CreateClinicDto) {
+    constructor(args: CreateClinicDtoArgs) {
         const {
             registerNumber,
             name,
@@ -83,12 +83,9 @@ export class CreateClinicDto {
         this.phone = phone,
         this.address = address,
         this.createdBy = createdBy
-        
-        
-
     }
 
-    static create(object: CreateClinicDtoOptions): [string?, CreateClinicDto?] {
+    static create(object: CreateClinicDtoArgs): [string?, CreateClinicDto?] {
         const createClinicDto = new CreateClinicDto(object);
 
         const errors = validateSync(createClinicDto);
