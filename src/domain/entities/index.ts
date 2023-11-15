@@ -1,4 +1,4 @@
-export * from './account.entity';
+export {AccountEntity, Gender, Role} from './account.entity';
 export * from './appointment.entity';
 export * from './authenticatedUser.entity';
 export * from './clinic.entity';

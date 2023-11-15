@@ -9,17 +9,9 @@ import {
   MinLength,
   validateSync,
 } from "class-validator";
+import { Gender, Role } from "../../entities";
 
-export enum Gender {
-  female = "female",
-  male = "male",
-}
 
-export enum Role {
-  admin = "admin",
-  doctor = "doctor",
-  patient = "patient",
-}
 interface CreateAccountDtoArgs {
   duiNumber: string;
   email: string;
