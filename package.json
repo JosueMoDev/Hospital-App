@@ -8,10 +8,9 @@
     "dev": "tsnd --respawn --clear src/app.ts",
     "build": "rimraf ./dist && tsc",
     "start": "yarn run build && node dist/app.js",
-    "docker:test": "docker compose -f docker-compose-test.yml --env-file .env.test up -d",
-    "test": " yarn run docker:test && jest",
-    "test:watch": " yarn run docker:test && jest --watch",
-    "test:coverage": "yarn run docker:test && jest --coverage"
+    "test": " yarn run jest",
+    "test:watch": " yarn run  jest --watch",
+    "test:coverage": "yarn run jest --coverage"
   },
   "license": "MIT",
   "devDependencies": {
