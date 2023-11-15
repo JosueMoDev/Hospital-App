@@ -21,6 +21,7 @@ class LastEditedBy {
         this.date = date,
         this.doctor = doctor
     }
+
 }
 export class createRecordDto {
 
@@ -46,23 +47,36 @@ export class createRecordDto {
 
     constructor(args: RecordDtoArgs) {
         const { doctor, patient, title, body, lastEditedBy } = args;
+        const data = lastEditedBy.map(lastEditedBy => new LastEditedBy(lastEditedBy.doctor, lastEditedBy.date))
+      
         this.doctor = doctor,
         this.patient = patient,
         this.title = title,
         this.body = body,
-        this.lastEditedBy = lastEditedBy
+        this.lastEditedBy = data.map(({doctor, date})=>({doctor, date}))
 
     }
 
-    static create(object: RecordDtoArgs): [string?, createRecordDto?] {
+    static create(object: RecordDtoArgs): [undefined | {[key: string]: string}, createRecordDto?] {
         
         const recordDto = new createRecordDto(object);
 
         const errors = validateSync(recordDto);
 
-        if (errors.length > 0) {
-            return [errors[0].toString()];
+        const isValidObject = recordDto.lastEditedBy.map(({date, doctor}) => {
+            const hasError = validateSync(new LastEditedBy(doctor, date));
+            if (hasError.length > 0) return hasError[0].constraints;
+        });
+    
+        if(isValidObject.filter(error=>error!==undefined).length >0 ) {
+            return [isValidObject.filter(error=>error!==undefined)[0]]
         }
+
+        if (errors.length > 0) {
+            return [errors[0].constraints];
+        }
+
+    
 
         return [undefined, recordDto];
 

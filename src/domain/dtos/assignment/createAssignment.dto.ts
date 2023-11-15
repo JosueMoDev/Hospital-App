@@ -8,14 +8,12 @@ interface AssignmentDtoArgs {
 
 class Doctors {
     
-    @IsMongoId({message: 'should be mongo id'})
-    public readonly doctor: string;
+  @IsMongoId({message: 'should be mongo id'})
+  public readonly doctor: string;
 
-    constructor(doctor: string) {
-        this.doctor = doctor
-    }
-
-    static hasError(id: string) { return validateSync(new Doctors(id))}
+  constructor(doctor: string) {
+    this.doctor = doctor
+  }
 
 }
 
@@ -38,7 +36,6 @@ export class createAssignmentDto {
 
   static create( object: AssignmentDtoArgs): [undefined | { [key: string]: string }, AssignmentDtoArgs?] {
     const assignmentDto = new createAssignmentDto(object);
-
     const errors = validateSync(assignmentDto);
 
     const areMongoId = assignmentDto.doctors.map((doctor) => {
@@ -54,8 +51,8 @@ export class createAssignmentDto {
       return [errors[0].constraints];
     }
     const assignmentDtoMapped = {
-        clinic: assignmentDto.clinic,
-        doctors: assignmentDto.doctors.map((doctor)=>doctor.doctor),
+      clinic: assignmentDto.clinic,
+      doctors: assignmentDto.doctors.map((doctor)=>doctor.doctor),
     }
     return [undefined, assignmentDtoMapped];
   }
