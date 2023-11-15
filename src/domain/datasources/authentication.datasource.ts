@@ -1,4 +1,4 @@
-import { AuthenticatedUserEntity } from '../entities/authenticatedUser.entity';
+import { AuthenticatedUserEntity } from '../entities';
 export abstract class AuthenticatedUserDataSource {
 
     abstract loginWithEmailAndPassword(email: string, password: string): Promise<AuthenticatedUserEntity>;

@@ -1,4 +1,4 @@
-import { AccountEntity } from "../entities/account.entity";
+import { AccountEntity } from "../entities";
 
 export abstract class UserRepository {
 

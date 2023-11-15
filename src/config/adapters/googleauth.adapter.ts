@@ -1,5 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
-import { Environment } from "../envs/envs";
+import { Environment } from "../envs";
 
 
 export class GoogleOAuth2ClientAdapter {

@@ -1,4 +1,4 @@
-import { AppointmentEntity } from "../entities/appointment.entity";
+import { AppointmentEntity } from "../entities";
 
 export abstract class  AppointmentRepository {
 

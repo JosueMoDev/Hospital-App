@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Environment } from '../envs/envs';
+import { Environment } from '../envs';
 
 const JWT_SEED = Environment.SECRET_KEY_JWT;
 

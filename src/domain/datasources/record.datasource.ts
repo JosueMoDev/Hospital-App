@@ -1,4 +1,4 @@
-import { RecordEntity } from "../entities/record.entity";
+import { RecordEntity } from "../entities";
 
 export abstract class RecordDataSource {
 

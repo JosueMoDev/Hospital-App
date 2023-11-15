@@ -1,4 +1,4 @@
-import { ClinicEntity } from "../entities/clinic.entity";
+import { ClinicEntity } from "../entities";
 
 export abstract class ClinicRepository {
    abstract findOneById(id: string): Promise<ClinicEntity>;
