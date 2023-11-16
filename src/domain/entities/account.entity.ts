@@ -92,7 +92,7 @@ export class AccountEntity {
       createdAt = new Date(),
     } = object;
 
-    const user = new AccountEntity({
+    const account = new AccountEntity({
       id,
       duiNumber,
       email,
@@ -108,7 +108,7 @@ export class AccountEntity {
       createdAt: new Date(createdAt)
     });
 
-    return user;
+    return account;
 
   }
 }

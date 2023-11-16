@@ -1,7 +1,8 @@
+import { LoginDto } from '../dtos';
 import { AuthenticatedUserEntity } from '../entities';
-export abstract class AuthenticatedUserDataSource {
+export abstract class AuthenticationDataSource {
 
-    abstract loginWithEmailAndPassword(email: string, password: string): Promise<AuthenticatedUserEntity>;
+    abstract loginWithEmailAndPassword(loginDto: LoginDto): Promise<AuthenticatedUserEntity>;
 
     abstract loginWithGoogle(email:string): Promise<AuthenticatedUserEntity>;
 
