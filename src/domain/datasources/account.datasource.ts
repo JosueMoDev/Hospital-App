@@ -1,6 +1,6 @@
 import { AccountEntity } from "../entities";
 
-export abstract class UserDataSource {
+export abstract class AccountDataSource {
 
     abstract findOneById(id: string): Promise<AccountEntity>;
 

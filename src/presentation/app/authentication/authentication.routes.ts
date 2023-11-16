@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { AuthenticationService } from "../../services";
 import { AuthenticationController } from "./authentication.controller";
-import { AuthenticationRepository } from "../../../domain";
 import { AuthenticationDataSourceImpl } from '../../../infraestructure/datasources/authentication.datasource.impl';
 import { AuthenticationRepositoryImpl } from '../../../infraestructure/repositories/authentication.repository.impl';
 

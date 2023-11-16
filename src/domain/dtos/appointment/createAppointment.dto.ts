@@ -25,8 +25,8 @@ export class createAppointmentDto {
     constructor(args: AppointmentDtoArgs) {
         const { startDate, endDate, doctor, patient } = args;
 
-        this.startDate = startDate,
-        this.endDate = endDate,
+        this.startDate = new Date(startDate),
+        this.endDate = new Date(endDate),
         this.doctor = doctor,
         this.patient = patient
 

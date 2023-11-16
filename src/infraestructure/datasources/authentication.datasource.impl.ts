@@ -12,8 +12,9 @@ export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
 
         if (!account) throw CustomError.badRequest('Any user found');
 
-        // const isPasswordMatching = BcryptAdapter.comparePassword(loginDto.password, account.password);
-        // if (!isPasswordMatching) throw CustomError.badRequest('Wrong credentials');
+     
+        const isPasswordMatching = BcryptAdapter.comparePassword(loginDto.password, account.password);
+        if (!isPasswordMatching) throw CustomError.badRequest('Wrong credentials');
 
         const { password, ...authenticatedAccount } = AccountEntity.fromObject(account);
         const token = await JWTAdapter.generateToken({ id: account.id });
@@ -21,13 +22,8 @@ export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
         if (!token) throw CustomError.internalServer('Error while creating token');
 
         return {
-          id: authenticatedAccount.id,
-          email: authenticatedAccount.email,
-          name: authenticatedAccount.name,
-          lastname: authenticatedAccount.lastname,
-          duiNumber: authenticatedAccount.duiNumber,
-          role: authenticatedAccount.role,
-          accessToken: token as string,
+          account: authenticatedAccount,
+          accessToken: token,
           refreshToken: ''
         }
     }
