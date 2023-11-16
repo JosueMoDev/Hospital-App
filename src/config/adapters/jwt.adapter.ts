@@ -5,12 +5,13 @@ const JWT_SEED = Environment.SECRET_KEY_JWT;
 
 export class JWTAdapter { 
 
-    static async generateToken(payload: any, duration: string = '2h') {
+    static async generateToken(payload: any, duration: string = '2h'): Promise<string | null> {
         return new Promise((resolve) => {
-            jwt.sign(payload, JWT_SEED, { expiresIn: duration }), (err: Error, token: string) => {
-                if (err) return resolve(null);
+            jwt.sign(payload, JWT_SEED, { expiresIn: duration }, (error, token) => {
+                if (error) return resolve(null);
+                if (!token) return resolve(null);
                 resolve(token);
-            }
+            });
         });
     }
 
