@@ -6,7 +6,7 @@ interface RecordDtoArgs {
     patient: string,
     title: string,
     body: string,
-    lastEditedBy: LastEditedBy[]
+    lastEditedBy: LastEditedBy
 }
 
 class LastEditedBy {
@@ -43,17 +43,16 @@ export class CreateRecordDto {
     
     @ArrayMinSize(1, { message:'LastEdited field should have at least one item'})
     @Type(() => LastEditedBy)
-    public lastEditedBy: LastEditedBy[];
+    public lastEditedBy: LastEditedBy;
 
     constructor(args: RecordDtoArgs) {
         const { doctor, patient, title, body, lastEditedBy } = args;
-        const data = lastEditedBy.map(lastEditedBy => new LastEditedBy(lastEditedBy.doctor, lastEditedBy.date))
       
         this.doctor = doctor,
         this.patient = patient,
         this.title = title,
         this.body = body,
-        this.lastEditedBy = data.map(({doctor, date})=>({doctor, date}))
+        this.lastEditedBy = new LastEditedBy(lastEditedBy.doctor, lastEditedBy.date);
 
     }
 
@@ -63,13 +62,11 @@ export class CreateRecordDto {
 
         const errors = validateSync(recordDto);
 
-        const isValidObject = recordDto.lastEditedBy.map(({date, doctor}) => {
-            const hasError = validateSync(new LastEditedBy(doctor, date));
-            if (hasError.length > 0) return hasError[0].constraints;
-        });
+        const isValidObject = validateSync(new LastEditedBy(recordDto.lastEditedBy.doctor, recordDto.lastEditedBy.date));
+        
     
-        if(isValidObject.filter(error=>error!==undefined).length >0 ) {
-            return [isValidObject.filter(error=>error!==undefined)[0]]
+        if(isValidObject.length > 0) {
+            return [isValidObject[0].constraints];
         }
 
         if (errors.length > 0) {

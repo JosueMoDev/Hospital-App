@@ -17,7 +17,7 @@ class Doctors {
 
 }
 
-export class createAssignmentDto {
+export class CreateClinicAssignmentDto {
   @IsMongoId()
   public readonly clinic: string;
   @IsArray()
@@ -27,15 +27,14 @@ export class createAssignmentDto {
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
-    const { clinic, doctors } = args;
-    const docs = doctors.map((doctor) =>  new Doctors(doctor));
- 
+    const { clinic, doctors } = args; 
     this.clinic = clinic,
-    this.doctors = docs
+    this.doctors = doctors.map((doctor) =>  new Doctors(doctor));
+ 
   }
 
-  static create( object: AssignmentDtoArgs): [undefined | { [key: string]: string }, AssignmentDtoArgs?] {
-    const assignmentDto = new createAssignmentDto(object);
+  static create( object: AssignmentDtoArgs): [undefined | { [key: string]: string }, CreateClinicAssignmentDto?] {
+    const assignmentDto = new CreateClinicAssignmentDto(object);
     const errors = validateSync(assignmentDto);
 
     const areMongoId = assignmentDto.doctors.map((doctor) => {
@@ -50,10 +49,7 @@ export class createAssignmentDto {
     if (errors.length > 0) {
       return [errors[0].constraints];
     }
-    const assignmentDtoMapped = {
-      clinic: assignmentDto.clinic,
-      doctors: assignmentDto.doctors.map((doctor)=>doctor.doctor),
-    }
-    return [undefined, assignmentDtoMapped];
+ 
+    return [undefined, assignmentDto];
   }
 }
