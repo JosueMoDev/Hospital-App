@@ -9,7 +9,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         throw new Error("Method not implemented.");
     }
     async create(dto: any): Promise<ClinicEntity> {
-        throw new Error("Method not implemented.");
+        return dto;
     }
     async update(dto: any): Promise<ClinicEntity> {
         throw new Error("Method not implemented.");

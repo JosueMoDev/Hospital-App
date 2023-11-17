@@ -6,7 +6,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
         throw new Error("Method not implemented.");
     }
     async create(dto: any): Promise<RecordEntity> {
-        throw new Error("Method not implemented.");
+        return dto;
     }
     async uptate(dto: any): Promise<RecordEntity> {
         throw new Error("Method not implemented.");

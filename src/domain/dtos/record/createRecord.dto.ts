@@ -18,12 +18,12 @@ class LastEditedBy {
     public date: Date
 
     constructor(doctor: string, date: Date) {
-        this.date = date,
+        this.date = new Date(date),
         this.doctor = doctor
     }
 
 }
-export class createRecordDto {
+export class CreateRecordDto {
 
     @IsMongoId()
     @IsNotEmpty({message: 'Doctor is required'})
@@ -57,9 +57,9 @@ export class createRecordDto {
 
     }
 
-    static create(object: RecordDtoArgs): [undefined | {[key: string]: string}, createRecordDto?] {
+    static create(object: RecordDtoArgs): [undefined | {[key: string]: string}, CreateRecordDto?] {
         
-        const recordDto = new createRecordDto(object);
+        const recordDto = new CreateRecordDto(object);
 
         const errors = validateSync(recordDto);
 
