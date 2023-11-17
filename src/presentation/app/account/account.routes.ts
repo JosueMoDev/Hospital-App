@@ -14,6 +14,7 @@ export class AccountRoutes {
         const controller = new AccountController(accountService);
 
         router.post('/create', controller.createAccount);
+        router.patch('/update', controller.updateAccount);
 
         return router;
     }
