@@ -1,11 +1,11 @@
-import { AppointmentDataSource, AppointmentEntity } from "../../domain";
+import { AppointmentDataSource, AppointmentEntity, PaginationDto } from "../../domain";
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
     async findOneById(id: string): Promise<AppointmentEntity> {
         throw new Error("Method not implemented.");
     }
-    async findMany(limit: number, offset: number): Promise<AppointmentEntity[]> {
+    async findMany(dto: PaginationDto): Promise<AppointmentEntity[]> {
         throw new Error("Method not implemented.");
     }
     async create(dto: any): Promise<AppointmentEntity> {

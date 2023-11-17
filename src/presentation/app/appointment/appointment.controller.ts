@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { AppointmentService } from "../../services";
-import { HandlerError, createAppointmentDto } from "../../../domain";
+import { HandlerError, CreateAppointmentDto } from "../../../domain";
 
 export class AppointmentController {
 
     constructor(private readonly appointmentService: AppointmentService) { }
     
     createAppointment = (request: Request, response: Response) => {
-        const [error, appointmentDto] = createAppointmentDto.create(request.body);
+        const [error, appointmentDto] = CreateAppointmentDto.create(request.body);
         if (error) return response.status(400).json({ error });
 
         this.appointmentService

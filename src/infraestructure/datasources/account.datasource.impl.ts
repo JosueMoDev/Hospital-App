@@ -1,11 +1,11 @@
-import { AccountDataSource, AccountEntity, CreateAccountDto } from "../../domain";
+import { AccountDataSource, AccountEntity, CreateAccountDto, PaginationDto } from "../../domain";
 
 export class AccountDataSourceImpl implements AccountDataSource {
 
     async findOneById(id: string): Promise<AccountEntity> {
         throw new Error("Method not implemented.");
     }
-    async getMany(by: string, limit: number, offset: number): Promise<AccountEntity[]> {
+    async getMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
         throw new Error("Method not implemented.");
     }
     async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {

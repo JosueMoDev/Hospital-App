@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { AppointmentDataSourceImpl } from "../../../infraestructure/datasources/appointment.datasource.impl";
-import { AppointmentRepositoryImpl } from "../../../infraestructure/repositories/appointment.repository.impl";
+import { AppointmentDataSourceImpl, AppointmentRepositoryImpl } from "../../../infraestructure";
 import { AppointmentService } from "../../services";
 import { AppointmentController } from './appointment.controller';
 

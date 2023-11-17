@@ -6,6 +6,6 @@ export abstract class AuthenticationRepository {
 
     abstract loginWithGoogle(email:string): Promise<AuthenticatedUserEntity>;
 
-    abstract refreshToken(token: any): Promise<AuthenticatedUserEntity>;
+    abstract refreshToken(token: string): Promise<AuthenticatedUserEntity>;
 
 }

@@ -1,12 +1,13 @@
+import { CreateAppointmentDto, PaginationDto } from "../dtos";
 import { AppointmentEntity } from "../entities";
 
 export abstract class  AppointmentRepository {
 
    abstract findOneById(id: string): Promise<AppointmentEntity>;
 
-   abstract findMany(limit: number, offset: number): Promise<AppointmentEntity[]>;
+   abstract findMany(dto: PaginationDto): Promise<AppointmentEntity[]>;
 
-   abstract create(dto: any): Promise<AppointmentEntity>;
+   abstract create(dto: CreateAppointmentDto): Promise<AppointmentEntity>;
 
    abstract update(dto: any): Promise<AppointmentEntity>;
 
