@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { RecordDataSourceImpl } from "../../../infraestructure/datasources/record.datasource.impl";
-import { RecordRepositoryImpl } from "../../../infraestructure/repositories/record.repository.impl";
+import { RecordDataSourceImpl, RecordRepositoryImpl } from "../../../infraestructure";
 import { RecordService } from "../../services";
 import { RecordController } from "./record.controller";
 

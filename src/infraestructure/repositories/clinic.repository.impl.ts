@@ -1,4 +1,4 @@
-import { ClinicDataSource, ClinicEntity, ClinicRepository } from "../../domain";
+import { ClinicDataSource, ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto } from "../../domain";
 
 export class ClinicRepositoyImpl implements ClinicRepository {
 
@@ -7,10 +7,10 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     findOneById(id: string): Promise<ClinicEntity> {
         return this.datasource.findOneById(id);
     }
-    findMany(limit: string, offset: string): Promise<ClinicEntity[]> {
-        return this.datasource.findMany(limit, offset);
+    findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
+        return this.datasource.findMany(dto);
     }
-    create(dto: any): Promise<ClinicEntity> {
+    create(dto: CreateClinicDto): Promise<ClinicEntity> {
         return this.datasource.create(dto);
     }
     update(dto: any): Promise<ClinicEntity> {

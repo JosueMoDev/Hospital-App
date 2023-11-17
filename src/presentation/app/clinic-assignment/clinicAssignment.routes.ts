@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { ClinicAssignmentDataSourceImpl } from '../../../infraestructure/datasources/clinicAssignment.datasource.impl';
-import { ClinicAssignmentRepositoryImpl } from "../../../infraestructure/repositories/assignment.repository.impl";
+import { ClinicAssignmentDataSourceImpl, ClinicAssignmentRepositoryImpl } from '../../../infraestructure';
 import { ClinicAssignmentService } from "../../services";
 import { ClinicAssignmentController } from "./clinicAssignment.controller";
 

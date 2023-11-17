@@ -7,7 +7,7 @@ interface AppointmentDtoArgs {
     patient: string,
 }
 
-export class createAppointmentDto {
+export class CreateAppointmentDto {
     @IsDate({ message: 'Date is invalid' })
     @IsNotEmpty({ message: 'Start Date is required' })
     public startDate: Date;
@@ -32,9 +32,9 @@ export class createAppointmentDto {
 
     }
 
-    static create(object: AppointmentDtoArgs): [undefined | {[key:string]:string}, createAppointmentDto?] {
+    static create(object: AppointmentDtoArgs): [undefined | {[key:string]:string}, CreateAppointmentDto?] {
         
-        const appointmentDto = new createAppointmentDto(object);
+        const appointmentDto = new CreateAppointmentDto(object);
 
         const errors = validateSync(appointmentDto);
 

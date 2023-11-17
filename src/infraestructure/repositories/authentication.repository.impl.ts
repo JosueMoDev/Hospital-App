@@ -10,7 +10,7 @@ export class AuthenticationRepositoryImpl implements AuthenticationRepository {
     loginWithGoogle(email: string): Promise<AuthenticatedUserEntity> {
         throw new Error("Method not implemented.");
     }
-    refreshToken(token: any): Promise<AuthenticatedUserEntity> {
+    refreshToken(token: string): Promise<AuthenticatedUserEntity> {
         throw new Error("Method not implemented.");
     }
 

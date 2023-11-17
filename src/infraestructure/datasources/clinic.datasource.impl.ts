@@ -1,15 +1,15 @@
-import { ClinicDataSource, ClinicEntity } from "../../domain";
+import { ClinicDataSource, ClinicEntity, CreateClinicDto, PaginationDto } from "../../domain";
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
     async findOneById(id: string): Promise<ClinicEntity> {
         throw new Error("Method not implemented.");
     }
-    async findMany(limit: string, offset: string): Promise<ClinicEntity[]> {
+    async findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
         throw new Error("Method not implemented.");
     }
-    async create(dto: any): Promise<ClinicEntity> {
-        return dto;
+    async create(dto: CreateClinicDto): Promise<ClinicEntity> {
+        return dto as any;
     }
     async update(dto: any): Promise<ClinicEntity> {
         throw new Error("Method not implemented.");

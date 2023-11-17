@@ -1,4 +1,4 @@
-import { AppointmentDataSource, AppointmentEntity, AppointmentRepository } from "../../domain";
+import { AppointmentDataSource, AppointmentEntity, AppointmentRepository, CreateAppointmentDto, PaginationDto } from "../../domain";
 
 export class AppointmentRepositoryImpl implements AppointmentRepository {
 
@@ -7,10 +7,10 @@ export class AppointmentRepositoryImpl implements AppointmentRepository {
     findOneById(id: string): Promise<AppointmentEntity> {
         return this.datasource.findOneById(id);
     }
-    findMany(limit: number, offset: number): Promise<AppointmentEntity[]> {
-        return this.datasource.findMany(limit, offset);
+    findMany(dto: PaginationDto): Promise<AppointmentEntity[]> {
+        return this.datasource.findMany(dto);
     }
-    create(dto: any): Promise<AppointmentEntity> {
+    create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
         return this.datasource.create(dto);
     }
     update(dto: any): Promise<AppointmentEntity> {
