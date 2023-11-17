@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+enum Gender {
+  FEMALE
+  MALE
+}
+
+enum Role {
+  PATIENT
+  ADMIN
+  DOCTOR
+}
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  duiNumber String @unique
+  email String 
+  password String
+  name String
+  lastname String
+  gender Gender
+  phone String
+  isValidated Boolean
+  role Role
+  photoUrl String
+  photoId String
+  createdAt DateTime
+  //! Relations
+  clinics Clinic[]
+  doctors_appointment Appointment[] @relation("doctor_in_appointment")
+  patients_appointment Appointment[] @relation("patient_in_appointmn")
+
+  doctors_record Record[] @relation("doctor_record")
+  patients_record Record[] @relation("patient_record")
+
+  doctors ClinicAssignment[] @relation("doctors_assigned")
+
+}
+
+type Address {
+  city String
+  street String
+  state String
+}
+model Clinic {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  registerNumber String @unique
+  name String
+  phone String
+  address Address
+  photoURl String
+  photoId String
+  createdAt DateTime
+  createdBy Account @relation(fields: [accountId], references: [id])
+  accountId String @db.ObjectId
+  clinicAssignment ClinicAssignment[] 
+}
+
+model Appointment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  startDate DateTime
+  endDate DateTime
+  doctor Account @relation("doctor_in_appointment", fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+  patient Account @relation("patient_in_appointmn", fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
+
+}
+
+type LastEditedBy {
+  doctor String
+  date DateTime 
+}
+
+model Record {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  doctor Account @relation("doctor_record",fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+  patient Account @relation("patient_record",fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
+  createdAt DateTime
+  title String
+  body String
+  lastEditedBy LastEditedBy
+}
+
+model ClinicAssignment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  clinicId String @unique @db.ObjectId
+  doctors Account @relation("doctors_assigned", fields: [doctorsId], references: [id])
+  doctorsId String @unique @db.ObjectId
+}
