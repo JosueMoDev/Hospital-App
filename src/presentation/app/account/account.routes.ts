@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { AccountDataSourceImpl } from "../../../infraestructure/datasources/account.datasource.impl";
-import { AccountRepositoryImpl } from "../../../infraestructure/repositories/account.repository.impl";
+import { AccountDataSourceImpl, AccountRepositoryImpl} from "../../../infraestructure";
 import { AccountService } from "../../services";
 import { AccountController } from "./account.controller";
 
