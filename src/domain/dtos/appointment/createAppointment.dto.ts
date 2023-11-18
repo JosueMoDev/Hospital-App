@@ -1,5 +1,5 @@
 import { IsISO8601, IsMongoId, IsNotEmpty, Matches } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../shared";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface CreateAppointmentDtoArgs {
   startDate: string;

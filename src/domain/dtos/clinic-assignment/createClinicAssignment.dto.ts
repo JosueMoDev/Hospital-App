@@ -6,7 +6,7 @@ import {
   IsNotEmpty,
   ValidateNested,
 } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../shared";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface AssignmentDtoArgs {
   clinic: string;

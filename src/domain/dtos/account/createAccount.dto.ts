@@ -1,6 +1,5 @@
 import { Gender, Role } from '../../entities';
-import { CustomErrors, CustomValidationErrors } from '../shared';
-import { CreateAccountDtoArgs } from './accountDto.interface';
+import { CustomErrors, CustomValidationErrors } from '../utils';
 import {
   IsBoolean,
   IsEmail,
@@ -11,6 +10,18 @@ import {
   Length,
   MinLength,
 } from "class-validator";
+
+interface CreateAccountDtoArgs {
+  duiNumber: string;
+  email: string;
+  password: string;
+  name: string;
+  lastname: string;
+  gender: Gender;
+  phone: string;
+  isValidated?: boolean;
+  role: Role;
+}
 
 export class CreateAccountDto {
   @Length(9, 9, { message: "DUI Format not valid" })

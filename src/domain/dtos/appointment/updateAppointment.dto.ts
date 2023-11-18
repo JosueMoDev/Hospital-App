@@ -1,5 +1,5 @@
 import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601, Matches } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../shared";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface UpdateAppointmentDtArgs {
   id: string;

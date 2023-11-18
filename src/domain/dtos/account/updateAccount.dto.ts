@@ -1,6 +1,5 @@
 import { Gender, Role } from "../../entities";
-import { CustomErrors, CustomValidationErrors } from "../shared";
-import { CreateAccountDtoArgs } from "./accountDto.interface";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 import {
     IsBoolean,
     IsEmail,
@@ -15,9 +14,19 @@ import {
 
 } from "class-validator";
 
-interface UpdateAccountDtoArgs extends CreateAccountDtoArgs {
+interface UpdateAccountDtoArgs {
     id: string;
+    duiNumber?: string;
+    email?: string;
+    password?: string;
+    name?: string;
+    lastname?: string;
+    gender?: Gender;
+    phone?: string;
+    isValidated?: boolean;
+    role?: Role;
 }
+
 
 export class UpdateAccountDto {
     @IsMongoId()

@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsISO8601, IsMongoId, IsNotEmpty, IsObject, IsString, Matches, ValidateNested } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../shared";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface RecordDtoArgs {
     doctor: string,
