@@ -1,12 +1,12 @@
-import { IsEmail, IsNotEmpty, MinLength} from "class-validator";
+import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../shared";
 interface LoginDtoOptions {
-    email: string ,
+    email: string,
     password: string
 }
 export class LoginDto {
-    @IsEmail({}, {message: 'Email is not valid'})
-    @IsNotEmpty({message: 'Email is required'})
+    @IsEmail({}, { message: 'Email is not valid' })
+    @IsNotEmpty({ message: 'Email is required' })
     public email!: string;
 
     @MinLength(8, { message: 'Password should be at least 8 characters long' })
@@ -17,15 +17,13 @@ export class LoginDto {
         Object.assign(this, args)
     }
 
-    static create(object: LoginDtoOptions): [ undefined| CustomErrors[], LoginDto?] {
-        
+    static create(object: LoginDtoOptions): [undefined | CustomErrors[], LoginDto?] {
+
         const loginDto = new LoginDto(object);
 
         const [errors, validatedDto] = CustomValidationErrors.validateDto<LoginDto>(loginDto);
 
-        if (errors) {
-            return [errors];
-        }
+        if (errors) return [errors];
 
         return [undefined, validatedDto];
 

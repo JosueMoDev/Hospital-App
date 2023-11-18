@@ -11,10 +11,15 @@ import {
 } from "class-validator";
 
 import { CustomErrors, CustomValidationErrors } from "../shared";
-import { CreateClinicDtoArgs } from "./createClinic.dto";
 
-interface UpdatedClinicDtoArgs extends CreateClinicDtoArgs {
+
+interface UpdatedClinicDtoArgs {
   id: string;
+  registerNumber?: string,
+  name?: string,
+  phone?: string,
+  address?: Address | any,
+  createdBy?: string
 }
 
 class Address {
@@ -35,10 +40,10 @@ class Address {
   }
 }
 export class UpdateClinicDto {
-    
+
   @IsMongoId()
   @IsNotEmpty({ message: "Clinic ID is required" })
-  public id!: string; 
+  public id!: string;
 
   @IsOptional()
   @Length(9, 9, { message: "Register Number  Format not valid" })
@@ -52,7 +57,7 @@ export class UpdateClinicDto {
   @IsPhoneNumber("SV", { message: "Phone Number not valid" })
   @IsOptional()
   public phone!: string;
-  
+
   @IsOptional()
   @IsObject()
   @ValidateNested()

@@ -12,8 +12,7 @@ import {
     IsString,
     Length,
     MinLength,
-    ValidationError,
-    validateSync,
+
 } from "class-validator";
 
 interface UpdateAccountDtoArgs extends CreateAccountDtoArgs {
@@ -66,11 +65,12 @@ export class UpdateAccountDto {
     static update(
         object: UpdateAccountDtoArgs
     ): [undefined | CustomErrors[], UpdateAccountDto?] {
+
         const updateAccountDto = new UpdateAccountDto(object);
+
         const [errors, validatedDto] = CustomValidationErrors.validateDto<UpdateAccountDto>(updateAccountDto);
-        if (errors) {
-            return [errors];
-        }
+
+        if (errors) return [errors];
 
         return [undefined, validatedDto];
     }

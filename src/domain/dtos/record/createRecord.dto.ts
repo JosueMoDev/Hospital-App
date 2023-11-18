@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsMongoId, IsNotEmpty, IsObject, IsString, ValidateNested } from "class-validator";
+import { IsISO8601, IsMongoId, IsNotEmpty, IsObject, IsString, Matches, ValidateNested } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../shared";
 
 interface RecordDtoArgs {
@@ -12,26 +12,29 @@ interface RecordDtoArgs {
 
 class LastEditedBy {
     @IsMongoId()
-    @IsNotEmpty({message: 'Doctor is required'})
-    public readonly doctor: string; 
-    @IsDate({ message: 'Date not valid' })
-    @IsNotEmpty({message: 'Date is required'})
-    public date: Date
+    @IsNotEmpty({ message: 'Doctor is required' })
+    public readonly doctor!: string;
 
-    constructor(doctor: string, date: Date) {
-        this.date = new Date(date),
-        this.doctor = doctor
+    @IsNotEmpty({ message: 'Date is required' })
+    @IsISO8601({ strict: true })
+    @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
+        message: 'Start Date should be YYYY-MM-DD format .',
+    })
+    public date!: string;
+
+    constructor(object: LastEditedBy) {
+        Object.assign(this, object)
     }
 
 }
 export class CreateRecordDto {
 
     @IsMongoId()
-    @IsNotEmpty({message: 'Doctor is required'})
+    @IsNotEmpty({ message: 'Doctor is required' })
     public readonly doctor!: string;
 
     @IsMongoId()
-    @IsNotEmpty({message: 'Patient is required'})
+    @IsNotEmpty({ message: 'Patient is required' })
     public readonly patient!: string;
 
     @IsString({ message: 'Title should be a string' })
@@ -40,26 +43,25 @@ export class CreateRecordDto {
 
     @IsString({ message: 'Body should be a string' })
     @IsNotEmpty({ message: 'Body is required' })
-    public body!: string; @IsNotEmpty({ message: '' })   
+    public body!: string; @IsNotEmpty({ message: '' })
 
-    @IsObject({message: 'Not an objected provided'})
+    @IsObject({ message: 'Not an objected provided' })
     @ValidateNested()
-    @IsNotEmpty({message:'Field Required'})
+    @IsNotEmpty({ message: 'Field Required' })
     @Type(() => LastEditedBy)
     public lastEditedBy: LastEditedBy;
 
     constructor(args: RecordDtoArgs) {
         Object.assign(this, args);
-        // TODO: error cuando se optienen lastEdited by como undefine
-        this.lastEditedBy = new LastEditedBy(args?.lastEditedBy.doctor, args?.lastEditedBy.date);
+        this.lastEditedBy = new LastEditedBy(args.lastEditedBy);
 
     }
 
     static create(object: RecordDtoArgs): [undefined | CustomErrors[], CreateRecordDto?] {
-        
+
         const recordDto = new CreateRecordDto(object);
         const [errors, updatedDto] = CustomValidationErrors.validateDto<CreateRecordDto>(recordDto);
-        if(errors) return[errors];
+        if (errors) return [errors];
         return [undefined, updatedDto];
 
     }

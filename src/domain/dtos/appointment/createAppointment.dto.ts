@@ -1,15 +1,28 @@
-import { IsDate, IsMongoId, IsNotEmpty} from "class-validator";
-import { AppointmentDtoArgs } from "./appointmentDto.interface";
+import { IsISO8601, IsMongoId, IsNotEmpty, Matches } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../shared";
 
-export class CreateAppointmentDto  {
-  @IsDate({ message: "Date is invalid" })
-  @IsNotEmpty({ message: "Start Date is required" })
-  public startDate!: Date;
+interface CreateAppointmentDtoArgs {
+  startDate: string;
+  endDate: string;
+  doctor: string;
+  patient: string;
+}
+export class CreateAppointmentDto {
 
-  @IsDate({ message: "Date is invalid" })
+
+  @IsNotEmpty({ message: "Start Date is required" })
+  @IsISO8601({ strict: true })
+  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
+    message: 'Start Date should be YYYY-MM-DD format .',
+  })
+  public startDate!: string;
+
   @IsNotEmpty({ message: "End Date is required" })
-  public endDate!: Date;
+  @IsISO8601({ strict: true })
+  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
+    message: 'Start Date should be YYYY-MM-DD format .',
+  })
+  public endDate!: string;
 
   @IsMongoId()
   public readonly doctor!: string;
@@ -17,20 +30,19 @@ export class CreateAppointmentDto  {
   @IsMongoId()
   public readonly patient!: string;
 
-  constructor(args: AppointmentDtoArgs) {
+  constructor(args: CreateAppointmentDtoArgs) {
     Object.assign(this, args);
-    this.startDate = new Date(args.startDate);
-    this.endDate = new Date(args.endDate);
   }
 
   static create(
     object: CreateAppointmentDto
   ): [undefined | CustomErrors[], CreateAppointmentDto?] {
+
     const updateAccountDto = new CreateAppointmentDto(object);
+
     const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateAppointmentDto>(updateAccountDto);
-    if (errors) {
-      return [errors];
-    }
+
+    if (errors) return [errors];
 
     return [undefined, validatedDto];
   }

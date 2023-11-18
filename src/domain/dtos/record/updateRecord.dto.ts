@@ -1,70 +1,75 @@
 import { Type } from "class-transformer";
 import {
   IsDate,
+  IsISO8601,
   IsMongoId,
   IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
+  Matches,
   ValidateNested,
 } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../shared";
 
 interface UpdateRecordDtoArgs {
   id: string;
-  doctor: string;
-  patient: string;
-  title: string;
-  body: string;
-  lastEditedBy: LastEditedBy;
+  doctor?: string;
+  patient?: string;
+  title?: string;
+  body?: string;
+  lastEditedBy: LastEditedBy | any;
 }
 
 class LastEditedBy {
-  @IsMongoId()
   @IsNotEmpty({ message: "Doctor is required" })
-  public readonly doctor: string;
-  @IsDate({ message: "Date not valid" })
-  @IsNotEmpty({ message: "Date is required" })
-  public date: Date;
+  @IsMongoId()
+  public readonly doctor!: string;
 
-  constructor(doctor: string, date: Date) {
-    (this.date = new Date(date)), (this.doctor = doctor);
+
+  @IsNotEmpty({ message: "Date is required" })
+  @IsISO8601({ strict: true })
+  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
+    message: 'Start Date should be YYYY-MM-DD format .',
+  })
+  public date!: string;
+
+  constructor(object: LastEditedBy) {
+    Object.assign(this, object);
   }
 }
 export class UpdateRecordDto {
 
+  @IsNotEmpty({ message: 'Record Id is required' })
   @IsMongoId()
-  @IsNotEmpty({message:'Record Id is required'})
   public readonly id!: string;
 
-  @IsMongoId()
   @IsOptional()
+  @IsMongoId()
   public readonly doctor!: string;
 
-  @IsMongoId()
   @IsOptional()
+  @IsMongoId()
   public readonly patient!: string;
 
-  @IsString({ message: "Title should be a string" })
   @IsOptional()
+  @IsString({ message: "Title should be a string" })
   public title!: string;
 
-  @IsString({ message: "Body should be a string" })
   @IsOptional()
+  @IsString({ message: "Body should be a string" })
   public body!: string;
 
+  @IsNotEmpty({ message: "Las edited By is required" })
   @IsObject()
   @ValidateNested()
-  @IsNotEmpty({ message: "Las edited By is required" })
   @Type(() => LastEditedBy)
-  public lastEditedBy: LastEditedBy;
+  public lastEditedBy!: LastEditedBy;
 
   constructor(args: UpdateRecordDtoArgs) {
     Object.assign(this, args);
-    this.lastEditedBy = new LastEditedBy(
-      args.lastEditedBy.doctor,
-      args.lastEditedBy.date
-    );
+    this.lastEditedBy = new LastEditedBy(args.lastEditedBy);
+
   }
 
   static update(

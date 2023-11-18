@@ -1,6 +1,6 @@
 import { Gender, Role } from '../../entities';
 import { CustomErrors, CustomValidationErrors } from '../shared';
-import { CreateAccountDtoArgs} from './accountDto.interface';
+import { CreateAccountDtoArgs } from './accountDto.interface';
 import {
   IsBoolean,
   IsEmail,
@@ -55,11 +55,12 @@ export class CreateAccountDto {
   static create(
     object: CreateAccountDtoArgs
   ): [undefined | CustomErrors[], CreateAccountDto?] {
+
     const createAccountDto = new CreateAccountDto(object);
+
     const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateAccountDto>(createAccountDto);
-    if (errors) {
-      return [errors];
-    }
+
+    if (errors) return [errors];
 
     return [undefined, validatedDto];
   }
