@@ -1,4 +1,4 @@
-import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity } from "../../domain";
+import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
 
 export class RecordDataSourceImpl implements RecordDataSource {
 
@@ -12,8 +12,8 @@ export class RecordDataSourceImpl implements RecordDataSource {
     async create(dto: CreateRecordDto): Promise<RecordEntity> {
         return dto as any ;
     }
-    async uptate(dto: any): Promise<RecordEntity> {
-        throw new Error("Method not implemented.");
+    async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
+        return dto as any;
     }
     async hiddeRecords(id: string): Promise<Boolean> {
         throw new Error("Method not implemented.");

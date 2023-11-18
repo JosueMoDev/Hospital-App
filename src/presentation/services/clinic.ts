@@ -1,4 +1,4 @@
-import { ClinicEntity, ClinicRepository, CreateClinicDto } from "../../domain";
+import { ClinicEntity, ClinicRepository, CreateClinicDto, UpdateClinicDto } from "../../domain";
 
 export class ClinicService {
 
@@ -6,6 +6,10 @@ export class ClinicService {
 
     public async creatingClinic(dto: CreateClinicDto): Promise<ClinicEntity> {
         return await this.repository.create(dto);
+    }
+
+    public async updatingClinic(dto: UpdateClinicDto): Promise<ClinicEntity>{
+        return await this.repository.update(dto);
     }
     
 }

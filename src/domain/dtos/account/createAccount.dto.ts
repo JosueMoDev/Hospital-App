@@ -1,5 +1,6 @@
 import { Gender, Role } from '../../entities';
-import { CreateAccountDtoArgs, ErrorDefinition } from './AccountDto.interface';
+import { CustomErrors, CustomValidationErrors } from '../shared';
+import { CreateAccountDtoArgs} from './accountDto.interface';
 import {
   IsBoolean,
   IsEmail,
@@ -9,8 +10,6 @@ import {
   IsString,
   Length,
   MinLength,
-  ValidationError,
-  validateSync,
 } from "class-validator";
 
 export class CreateAccountDto {
@@ -55,9 +54,9 @@ export class CreateAccountDto {
   }
   static create(
     object: CreateAccountDtoArgs
-  ): [undefined | ErrorDefinition[], CreateAccountDto?] {
-    const updateAccountDto = new CreateAccountDto(object);
-    const [errors, validatedDto] = CreateAccountDto.validateDto(updateAccountDto);
+  ): [undefined | CustomErrors[], CreateAccountDto?] {
+    const createAccountDto = new CreateAccountDto(object);
+    const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateAccountDto>(createAccountDto);
     if (errors) {
       return [errors];
     }
@@ -65,17 +64,4 @@ export class CreateAccountDto {
     return [undefined, validatedDto];
   }
 
-  protected static validateDto(
-    dto: CreateAccountDto
-  ): [undefined | ErrorDefinition[], CreateAccountDto?] {
-    const errors = validateSync(dto);
-    if (errors !== undefined && errors.length > 0) {
-      const errorsMapped = errors.map((error: ValidationError): ErrorDefinition => ({
-        errorOnProperty: error.property,
-        errorMessages: error.constraints!
-      }));
-      return [errorsMapped];
-    }
-    return [undefined, dto];
-  }
 }

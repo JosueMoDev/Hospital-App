@@ -12,7 +12,3 @@ export interface CreateAccountDtoArgs {
     role: Role;
 }
 
-export interface ErrorDefinition {
-    errorOnProperty: string,
-    errorMessages: { [key: string]: string }
-}

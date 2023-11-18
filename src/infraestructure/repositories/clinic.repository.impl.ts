@@ -1,4 +1,4 @@
-import { ClinicDataSource, ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto } from "../../domain";
+import { ClinicDataSource, ClinicEntity, ClinicRepository, UpdateClinicDto, PaginationDto, CreateClinicDto } from "../../domain";
 
 export class ClinicRepositoyImpl implements ClinicRepository {
 
@@ -13,7 +13,7 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     create(dto: CreateClinicDto): Promise<ClinicEntity> {
         return this.datasource.create(dto);
     }
-    update(dto: any): Promise<ClinicEntity> {
+    update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.update(dto);
     }
     delete(id: string): Promise<ClinicEntity> {

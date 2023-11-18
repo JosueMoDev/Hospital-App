@@ -1,4 +1,4 @@
-import { AppointmentEntity, AppointmentRepository, CreateAppointmentDto } from "../../domain";
+import { AppointmentEntity, AppointmentRepository, CreateAppointmentDto, UpdateAppointmentDto } from "../../domain";
 
 export class AppointmentService {
 
@@ -6,6 +6,10 @@ export class AppointmentService {
     
     public async creatingAppointment(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
         return await this.repository.create(dto);
+    }
+
+    public async updatingAppointment(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
+        return await this.repository.update(dto);
     }
     
 }

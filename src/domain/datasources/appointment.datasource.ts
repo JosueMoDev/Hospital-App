@@ -1,4 +1,4 @@
-import { CreateAppointmentDto, PaginationDto } from "../dtos";
+import { UpdateAppointmentDto, PaginationDto, CreateAppointmentDto } from "../dtos";
 import { AppointmentEntity } from "../entities";
 
 export abstract class  AppointmentDataSource {
@@ -9,7 +9,7 @@ export abstract class  AppointmentDataSource {
 
    abstract create(dto: CreateAppointmentDto): Promise<AppointmentEntity>;
 
-   abstract update(dto: any): Promise<AppointmentEntity>;
+   abstract update(dto: UpdateAppointmentDto): Promise<AppointmentEntity>;
 
    abstract delete(id: string): Promise<AppointmentEntity>;
 

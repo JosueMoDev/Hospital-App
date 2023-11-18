@@ -14,6 +14,7 @@ export class RecordRoutes {
 
 
         router.post('/create', controller.createRecord);
+        router.patch('/update', controller.updateRecord)
 
         return router;
     }

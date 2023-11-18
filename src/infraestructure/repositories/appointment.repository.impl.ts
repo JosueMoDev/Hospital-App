@@ -1,4 +1,4 @@
-import { AppointmentDataSource, AppointmentEntity, AppointmentRepository, CreateAppointmentDto, PaginationDto } from "../../domain";
+import { AppointmentDataSource, AppointmentEntity, AppointmentRepository, UpdateAppointmentDto, PaginationDto, CreateAppointmentDto } from "../../domain";
 
 export class AppointmentRepositoryImpl implements AppointmentRepository {
 
@@ -13,7 +13,7 @@ export class AppointmentRepositoryImpl implements AppointmentRepository {
     create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
         return this.datasource.create(dto);
     }
-    update(dto: any): Promise<AppointmentEntity> {
+    update(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
         return this.datasource.update(dto);
     }
     delete(id: string): Promise<AppointmentEntity> {

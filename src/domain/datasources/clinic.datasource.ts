@@ -1,4 +1,4 @@
-import { CreateClinicDto, PaginationDto } from "../dtos";
+import { UpdateClinicDto, PaginationDto, CreateClinicDto } from "../dtos";
 import { ClinicEntity } from "../entities";
 
 export abstract class ClinicDataSource {
@@ -9,7 +9,7 @@ export abstract class ClinicDataSource {
 
    abstract create(dto: CreateClinicDto): Promise<ClinicEntity>;
 
-   abstract update(dto: any): Promise<ClinicEntity>;
+   abstract update(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
    abstract delete(id: string): Promise<ClinicEntity>;
    

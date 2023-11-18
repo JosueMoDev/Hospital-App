@@ -1,4 +1,4 @@
-import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, RecordRepository } from "../../domain";
+import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto } from "../../domain";
 
 export class RecordRepositoryImpl implements RecordRepository {
 
@@ -14,7 +14,7 @@ export class RecordRepositoryImpl implements RecordRepository {
     create(dto: CreateRecordDto): Promise<RecordEntity> {
         return this.datasource.create(dto);
     }
-    uptate(dto: any): Promise<RecordEntity> {
+    uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return this.datasource.uptate(dto);
     }
     hiddeRecords(id: string): Promise<Boolean> {

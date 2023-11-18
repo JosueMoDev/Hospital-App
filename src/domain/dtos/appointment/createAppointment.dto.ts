@@ -1,48 +1,38 @@
-import { IsDate, IsMongoId, IsNotEmpty, validateSync } from "class-validator";
+import { IsDate, IsMongoId, IsNotEmpty} from "class-validator";
+import { AppointmentDtoArgs } from "./appointmentDto.interface";
+import { CustomErrors, CustomValidationErrors } from "../shared";
 
-interface AppointmentDtoArgs {
-    startDate: Date,
-    endDate: Date,
-    doctor: string,
-    patient: string,
-}
+export class CreateAppointmentDto  {
+  @IsDate({ message: "Date is invalid" })
+  @IsNotEmpty({ message: "Start Date is required" })
+  public startDate!: Date;
 
-export class CreateAppointmentDto {
-    @IsDate({ message: 'Date is invalid' })
-    @IsNotEmpty({ message: 'Start Date is required' })
-    public startDate: Date;
+  @IsDate({ message: "Date is invalid" })
+  @IsNotEmpty({ message: "End Date is required" })
+  public endDate!: Date;
 
-    @IsDate({ message: 'Date is invalid' })
-    @IsNotEmpty({ message: 'End Date is required' })
-    public endDate: Date;
+  @IsMongoId()
+  public readonly doctor!: string;
 
-    @IsMongoId()
-    public readonly doctor: string;
+  @IsMongoId()
+  public readonly patient!: string;
 
-    @IsMongoId()
-    public readonly patient: string;
+  constructor(args: AppointmentDtoArgs) {
+    Object.assign(this, args);
+    this.startDate = new Date(args.startDate);
+    this.endDate = new Date(args.endDate);
+  }
 
-    constructor(args: AppointmentDtoArgs) {
-        const { startDate, endDate, doctor, patient } = args;
-
-        this.startDate = new Date(startDate),
-        this.endDate = new Date(endDate),
-        this.doctor = doctor,
-        this.patient = patient
-
+  static create(
+    object: CreateAppointmentDto
+  ): [undefined | CustomErrors[], CreateAppointmentDto?] {
+    const updateAccountDto = new CreateAppointmentDto(object);
+    const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateAppointmentDto>(updateAccountDto);
+    if (errors) {
+      return [errors];
     }
 
-    static create(object: AppointmentDtoArgs): [undefined | {[key:string]:string}, CreateAppointmentDto?] {
-        
-        const appointmentDto = new CreateAppointmentDto(object);
+    return [undefined, validatedDto];
+  }
 
-        const errors = validateSync(appointmentDto);
-
-        if (errors.length > 0) {
-            return [errors[0].constraints];
-        }
-
-        return [undefined, appointmentDto];
-
-    }
 }

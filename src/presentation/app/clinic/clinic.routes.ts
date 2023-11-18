@@ -13,7 +13,8 @@ export class ClinicRoutes {
         const clinicService = new ClinicService(repository);
         const controller = new ClinicController(clinicService);
 
-        router.post('/create', controller.createClinic)
+        router.post('/create', controller.createClinic);
+        router.patch('/update', controller.updateClinic)
 
         return router;
     }
