@@ -3,7 +3,7 @@ import { AccountDataSource, AccountEntity, CreateAccountDto, PaginationDto } fro
 export class AccountDataSourceImpl implements AccountDataSource {
 
     async findOneById(id: string): Promise<AccountEntity> {
-        throw new Error("Method not implemented.");
+       return id as any;
     }
     async getMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
         throw new Error("Method not implemented.");

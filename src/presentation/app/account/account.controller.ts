@@ -30,4 +30,13 @@ export class AccountController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
+
+  findAccountById = (request: Request, response: Response) => {
+    this.accountService.getAccountById(request.params.id)
+    .then((account)=> response.json(account))
+    .catch((error)=>{
+      const { statusCode, errorMessage } = HandlerError.hasError(error);
+      return response.status(statusCode).json({ error: errorMessage });
+    });
+  }
 }

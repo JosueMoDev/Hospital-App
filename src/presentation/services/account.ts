@@ -3,6 +3,10 @@ import { AccountEntity, AccountRepository, CreateAccountDto, UpdateAccountDto } 
 export class AccountService {
 
     constructor(private readonly repository: AccountRepository) { }
+
+    public async getAccountById(id: string): Promise<AccountEntity> {
+        return await this.repository.findOneById(id);
+    }
     
     public async creatingAccount(dto: CreateAccountDto): Promise<AccountEntity> {
         return await this.repository.createAccount(dto);

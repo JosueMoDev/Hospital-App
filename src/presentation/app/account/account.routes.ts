@@ -14,6 +14,7 @@ export class AccountRoutes {
 
         router.post('/create', controller.createAccount);
         router.patch('/update', controller.updateAccount);
+        router.get('/find-one/:id', controller.findAccountById)
 
         return router;
     }
