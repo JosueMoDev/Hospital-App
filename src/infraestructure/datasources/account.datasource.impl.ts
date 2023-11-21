@@ -3,10 +3,10 @@ import { AccountDataSource, AccountEntity, CreateAccountDto, PaginationDto } fro
 export class AccountDataSourceImpl implements AccountDataSource {
 
     async findOneById(id: string): Promise<AccountEntity> {
-       return id as any;
+        return id as any;
     }
-    async getMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        throw new Error("Method not implemented.");
+    async findMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
+        return { by, dto } as any;
     }
     async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
         return dto as AccountEntity;
@@ -15,13 +15,14 @@ export class AccountDataSourceImpl implements AccountDataSource {
         return dto as AccountEntity;
     }
     async changeStatusAccount(id: string): Promise<AccountEntity> {
-        throw new Error("Method not implemented.");
+        return id as any;
     }
     async changePasswordAccount(oldPassword: string, newPassword: string, id: string): Promise<Boolean> {
-        throw new Error("Method not implemented.");
+        // TODO: Create dto for change password 
+        return { oldPassword, newPassword, id } as any;
     }
     async confirmPassword(password: string, id: string): Promise<Boolean> {
-        throw new Error("Method not implemented.");
+        return { password, id } as any;
     }
 
 }

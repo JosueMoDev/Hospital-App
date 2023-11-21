@@ -14,9 +14,12 @@ export class ClinicRoutes {
         const controller = new ClinicController(clinicService);
 
         router.post('/create', controller.createClinic);
-        router.patch('/update', controller.updateClinic)
+        router.patch('/update', controller.updateClinic);
+        router.get('/find-one/:id', controller.findOneById);
+        router.get('/find-many', controller.findOneById);
+        router.patch('/change-status', controller.changeStatus);
 
         return router;
     }
-    
+
 }

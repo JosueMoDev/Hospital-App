@@ -11,6 +11,6 @@ export abstract class ClinicDataSource {
 
    abstract update(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
-   abstract delete(id: string): Promise<ClinicEntity>;
-   
+   abstract changeStatus(id: string): Promise<ClinicEntity>;
+
 }

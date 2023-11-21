@@ -2,21 +2,21 @@ import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, UpdateR
 
 export class RecordDataSourceImpl implements RecordDataSource {
 
-    findOneById(id: string): Promise<RecordEntity> {
-        throw new Error("Method not implemented.");
+    async findOneById(id: string): Promise<RecordEntity> {
+        return id as any
     }
-    
+
     async findMany(dto: PaginationDto): Promise<RecordEntity[]> {
-        throw new Error("Method not implemented.");
+        return dto as any
     }
     async create(dto: CreateRecordDto): Promise<RecordEntity> {
-        return dto as any ;
+        return dto as any;
     }
     async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return dto as any;
     }
     async hiddeRecords(id: string): Promise<Boolean> {
-        throw new Error("Method not implemented.");
+        return id as any
     }
 
 }

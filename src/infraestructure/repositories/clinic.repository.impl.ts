@@ -2,7 +2,7 @@ import { ClinicDataSource, ClinicEntity, ClinicRepository, UpdateClinicDto, Pagi
 
 export class ClinicRepositoyImpl implements ClinicRepository {
 
-    constructor(private readonly datasource: ClinicDataSource){}
+    constructor(private readonly datasource: ClinicDataSource) { }
 
     findOneById(id: string): Promise<ClinicEntity> {
         return this.datasource.findOneById(id);
@@ -16,8 +16,8 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.update(dto);
     }
-    delete(id: string): Promise<ClinicEntity> {
-        return this.datasource.delete(id);
+    changeStatus(id: string): Promise<ClinicEntity> {
+        return this.datasource.changeStatus(id);
     }
-    
+
 }

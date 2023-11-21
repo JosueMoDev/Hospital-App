@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { RecordService } from "../../services";
-import { CreateRecordDto, HandlerError, UpdateAccountDto, UpdateRecordDto } from "../../../domain";
+import { CreateRecordDto, HandlerError, PaginationDto, UpdateAccountDto, UpdateRecordDto } from "../../../domain";
 
 export class RecordController {
-  constructor(private readonly recordService: RecordService) {}
+  constructor(private readonly recordService: RecordService) { }
 
   createRecord = (request: Request, response: Response) => {
     const [error, createRecordDto] = CreateRecordDto.create(request.body);
@@ -30,4 +30,43 @@ export class RecordController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
+
+  findOneById = (request: Request, response: Response) => {
+    this.recordService
+      .findingOneById(request.params.id!)
+      .then((record) => response.json(record))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  };
+
+  findMany = (request: Request, response: Response) => {
+
+    const [error, pagDto] = PaginationDto.create(request.body);
+    if (error) return response.status(400).json({ error });
+
+    this.recordService
+      .findingMany(pagDto!)
+      .then((records) => response.json(records))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  };
+
+
+  hiddeRecord = (request: Request, response: Response) => {
+
+    this.recordService
+      .hiddingRecord(request.params.id)
+      .then((result) => response.json(result))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  };
+
+
+
 }

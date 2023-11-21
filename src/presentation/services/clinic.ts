@@ -1,15 +1,27 @@
-import { ClinicEntity, ClinicRepository, CreateClinicDto, UpdateClinicDto } from "../../domain";
+import { ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto, UpdateClinicDto } from "../../domain";
 
 export class ClinicService {
 
-    constructor(private readonly repository: ClinicRepository){}
+    constructor(private readonly repository: ClinicRepository) { }
 
     public async creatingClinic(dto: CreateClinicDto): Promise<ClinicEntity> {
         return await this.repository.create(dto);
     }
 
-    public async updatingClinic(dto: UpdateClinicDto): Promise<ClinicEntity>{
+    public async updatingClinic(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return await this.repository.update(dto);
     }
-    
+
+    public async findingOneById(id: string): Promise<ClinicEntity> {
+        return await this.repository.findOneById(id);
+    }
+
+    public async findingMany(dto: PaginationDto): Promise<ClinicEntity[]> {
+        return await this.repository.findMany(dto);
+    }
+
+    public async changingStatus(id: string): Promise<ClinicEntity> {
+        return await this.repository.changeStatus(id);
+    }
+
 }

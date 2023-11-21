@@ -3,10 +3,10 @@ import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateC
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
     async findOneById(id: string): Promise<ClinicEntity> {
-        throw new Error("Method not implemented.");
+        return id as any;
     }
     async findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
-        throw new Error("Method not implemented.");
+        return dto as any
     }
     async create(dto: CreateClinicDto): Promise<ClinicEntity> {
         return dto as any;
@@ -14,8 +14,8 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return dto as any;
     }
-    async delete(id: string): Promise<ClinicEntity> {
-        throw new Error("Method not implemented.");
+    async changeStatus(id: string): Promise<ClinicEntity> {
+        return id as any;
     }
 
 }

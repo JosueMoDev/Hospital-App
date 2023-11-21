@@ -3,19 +3,19 @@ import { AppointmentDataSource, AppointmentEntity, CreateAppointmentDto, Paginat
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
     async findOneById(id: string): Promise<AppointmentEntity> {
-        throw new Error("Method not implemented.");
+        return id as any;
     }
     async findMany(dto: PaginationDto): Promise<AppointmentEntity[]> {
-        throw new Error("Method not implemented.");
+        return dto as any;
     }
     async create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
-        return await dto as any;
+        return dto as any;
     }
-    async update(dto: UpdateAppointmentDto ): Promise<AppointmentEntity> {
-        return await dto as any;
+    async update(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
+        return dto as any;
     }
     async delete(id: string): Promise<AppointmentEntity> {
-        throw new Error("Method not implemented.");
+        return id as any;
     }
 
 }

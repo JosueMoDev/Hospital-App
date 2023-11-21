@@ -14,7 +14,10 @@ export class RecordRoutes {
 
 
         router.post('/create', controller.createRecord);
-        router.patch('/update', controller.updateRecord)
+        router.patch('/update', controller.updateRecord);
+        router.get('/find-one/:id', controller.findOneById);
+        router.get('/find-many', controller.findMany);
+        router.get('/hidde/:id', controller.hiddeRecord);
 
         return router;
     }

@@ -2,14 +2,14 @@ import { AccountDataSource, AccountEntity, AccountRepository, CreateAccountDto, 
 
 export class AccountRepositoryImpl implements AccountRepository {
 
-    constructor(private readonly datasource: AccountDataSource){}
+    constructor(private readonly datasource: AccountDataSource) { }
 
     findOneById(id: string): Promise<AccountEntity> {
         return this.datasource.findOneById(id);
     }
 
-    getMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        return this.getMany(by, dto);
+    findMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
+        return this.findMany(by, dto);
     }
 
     createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
@@ -26,7 +26,7 @@ export class AccountRepositoryImpl implements AccountRepository {
     changePasswordAccount(oldPassword: string, newPassword: string, id: string): Promise<Boolean> {
         return this.datasource.changePasswordAccount(oldPassword, newPassword, id);
     }
-    
+
     confirmPassword(password: string, id: string): Promise<Boolean> {
         return this.datasource.confirmPassword(password, id);
     }
