@@ -20,6 +20,18 @@ enum Role {
   ADMIN
   DOCTOR
 }
+
+type LastUpdate {
+  doctor String
+  date DateTime 
+}
+
+type Address {
+  city String
+  street String
+  state String
+}
+
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   duiNumber String @unique
@@ -34,23 +46,25 @@ model Account {
   photoUrl String
   photoId String
   createdAt DateTime
-  //! Relations
+  lastUpdate LastUpdate[]
+
+  //? Clinic relation
   clinics Clinic[]
-  doctors_appointment Appointment[] @relation("doctor_in_appointment")
-  patients_appointment Appointment[] @relation("patient_in_appointmn")
 
-  doctors_record Record[] @relation("doctor_record")
-  patients_record Record[] @relation("patient_record")
-
+  //? Clinic Assignment relation
   doctors ClinicAssignment[] @relation("doctors_assigned")
 
+  //? Appointments relations
+  appointment_doctor Appointment? @relation("appointment_doctor")
+  appointment_patient Appointment? @relation("appointment_patient")
+  appointment_account Appointment? @relation("appointment_account")
+
+  //? Records relations 
+  doctors_record Record? @relation("doctor_record")
+  patients_record Record? @relation("patient_record")
 }
 
-type Address {
-  city String
-  street String
-  state String
-}
+
 model Clinic {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   registerNumber String @unique
@@ -62,44 +76,55 @@ model Clinic {
   createdAt DateTime
   status Boolean
   createdBy Account @relation(fields: [accountId], references: [id])
-  lastUpdated LastEditedBy
+  lastUpdate LastUpdate[]
   accountId String @db.ObjectId
-  clinicAssignment ClinicAssignment[] 
+  // ? Clinic Assignment relation
+  clinicAssignment ClinicAssignment? 
 }
 
 model Appointment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   startDate DateTime
   endDate DateTime
-  doctor Account @relation("doctor_in_appointment", fields: [doctorId], references: [id])
+  lastUpdate LastUpdate[]
+
+  doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
   doctorId String @unique @db.ObjectId
-  patient Account @relation("patient_in_appointmn", fields: [patientId], references: [id])
+
+  patient Account @relation("appointment_patient", fields: [patientId], references: [id])
   patientId String @unique @db.ObjectId
 
+  createdBy Account @relation("appointment_account", fields: [accountId], references: [id])
+  accountId String @unique @db.ObjectId
+
 }
 
-type LastEditedBy {
-  doctor String
-  date DateTime 
-}
+
 
 model Record {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  doctor Account @relation("doctor_record",fields: [doctorId], references: [id])
-  doctorId String @unique @db.ObjectId
-  patient Account @relation("patient_record",fields: [patientId], references: [id])
-  patientId String @unique @db.ObjectId
   createdAt DateTime
   title String
   pdf String
   status Boolean
-  lastEditedBy LastEditedBy
+  lastUpdate LastUpdate[]
+
+  doctor Account @relation("doctor_record",fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+
+  patient Account @relation("patient_record",fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
 }
 
 model ClinicAssignment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+
   clinic Clinic @relation(fields: [clinicId], references: [id])
   clinicId String @unique @db.ObjectId
+
+  lastUpdate LastUpdate[]
+
   doctors Account @relation("doctors_assigned", fields: [doctorsId], references: [id])
   doctorsId String @unique @db.ObjectId
+  
 }
