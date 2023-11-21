@@ -5,8 +5,8 @@ export class AccountDataSourceImpl implements AccountDataSource {
     async findOneById(id: string): Promise<AccountEntity> {
         return id as any;
     }
-    async findMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        return { by, dto } as any;
+    async findMany(dto: PaginationDto): Promise<AccountEntity[]> {
+        return dto as any;
     }
     async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
         return dto as AccountEntity;

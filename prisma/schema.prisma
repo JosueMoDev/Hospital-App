@@ -60,7 +60,9 @@ model Clinic {
   photoURl String
   photoId String
   createdAt DateTime
+  status Boolean
   createdBy Account @relation(fields: [accountId], references: [id])
+  lastUpdated LastEditedBy
   accountId String @db.ObjectId
   clinicAssignment ClinicAssignment[] 
 }
@@ -89,7 +91,8 @@ model Record {
   patientId String @unique @db.ObjectId
   createdAt DateTime
   title String
-  body String
+  pdf String
+  status Boolean
   lastEditedBy LastEditedBy
 }
 

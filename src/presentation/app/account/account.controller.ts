@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AccountService } from "../../services";
-import { CreateAccountDto, HandlerError, PaginationDto, UpdateAccountDto } from "../../../domain";
+import { By, CreateAccountDto, HandlerError, PaginationDto, UpdateAccountDto } from "../../../domain";
 
 export class AccountController {
   constructor(private readonly accountService: AccountService) { }
@@ -41,11 +41,10 @@ export class AccountController {
   }
 
   findManyAccounts = (request: Request, response: Response) => {
-    const { by, limit, offset } = request.params;
-    const [error, pagDto] = PaginationDto.create(+limit, +offset);
-
+    const [error, pagDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
-    this.accountService.findingManyAccounts(by, pagDto!)
+
+    this.accountService.findingManyAccounts(pagDto!)
       .then((accounts) => response.json(accounts))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

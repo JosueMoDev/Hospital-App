@@ -8,8 +8,8 @@ export class AccountRepositoryImpl implements AccountRepository {
         return this.datasource.findOneById(id);
     }
 
-    findMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        return this.findMany(by, dto);
+    findMany(dto: PaginationDto): Promise<AccountEntity[]> {
+        return this.datasource.findMany(dto);
     }
 
     createAccount(dto: CreateAccountDto): Promise<AccountEntity> {

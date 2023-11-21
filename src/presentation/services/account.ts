@@ -8,8 +8,8 @@ export class AccountService {
         return await this.repository.findOneById(id);
     }
 
-    public async findingManyAccounts(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        return await this.repository.findMany(by, dto);
+    public async findingManyAccounts(dto: PaginationDto): Promise<AccountEntity[]> {
+        return await this.repository.findMany(dto);
     }
 
     public async creatingAccount(dto: CreateAccountDto): Promise<AccountEntity> {
