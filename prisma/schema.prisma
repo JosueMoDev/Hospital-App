@@ -41,10 +41,10 @@ model Account {
   lastname String
   gender Gender
   phone String
-  isValidated Boolean
+  isValidated Boolean? @default(false)
   role Role
-  photoUrl String
-  photoId String
+  photoUrl String?
+  photoId String?
   createdAt DateTime
   lastUpdate LastUpdate[]
 
@@ -74,7 +74,7 @@ model Clinic {
   photoURl String?
   photoId String?
   createdAt DateTime
-  status Boolean
+  status Boolean ? @default(true)
   lastUpdate LastUpdate[]
   // ? Account Relation
   createdBy Account @relation(fields: [accountId], references: [id])
@@ -88,7 +88,7 @@ model Appointment {
   startDate DateTime
   endDate DateTime
   lastUpdate LastUpdate[]
-  createdAt DateTime
+  createdAt DateTime 
 
   doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
   doctorId String @unique @db.ObjectId
@@ -108,7 +108,7 @@ model Record {
   createdAt DateTime
   title String
   pdf String
-  status Boolean
+  status Boolean? @default(true)
   lastUpdate LastUpdate[]
 
   doctor Account @relation("doctor_record",fields: [doctorId], references: [id])

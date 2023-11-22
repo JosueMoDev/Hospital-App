@@ -40,11 +40,8 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     ...dto,
                     password: hashPassword,
                     gender: gender[dto.gender],
-                    isValidated: false,
                     role: role[dto.role],
                     createdAt: new Date(),
-                    photoUrl: '',
-                    photoId: ''
                 }
             });
             return AccountEntity.fromObject(saveAccount);

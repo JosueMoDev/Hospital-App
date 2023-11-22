@@ -18,10 +18,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
                     phone: dto.phone,
                     address: dto.address,
                     createdAt: new Date(),
-                    status: true,
                     accountId: dto.createdBy,
-                    photoURl: "",
-                    photoId: ""
                 }
             });
             return ClinicEntity.fromObject(newClinic);
