@@ -35,7 +35,7 @@ type Address {
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   duiNumber String @unique
-  email String 
+  email String @unique
   password String
   name String
   lastname String
@@ -71,12 +71,13 @@ model Clinic {
   name String
   phone String
   address Address
-  photoURl String
-  photoId String
+  photoURl String?
+  photoId String?
   createdAt DateTime
   status Boolean
-  createdBy Account @relation(fields: [accountId], references: [id])
   lastUpdate LastUpdate[]
+  // ? Account Relation
+  createdBy Account @relation(fields: [accountId], references: [id])
   accountId String @db.ObjectId
   // ? Clinic Assignment relation
   clinicAssignment ClinicAssignment? 
@@ -87,6 +88,7 @@ model Appointment {
   startDate DateTime
   endDate DateTime
   lastUpdate LastUpdate[]
+  createdAt DateTime
 
   doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
   doctorId String @unique @db.ObjectId

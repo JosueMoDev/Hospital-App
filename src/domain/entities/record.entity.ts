@@ -1,7 +1,5 @@
-export interface LastEditedBy {
-    doctor: string;
-    date: Date;
-}
+import { LastUpdate } from '../dtos/utils/lastUpdate';
+
 export interface RecordOptions {
     id: string,
     doctor: string;
@@ -9,8 +7,8 @@ export interface RecordOptions {
     createdAt: Date;
     title: string;
     body: string;
-    lastEditedBy: LastEditedBy[];
-    
+    lastUpdate: LastUpdate[];
+
 }
 
 export class RecordEntity {
@@ -20,9 +18,9 @@ export class RecordEntity {
     public createdAt: Date;
     public title: string;
     public body: string;
-    public lastEditedBy: LastEditedBy[];
+    public lastUpdate: LastUpdate[];
 
-    constructor(options: RecordOptions){
+    constructor(options: RecordOptions) {
         const {
             id,
             doctor,
@@ -30,7 +28,7 @@ export class RecordEntity {
             createdAt,
             title,
             body,
-            lastEditedBy,
+            lastUpdate,
         } = options;
 
         this.id = id;
@@ -39,28 +37,28 @@ export class RecordEntity {
         this.createdAt = createdAt;
         this.title = title;
         this.body = body;
-        this.lastEditedBy = lastEditedBy;
+        this.lastUpdate = lastUpdate;
     }
 
-    static fromObject(object: {[key: string]: any}): RecordEntity {
+    static fromObject(object: { [key: string]: any }): RecordEntity {
         const {
             id,
-            doctor,
-            patient,
+            doctorId,
+            patientId,
             createdAt,
             title,
-            body,
-            lastEditedBy
-        }= object
+            pdf,
+            lastUpdate
+        } = object
 
         const record = new RecordEntity({
-          id,
-          doctor,
-          patient,
-          createdAt,
-          title,
-          body,
-          lastEditedBy,
+            id,
+            doctor: doctorId,
+            patient: patientId,
+            createdAt,
+            title,
+            body: pdf,
+            lastUpdate,
         });
 
         return record;

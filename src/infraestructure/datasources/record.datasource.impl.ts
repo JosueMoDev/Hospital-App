@@ -1,4 +1,5 @@
-import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
+import { prisma } from "../../config";
+import { CreateRecordDto, CustomError, PaginationDto, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
 
 export class RecordDataSourceImpl implements RecordDataSource {
 
@@ -10,7 +11,21 @@ export class RecordDataSourceImpl implements RecordDataSource {
         return dto as any
     }
     async create(dto: CreateRecordDto): Promise<RecordEntity> {
-        return dto as any;
+        try {
+            const newRecord = await prisma.record.create({
+                data: {
+                    createdAt: new Date(),
+                    title: dto.title,
+                    pdf: dto.body,
+                    status: true,
+                    doctorId: dto.doctor,
+                    patientId: dto.patient
+                }
+            });
+            return RecordEntity.fromObject(newRecord);
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`)
+        }
     }
     async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return dto as any;
