@@ -1,4 +1,4 @@
-import { AccountDataSource, AccountEntity, CreateAccountDto, PaginationDto } from "../../domain";
+import { AccountDataSource, AccountEntity, CreateAccountDto, PaginationDto, UpdatePasswordDto } from "../../domain";
 
 export class AccountDataSourceImpl implements AccountDataSource {
 
@@ -17,9 +17,8 @@ export class AccountDataSourceImpl implements AccountDataSource {
     async changeStatusAccount(id: string): Promise<AccountEntity> {
         return id as any;
     }
-    async changePasswordAccount(oldPassword: string, newPassword: string, id: string): Promise<Boolean> {
-        // TODO: Create dto for change password 
-        return { oldPassword, newPassword, id } as any;
+    async changePasswordAccount(dto:UpdatePasswordDto): Promise<Boolean> {
+        return dto as any;
     }
     async confirmPassword(password: string, id: string): Promise<Boolean> {
         return { password, id } as any;

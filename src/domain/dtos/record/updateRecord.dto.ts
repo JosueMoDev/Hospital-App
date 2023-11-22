@@ -1,16 +1,13 @@
 import { Type } from "class-transformer";
 import {
-  IsDate,
-  IsISO8601,
   IsMongoId,
   IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
-  Matches,
   ValidateNested,
 } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 
 interface UpdateRecordDtoArgs {
   id: string;
@@ -18,26 +15,10 @@ interface UpdateRecordDtoArgs {
   patient?: string;
   title?: string;
   body?: string;
-  lastEditedBy: LastEditedBy | any;
+  lastUpdate: LastUpdate;
 }
 
-class LastEditedBy {
-  @IsNotEmpty({ message: "Doctor is required" })
-  @IsMongoId()
-  public readonly doctor!: string;
 
-
-  @IsNotEmpty({ message: "Date is required" })
-  @IsISO8601({ strict: true })
-  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
-    message: 'Start Date should be YYYY-MM-DD format .',
-  })
-  public date!: string;
-
-  constructor(object: LastEditedBy) {
-    Object.assign(this, object);
-  }
-}
 export class UpdateRecordDto {
 
   @IsNotEmpty({ message: 'Record Id is required' })
@@ -60,15 +41,15 @@ export class UpdateRecordDto {
   @IsString({ message: "Body should be a string" })
   public body!: string;
 
-  @IsNotEmpty({ message: "Las edited By is required" })
+  @IsNotEmpty({ message: "Last Update is required" })
   @IsObject()
   @ValidateNested()
-  @Type(() => LastEditedBy)
-  public lastEditedBy!: LastEditedBy;
+  @Type(() => LastUpdate)
+  public lastUpdate!: LastUpdate;
 
   constructor(args: UpdateRecordDtoArgs) {
     Object.assign(this, args);
-    this.lastEditedBy = new LastEditedBy(args.lastEditedBy);
+    this.lastUpdate = new LastUpdate(args.lastUpdate);
 
   }
 

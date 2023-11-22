@@ -1,9 +1,15 @@
 import { Request, Response } from "express";
 import { AccountService } from "../../services";
-import { By, CreateAccountDto, HandlerError, PaginationDto, UpdateAccountDto } from "../../../domain";
+import {
+  CreateAccountDto,
+  HandlerError,
+  PaginationDto,
+  UpdateAccountDto,
+  UpdatePasswordDto,
+} from "../../../domain";
 
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(private readonly accountService: AccountService) {}
 
   createAccount = (request: Request, response: Response) => {
     const [error, createAccountDto] = CreateAccountDto.create(request.body);
@@ -32,52 +38,61 @@ export class AccountController {
   };
 
   findAccountById = (request: Request, response: Response) => {
-    this.accountService.findingAccountById(request.params.id)
+    this.accountService
+      .findingAccountById(request.params.id)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   findManyAccounts = (request: Request, response: Response) => {
     const [error, pagDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
 
-    this.accountService.findingManyAccounts(pagDto!)
+    this.accountService
+      .findingManyAccounts(pagDto!)
       .then((accounts) => response.json(accounts))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   changePassowordAccount = (request: Request, response: Response) => {
-    const { password, oldPassword } = request.body
-    this.accountService.changingPasswordAccoun(password, oldPassword, request.params.id)
+    const [error, passwordDto] = UpdatePasswordDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+
+    this.accountService
+      .changingPasswordAccoun(passwordDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   changeAccountStatus = (request: Request, response: Response) => {
-    this.accountService.changingStatusAccount(request.params.id)
+    if (!request.params.id) return response.status(400).json({"error":"id not provided"});
+    this.accountService
+      .changingStatusAccount(request.params.id)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   confirmPassword = (request: Request, response: Response) => {
-    this.accountService.checkingPassword(request.body, request.params.id)
+    if (!request.params.id && request.body.password) return response.status(400).json({ error: "missing id or password" });
+
+    this.accountService
+      .checkingPassword(request.body, request.params.id)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
-
+  };
 }

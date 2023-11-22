@@ -1,34 +1,40 @@
-import { AccountDataSource, AccountEntity, AccountRepository, CreateAccountDto, PaginationDto } from "../../domain";
+import {
+  AccountDataSource,
+  AccountEntity,
+  AccountRepository,
+  CreateAccountDto,
+  PaginationDto,
+  UpdateAccountDto,
+  UpdatePasswordDto,
+} from "../../domain";
 
 export class AccountRepositoryImpl implements AccountRepository {
+  constructor(private readonly datasource: AccountDataSource) {}
 
-    constructor(private readonly datasource: AccountDataSource) { }
+  findOneById(id: string): Promise<AccountEntity> {
+    return this.datasource.findOneById(id);
+  }
 
-    findOneById(id: string): Promise<AccountEntity> {
-        return this.datasource.findOneById(id);
-    }
+  findMany(dto: PaginationDto): Promise<AccountEntity[]> {
+    return this.datasource.findMany(dto);
+  }
 
-    findMany(dto: PaginationDto): Promise<AccountEntity[]> {
-        return this.datasource.findMany(dto);
-    }
+  createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
+    return this.datasource.createAccount(dto);
+  }
 
-    createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
-        return this.datasource.createAccount(dto);
-    }
+  updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
+    return this.datasource.updateAccount(dto);
+  }
+  changeStatusAccount(id: string): Promise<AccountEntity> {
+    return this.datasource.changeStatusAccount(id);
+  }
 
-    updateAccount(dto: any): Promise<AccountEntity> {
-        return this.datasource.updateAccount(dto);
-    }
-    changeStatusAccount(id: string): Promise<AccountEntity> {
-        return this.datasource.changeStatusAccount(id);
-    }
+  changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {
+    return this.datasource.changePasswordAccount(dto);
+  }
 
-    changePasswordAccount(oldPassword: string, newPassword: string, id: string): Promise<Boolean> {
-        return this.datasource.changePasswordAccount(oldPassword, newPassword, id);
-    }
-
-    confirmPassword(password: string, id: string): Promise<Boolean> {
-        return this.datasource.confirmPassword(password, id);
-    }
-
+  confirmPassword(password: string, id: string): Promise<Boolean> {
+    return this.datasource.confirmPassword(password, id);
+  }
 }

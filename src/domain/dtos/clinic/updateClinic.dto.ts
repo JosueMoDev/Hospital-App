@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 
 
 interface UpdatedClinicDtoArgs {
@@ -18,8 +18,10 @@ interface UpdatedClinicDtoArgs {
   registerNumber?: string,
   name?: string,
   phone?: string,
-  address?: Address | any,
-  createdBy?: string
+  address?: Address,
+  createdBy?: string,
+  lastUpdate: LastUpdate,
+
 }
 
 class Address {
@@ -40,7 +42,6 @@ class Address {
   }
 }
 export class UpdateClinicDto {
-
   @IsMongoId()
   @IsNotEmpty({ message: "Clinic ID is required" })
   public id!: string;
@@ -63,6 +64,12 @@ export class UpdateClinicDto {
   @ValidateNested()
   @Type(() => Address)
   public address!: Address;
+
+  @IsNotEmpty({ message: "Last Update is required" })
+  @IsObject()
+  @ValidateNested()
+  @Type(() => LastUpdate)
+  public lastUpdate!: LastUpdate;
 
   constructor(args: UpdatedClinicDtoArgs) {
     Object.assign(this, args);
