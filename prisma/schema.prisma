@@ -22,8 +22,9 @@ enum Role {
 }
 
 type LastUpdate {
-  doctor String
-  date DateTime 
+  account String
+  date DateTime
+  action String?
 }
 
 type Address {

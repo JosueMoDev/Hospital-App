@@ -11,7 +11,8 @@ import {
 
 interface UpdatePasswordDtoArgs {
   id: string;
-  password: string;
+  newPassword: string;
+  oldPassword: string;
   lastUpdate: LastUpdate;
 }
 
@@ -22,7 +23,11 @@ export class UpdatePasswordDto {
 
   @IsOptional()
   @MinLength(8, { message: "Password should be at least 8 characters long" })
-  public password!: string;
+  public newPassword!: string;
+
+  @IsOptional()
+  @MinLength(8, { message: "Password should be at least 8 characters long" })
+  public oldPassword!: string;
 
 
   @IsNotEmpty({ message: "Last Update is required" })

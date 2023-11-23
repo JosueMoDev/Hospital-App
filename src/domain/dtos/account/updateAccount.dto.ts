@@ -2,33 +2,33 @@ import { Type } from "class-transformer";
 import { Gender, Role } from "../../entities";
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 import {
-    IsBoolean,
-    IsEmail,
-    IsEnum,
-    IsMongoId,
-    IsNotEmpty,
-    IsObject,
-    IsOptional,
-    IsPhoneNumber,
-    IsString,
-    Length,
-    MinLength,
-    ValidateNested,
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  Length,
+  MinLength,
+  ValidateNested,
 
 } from "class-validator";
 
 interface UpdateAccountDtoArgs {
-    id: string;
-    duiNumber?: string;
-    email?: string;
-    password?: string;
-    name?: string;
-    lastname?: string;
-    gender?: Gender;
-    phone?: string;
-    isValidated?: boolean;
-    role?: Role;
-    lastUpdate: LastUpdate
+  id: string;
+  duiNumber?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  lastname?: string;
+  gender?: Gender;
+  phone?: string;
+  isValidated?: boolean;
+  role?: Role;
+  lastUpdate: LastUpdate
 }
 
 
@@ -79,6 +79,7 @@ export class UpdateAccountDto {
 
   constructor(args: UpdateAccountDtoArgs) {
     Object.assign(this, args);
+    this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
   static update(
     object: UpdateAccountDtoArgs

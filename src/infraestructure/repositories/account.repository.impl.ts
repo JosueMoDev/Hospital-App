@@ -9,7 +9,7 @@ import {
 } from "../../domain";
 
 export class AccountRepositoryImpl implements AccountRepository {
-  constructor(private readonly datasource: AccountDataSource) {}
+  constructor(private readonly datasource: AccountDataSource) { }
 
   findOneById(id: string): Promise<AccountEntity> {
     return this.datasource.findOneById(id);
@@ -26,8 +26,8 @@ export class AccountRepositoryImpl implements AccountRepository {
   updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
     return this.datasource.updateAccount(dto);
   }
-  changeStatusAccount(id: string): Promise<AccountEntity> {
-    return this.datasource.changeStatusAccount(id);
+  changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
+    return this.datasource.changeStatusAccount(dto);
   }
 
   changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {

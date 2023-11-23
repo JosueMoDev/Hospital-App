@@ -11,7 +11,7 @@ export abstract class AccountRepository {
 
     abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
-    abstract changeStatusAccount(id: string): Promise<AccountEntity>;
+    abstract changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
     abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
 

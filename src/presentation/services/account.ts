@@ -8,7 +8,7 @@ import {
 } from "../../domain";
 
 export class AccountService {
-  constructor(private readonly repository: AccountRepository) {}
+  constructor(private readonly repository: AccountRepository) { }
 
   public async findingAccountById(id: string): Promise<AccountEntity> {
     return await this.repository.findOneById(id);
@@ -28,8 +28,8 @@ export class AccountService {
     return await this.repository.updateAccount(dto);
   }
 
-  public async changingStatusAccount(id: string): Promise<AccountEntity> {
-    return await this.repository.changeStatusAccount(id);
+  public async changingStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
+    return await this.repository.changeStatusAccount(dto);
   }
 
   public async changingPasswordAccoun(

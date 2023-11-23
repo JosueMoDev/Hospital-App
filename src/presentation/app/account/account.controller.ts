@@ -9,7 +9,7 @@ import {
 } from "../../../domain";
 
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(private readonly accountService: AccountService) { }
 
   createAccount = (request: Request, response: Response) => {
     const [error, createAccountDto] = CreateAccountDto.create(request.body);
@@ -74,9 +74,11 @@ export class AccountController {
   };
 
   changeAccountStatus = (request: Request, response: Response) => {
-    if (!request.params.id) return response.status(400).json({"error":"id not provided"});
+    const [error, accountDto] = UpdateAccountDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+
     this.accountService
-      .changingStatusAccount(request.params.id)
+      .changingStatusAccount(accountDto!)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

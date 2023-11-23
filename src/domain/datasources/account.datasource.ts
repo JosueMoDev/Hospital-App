@@ -1,4 +1,4 @@
-import { CreateAccountDto, PaginationDto, UpdatePasswordDto } from "../dtos";
+import { CreateAccountDto, PaginationDto, UpdateAccountDto, UpdatePasswordDto } from "../dtos";
 import { AccountEntity } from "../entities";
 
 export abstract class AccountDataSource {
@@ -11,7 +11,7 @@ export abstract class AccountDataSource {
 
     abstract updateAccount(dto: any): Promise<AccountEntity>;
 
-    abstract changeStatusAccount(id: string): Promise<AccountEntity>;
+    abstract changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
     abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
 
