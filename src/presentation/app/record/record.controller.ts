@@ -57,9 +57,10 @@ export class RecordController {
 
 
   hiddeRecord = (request: Request, response: Response) => {
-
+    const [error, recordDto] = UpdateRecordDto.update(request.body);
+    if (error) return response.status(400).json({ error });
     this.recordService
-      .hiddingRecord(request.params.id)
+      .changingRecordStatus(recordDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

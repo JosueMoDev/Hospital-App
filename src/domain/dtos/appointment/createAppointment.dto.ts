@@ -6,7 +6,7 @@ interface CreateAppointmentDtoArgs {
   endDate: string;
   doctorId: string;
   patientId: string;
-  accountId: string;
+  createdBy: string;
 }
 export class CreateAppointmentDto {
   @IsNotEmpty({ message: "Start Date is required" })
@@ -33,7 +33,7 @@ export class CreateAppointmentDto {
 
   @IsMongoId()
   @IsNotEmpty()
-  public readonly accountId!: string;
+  public readonly createdBy!: string;
 
   constructor(args: CreateAppointmentDtoArgs) {
     Object.assign(this, args);

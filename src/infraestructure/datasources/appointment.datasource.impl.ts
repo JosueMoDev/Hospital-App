@@ -1,13 +1,13 @@
-import { prisma } from "../../config";
+import { DateFnsAdapter, prisma } from "../../config";
 import { AppointmentDataSource, AppointmentEntity, CreateAppointmentDto, CustomError, PaginationDto, UpdateAppointmentDto } from "../../domain";
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
     async findOneById(id: string): Promise<AppointmentEntity> {
         const appointment = await prisma.appointment.findFirst({
-            where: {id: id}
+            where: { id: id }
         });
-        if(!appointment) throw CustomError.badRequest('Any appointment found');
+        if (!appointment) throw CustomError.badRequest('Any appointment found');
 
         return AppointmentEntity.fromObject(appointment);
     }
@@ -23,7 +23,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
                     ...dto,
                     startDate: new Date(dto.startDate),
                     endDate: new Date(dto.endDate),
-                    createdAt: new Date()
+                    createdAt: DateFnsAdapter.formatDate(),
                 }
             });
             return AppointmentEntity.fromObject(newAppointment);
@@ -39,7 +39,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
         const appointment = await prisma.appointment.delete({
             where: { id: id },
         });
-        
+
         return AppointmentEntity.fromObject(appointment);
     }
 

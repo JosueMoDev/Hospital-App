@@ -2,8 +2,8 @@ import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, RecordR
 
 export class RecordRepositoryImpl implements RecordRepository {
 
-    constructor(private readonly datasource: RecordDataSource){}
-    
+    constructor(private readonly datasource: RecordDataSource) { }
+
     findOneById(id: string): Promise<RecordEntity> {
         throw new Error("Method not implemented.");
     }
@@ -17,8 +17,8 @@ export class RecordRepositoryImpl implements RecordRepository {
     uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return this.datasource.uptate(dto);
     }
-    hiddeRecords(id: string): Promise<Boolean> {
-        return this.datasource.hiddeRecords(id);
+    changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
+        return this.datasource.changeRecordStatus(dto);
     }
 
 }

@@ -1,5 +1,5 @@
 import { Gender, Role } from "@prisma/client";
-import { BcryptAdapter, prisma } from "../../config";
+import { BcryptAdapter, DateFnsAdapter, prisma } from "../../config";
 import { AccountDataSource, AccountEntity, CreateAccountDto, CustomError, PaginationDto, UpdateAccountDto, UpdatePasswordDto } from "../../domain";
 
 export class AccountDataSourceImpl implements AccountDataSource {
@@ -51,7 +51,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     password: hashPassword,
                     gender: gender[dto.gender],
                     role: role[dto.role],
-                    createdAt: new Date(),
+                    createdAt: DateFnsAdapter.formatDate(),
                     lastUpdate: []
                 }
             });
@@ -74,7 +74,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                 },
                 data: {
                     isValidated: !account.isValidated,
-                    lastUpdate: [...account.lastUpdate, { ...dto.lastUpdate, date: new Date(), action: 'ACCOUNT VALIDATION' }]
+                    lastUpdate: [...account.lastUpdate, { ...dto.lastUpdate, date: DateFnsAdapter.formatDate(), action: 'ACCOUNT VALIDATION', }]
                 }
             });
             return AccountEntity.fromObject(accountInvalidated);

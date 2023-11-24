@@ -1,4 +1,4 @@
-import { prisma } from "../../config";
+import { DateFnsAdapter, prisma } from "../../config";
 import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError } from "../../domain";
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
@@ -22,7 +22,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
             const newClinic = await prisma.clinic.create({
                 data: {
                     ...dto,
-                    createdAt: new Date(),
+                    createdAt: DateFnsAdapter.formatDate(),
                 }
             });
             return ClinicEntity.fromObject(newClinic);
@@ -37,20 +37,20 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         const clinic = await this.findOneById(dto.id);
         try {
             const clinicInvalidated = await prisma.clinic.update({
-            where: {
-                id: clinic.id,
-            },
-            data: {
-                status: !clinic.stutus,
-                lastUpdate: [
-                ...clinic.lastUpdate,
-                {
-                    ...dto.lastUpdate,
-                    date: new Date(),
-                    action: "CHANGE CLINIC STATUS",
+                where: {
+                    id: clinic.id,
                 },
-                ],
-            },
+                data: {
+                    status: !clinic.stutus,
+                    lastUpdate: [
+                        ...clinic.lastUpdate,
+                        {
+                            ...dto.lastUpdate,
+                            date: DateFnsAdapter.formatDate(),
+                            action: "CHANGE CLINIC STATUS",
+                        },
+                    ],
+                },
             });
             return ClinicEntity.fromObject(clinicInvalidated);
         } catch (error) {

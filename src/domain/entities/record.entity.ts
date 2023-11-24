@@ -2,41 +2,45 @@ import { LastUpdate } from '../dtos/utils/lastUpdate';
 
 export interface RecordOptions {
     id: string,
-    doctor: string;
-    patient: string;
+    doctorId: string;
+    patientId: string;
     createdAt: Date;
     title: string;
-    body: string;
+    pdf: string;
+    status: boolean;
     lastUpdate: LastUpdate[];
 
 }
 
 export class RecordEntity {
     public id: string;
-    public doctor: string;
-    public patient: string;
+    public doctorId: string;
+    public patientId: string;
     public createdAt: Date;
     public title: string;
-    public body: string;
+    public pdf: string;
+    public status: boolean;
     public lastUpdate: LastUpdate[];
 
     constructor(options: RecordOptions) {
         const {
             id,
-            doctor,
-            patient,
+            doctorId,
+            patientId,
             createdAt,
             title,
-            body,
+            pdf,
+            status,
             lastUpdate,
         } = options;
 
         this.id = id;
-        this.doctor = doctor;
-        this.patient = patient;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
         this.createdAt = createdAt;
         this.title = title;
-        this.body = body;
+        this.pdf = pdf;
+        this.status = status;
         this.lastUpdate = lastUpdate;
     }
 
@@ -48,16 +52,18 @@ export class RecordEntity {
             createdAt,
             title,
             pdf,
+            status,
             lastUpdate
         } = object
 
         const record = new RecordEntity({
             id,
-            doctor: doctorId,
-            patient: patientId,
+            doctorId,
+            patientId,
             createdAt,
             title,
-            body: pdf,
+            pdf,
+            status,
             lastUpdate,
         });
 

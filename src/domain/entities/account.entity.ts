@@ -95,7 +95,7 @@ export class AccountEntity {
       role,
       photoUrl,
       photoId,
-      createdAt = new Date(),
+      createdAt,
       lastUpdate
     } = object;
 
@@ -112,7 +112,7 @@ export class AccountEntity {
       role,
       photoUrl,
       photoId,
-      createdAt: new Date(createdAt),
+      createdAt,
       lastUpdate: lastUpdate ?? []
     });
 

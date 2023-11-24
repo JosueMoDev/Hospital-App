@@ -11,5 +11,5 @@ export abstract class RecordDataSource {
 
   abstract uptate(dto: UpdateRecordDto): Promise<RecordEntity>;
 
-  abstract hiddeRecords(id: string): Promise<Boolean>;
+  abstract changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity>;
 }

@@ -1,10 +1,16 @@
-import { prisma } from "../../config";
+import { DateFnsAdapter, prisma } from "../../config";
 import { CreateRecordDto, CustomError, PaginationDto, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
 
 export class RecordDataSourceImpl implements RecordDataSource {
 
     async findOneById(id: string): Promise<RecordEntity> {
-        return id as any
+        const record = await prisma.record.findFirst({
+            where: { id: id },
+        });
+
+        if (!record) throw CustomError.badRequest("Any record found");
+
+        return RecordEntity.fromObject(record);
     }
 
     async findMany(dto: PaginationDto): Promise<RecordEntity[]> {
@@ -14,12 +20,8 @@ export class RecordDataSourceImpl implements RecordDataSource {
         try {
             const newRecord = await prisma.record.create({
                 data: {
-                    createdAt: new Date(),
-                    title: dto.title,
-                    pdf: dto.body,
-                    status: true,
-                    doctorId: dto.doctor,
-                    patientId: dto.patient
+                    ...dto,
+                    createdAt: DateFnsAdapter.formatDate(),
                 }
             });
             return RecordEntity.fromObject(newRecord);
@@ -30,8 +32,29 @@ export class RecordDataSourceImpl implements RecordDataSource {
     async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return dto as any;
     }
-    async hiddeRecords(id: string): Promise<Boolean> {
-        return id as any
+    async changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
+        const record = await this.findOneById(dto.id);
+        try {
+            const statusChanged = await prisma.record.update({
+                where: {
+                    id: record.id,
+                },
+                data: {
+                    status: !record.status,
+                    lastUpdate: [
+                        ...record.lastUpdate,
+                        {
+                            ...dto.lastUpdate,
+                            date: DateFnsAdapter.formatDate(),
+                            action: "CHANGE RECORD VISIBILITY",
+                        },
+                    ],
+                },
+            });
+            return RecordEntity.fromObject(statusChanged);
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`);
+        }
     }
 
 }

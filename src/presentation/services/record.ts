@@ -20,7 +20,7 @@ export class RecordService {
     return await this.repository.findMany(dto);
   }
 
-  public async hiddingRecord(id: string): Promise<Boolean> {
-    return await this.repository.hiddeRecords(id);
+  public async changingRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
+    return await this.repository.changeRecordStatus(dto);
   }
 }

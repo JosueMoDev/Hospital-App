@@ -2,8 +2,8 @@ export interface AppointmentEntityOptions {
   id: string;
   startDate: Date;
   endDate: Date;
-  doctor: string;
-  patient: string;
+  doctorId: string;
+  patientId: string;
   createdAt: Date;
   createdBy: string;
 }
@@ -12,8 +12,8 @@ export class AppointmentEntity {
   public id: string;
   public startDate: Date;
   public endDate: Date;
-  public doctor: string;
-  public patient: string;
+  public doctorId: string;
+  public patientId: string;
   public createdAt: Date;
   public createdBy: string;
 
@@ -22,8 +22,8 @@ export class AppointmentEntity {
       id,
       startDate,
       endDate,
-      doctor,
-      patient,
+      doctorId,
+      patientId,
       createdAt,
       createdBy
     } = options;
@@ -31,23 +31,23 @@ export class AppointmentEntity {
     this.id = id,
       this.startDate = startDate,
       this.endDate = endDate,
-      this.doctor = doctor,
-      this.patient = patient,
+      this.doctorId = doctorId,
+      this.patientId = patientId,
       this.createdAt = createdAt,
       this.createdBy = createdBy;
 
   }
 
   static fromObject(object: { [key: string]: any }): AppointmentEntity {
-    const { id, startDate, endDate, doctorId, patientId, createdAt, accoutId } = object;
+    const { id, startDate, endDate, doctorId, patientId, createdAt, createdBy } = object;
     const appointment = new AppointmentEntity({
       id,
       startDate,
       endDate,
-      doctor: doctorId,
-      patient: patientId,
+      doctorId,
+      patientId,
       createdAt,
-      createdBy: accoutId,
+      createdBy,
     });
     return appointment;
   }

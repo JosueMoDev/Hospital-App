@@ -17,7 +17,7 @@ interface CreateClinicDtoArgs {
     name: string,
     phone: string,
     address: Address,
-    accountId: string
+    createdBy: string
 }
 
 class Address {
@@ -34,7 +34,7 @@ class Address {
     public city!: string;
 
     constructor(args: Address) {
-      Object.assign(this, args)
+        Object.assign(this, args)
     }
 }
 export class CreateClinicDto {
@@ -60,7 +60,7 @@ export class CreateClinicDto {
     public address!: Address;
 
     @IsMongoId()
-    public readonly accountId!: string
+    public readonly createdBy!: string
 
 
     constructor(args: CreateClinicDtoArgs) {

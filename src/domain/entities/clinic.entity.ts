@@ -11,10 +11,10 @@ export interface ClinicOptions {
   name: string;
   phone: string;
   address: Address;
-  photoURL: string;
+  photoUrl: string;
   photoId: string;
   createdAt: Date;
-  accountId: string;
+  createdBy: string;
   status: boolean;
   lastUpdate: LastUpdate[]
 }
@@ -25,10 +25,10 @@ export class ClinicEntity {
   public name: string;
   public phone: string;
   public address: Address;
-  public photoURL: string;
+  public photoUrl: string;
   public photoId: string;
   public createdAt: Date;
-  public accountId: string;
+  public createdBy: string;
   public stutus: boolean;
   public lastUpdate: LastUpdate[]
 
@@ -39,10 +39,10 @@ export class ClinicEntity {
       name,
       phone,
       address,
-      photoURL,
+      photoUrl,
       photoId,
       createdAt,
-      accountId,
+      createdBy,
       status,
       lastUpdate
     } = options;
@@ -52,10 +52,10 @@ export class ClinicEntity {
       this.name = name,
       this.phone = phone,
       this.address = address,
-      this.photoURL = photoURL,
+      this.photoUrl = photoUrl,
       this.photoId = photoId,
       this.createdAt = createdAt,
-      this.accountId = accountId,
+      this.createdBy = createdBy,
       this.stutus = status,
       this.lastUpdate = lastUpdate
   }
@@ -67,10 +67,10 @@ export class ClinicEntity {
       name,
       phone,
       address,
-      photoURL,
+      photoUrl,
       photoId,
       createdAt,
-      accountId,
+      createdBy,
       status,
       lastUpdate
     } = object;
@@ -81,12 +81,12 @@ export class ClinicEntity {
       name,
       phone,
       address,
-      photoURL,
+      photoUrl,
       photoId,
       createdAt,
-      accountId,
+      createdBy,
       status,
-      lastUpdate
+      lastUpdate: lastUpdate ?? []
     });
     return clinic;
   }

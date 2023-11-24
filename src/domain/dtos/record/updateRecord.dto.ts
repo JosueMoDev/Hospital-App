@@ -11,10 +11,10 @@ import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 
 interface UpdateRecordDtoArgs {
   id: string;
-  doctor?: string;
-  patient?: string;
+  doctorId?: string;
+  patientId?: string;
   title?: string;
-  body?: string;
+  pdf?: string;
   lastUpdate: LastUpdate;
 }
 
@@ -27,11 +27,11 @@ export class UpdateRecordDto {
 
   @IsOptional()
   @IsMongoId()
-  public readonly doctor!: string;
+  public readonly doctorId!: string;
 
   @IsOptional()
   @IsMongoId()
-  public readonly patient!: string;
+  public readonly patientId!: string;
 
   @IsOptional()
   @IsString({ message: "Title should be a string" })
@@ -39,7 +39,7 @@ export class UpdateRecordDto {
 
   @IsOptional()
   @IsString({ message: "Body should be a string" })
-  public body!: string;
+  public pdf!: string;
 
   @IsNotEmpty({ message: "Last Update is required" })
   @IsObject()

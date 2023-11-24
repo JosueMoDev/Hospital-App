@@ -2,29 +2,29 @@ import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface RecordDtoArgs {
-    doctor: string,
-    patient: string,
+    doctorId: string,
+    patientId: string,
     title: string,
-    body: string,
+    pdf: string,
 }
 
 export class CreateRecordDto {
 
     @IsMongoId()
     @IsNotEmpty({ message: 'Doctor is required' })
-    public readonly doctor!: string;
+    public readonly doctorId!: string;
 
     @IsMongoId()
     @IsNotEmpty({ message: 'Patient is required' })
-    public readonly patient!: string;
+    public readonly patientId!: string;
 
     @IsString({ message: 'Title should be a string' })
     @IsNotEmpty({ message: 'Title is required' })
     public title!: string;
 
-    @IsString({ message: 'Body should be a string' })
-    @IsNotEmpty({ message: 'Body is required' })
-    public body!: string;
+    @IsString({ message: 'PDF URL should be a string' })
+    @IsNotEmpty({ message: 'PDF URL is required' })
+    public pdf!: string;
 
 
     constructor(args: RecordDtoArgs) {
