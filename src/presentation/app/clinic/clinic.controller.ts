@@ -59,8 +59,10 @@ export class ClinicController {
   }
 
   changeStatus = (request: Request, response: Response) => {
+    const [error, clinicDto] = UpdateClinicDto.update(request.body);
+    if (error) return response.status(400).json({ error });
     this.clinicService
-      .changingStatus(request.params.id)
+      .changingStatus(clinicDto!)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

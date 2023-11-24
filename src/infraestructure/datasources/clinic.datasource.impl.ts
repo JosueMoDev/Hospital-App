@@ -4,21 +4,25 @@ import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateC
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
     async findOneById(id: string): Promise<ClinicEntity> {
-        return id as any;
+        const clinic = await prisma.clinic.findFirst({
+            where: { id: id },
+        });
+
+        if (!clinic) throw CustomError.badRequest("Any clinic found");
+
+        return ClinicEntity.fromObject(clinic);
     }
+
     async findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
         return dto as any
     }
+
     async create(dto: CreateClinicDto): Promise<ClinicEntity> {
         try {
             const newClinic = await prisma.clinic.create({
                 data: {
-                    registerNumber: dto.registerNumber,
-                    name: dto.name,
-                    phone: dto.phone,
-                    address: dto.address,
+                    ...dto,
                     createdAt: new Date(),
-                    accountId: dto.createdBy,
                 }
             });
             return ClinicEntity.fromObject(newClinic);
@@ -29,8 +33,29 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return dto as any;
     }
-    async changeStatus(id: string): Promise<ClinicEntity> {
-        return id as any;
+    async changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+        const clinic = await this.findOneById(dto.id);
+        try {
+            const clinicInvalidated = await prisma.clinic.update({
+            where: {
+                id: clinic.id,
+            },
+            data: {
+                status: !clinic.stutus,
+                lastUpdate: [
+                ...clinic.lastUpdate,
+                {
+                    ...dto.lastUpdate,
+                    date: new Date(),
+                    action: "CHANGE CLINIC STATUS",
+                },
+                ],
+            },
+            });
+            return ClinicEntity.fromObject(clinicInvalidated);
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`);
+        }
     }
 
 }

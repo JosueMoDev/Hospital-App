@@ -20,8 +20,8 @@ export class ClinicService {
         return await this.repository.findMany(dto);
     }
 
-    public async changingStatus(id: string): Promise<ClinicEntity> {
-        return await this.repository.changeStatus(id);
+    public async changingStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+        return await this.repository.changeStatus(dto);
     }
 
 }

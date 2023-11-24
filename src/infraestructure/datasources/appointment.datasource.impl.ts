@@ -4,24 +4,28 @@ import { AppointmentDataSource, AppointmentEntity, CreateAppointmentDto, CustomE
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
     async findOneById(id: string): Promise<AppointmentEntity> {
-        return id as any;
+        const appointment = await prisma.appointment.findFirst({
+            where: {id: id}
+        });
+        if(!appointment) throw CustomError.badRequest('Any appointment found');
+
+        return AppointmentEntity.fromObject(appointment);
     }
+
     async findMany(dto: PaginationDto): Promise<AppointmentEntity[]> {
         return dto as any;
     }
+
     async create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
         try {
             const newAppointment = await prisma.appointment.create({
                 data: {
+                    ...dto,
                     startDate: new Date(dto.startDate),
                     endDate: new Date(dto.endDate),
-                    doctorId: dto.doctor,
-                    patientId: dto.patient,
-                    accountId: dto.doctor,
                     createdAt: new Date()
                 }
             });
-            console.log(newAppointment)
             return AppointmentEntity.fromObject(newAppointment);
         } catch (error) {
             throw CustomError.internalServer(`${error}`)
@@ -31,7 +35,12 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
         return dto as any;
     }
     async delete(id: string): Promise<AppointmentEntity> {
-        return id as any;
+        await this.findOneById(id);
+        const appointment = await prisma.appointment.delete({
+            where: { id: id },
+        });
+        
+        return AppointmentEntity.fromObject(appointment);
     }
 
 }

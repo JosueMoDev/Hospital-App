@@ -1,3 +1,4 @@
+import { LastUpdate } from "@prisma/client";
 
 export interface Address {
   city: string,
@@ -13,8 +14,9 @@ export interface ClinicOptions {
   photoURL: string;
   photoId: string;
   createdAt: Date;
-  createdBy: string;
+  accountId: string;
   status: boolean;
+  lastUpdate: LastUpdate[]
 }
 
 export class ClinicEntity {
@@ -26,8 +28,9 @@ export class ClinicEntity {
   public photoURL: string;
   public photoId: string;
   public createdAt: Date;
-  public createdBy: string;
+  public accountId: string;
   public stutus: boolean;
+  public lastUpdate: LastUpdate[]
 
   constructor(options: ClinicOptions) {
     const {
@@ -39,8 +42,9 @@ export class ClinicEntity {
       photoURL,
       photoId,
       createdAt,
-      createdBy,
+      accountId,
       status,
+      lastUpdate
     } = options;
 
     this.id = id,
@@ -51,8 +55,9 @@ export class ClinicEntity {
       this.photoURL = photoURL,
       this.photoId = photoId,
       this.createdAt = createdAt,
-      this.createdBy = createdBy,
-      this.stutus = status
+      this.accountId = accountId,
+      this.stutus = status,
+      this.lastUpdate = lastUpdate
   }
 
   static fromObject(object: { [key: string]: any }): ClinicEntity {
@@ -66,7 +71,8 @@ export class ClinicEntity {
       photoId,
       createdAt,
       accountId,
-      status
+      status,
+      lastUpdate
     } = object;
 
     const clinic = new ClinicEntity({
@@ -78,8 +84,9 @@ export class ClinicEntity {
       photoURL,
       photoId,
       createdAt,
-      createdBy: accountId,
-      status
+      accountId,
+      status,
+      lastUpdate
     });
     return clinic;
   }

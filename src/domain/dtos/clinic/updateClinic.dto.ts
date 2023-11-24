@@ -50,9 +50,8 @@ export class UpdateClinicDto {
   @Length(9, 9, { message: "Register Number  Format not valid" })
   @IsOptional()
   public registerNumber!: string;
-
+  @IsOptional()
   @IsString({ message: "Name should contain only letters" })
-  @IsNotEmpty({ message: "Name is required" })
   public name!: string;
 
   @IsPhoneNumber("SV", { message: "Phone Number not valid" })
@@ -73,6 +72,7 @@ export class UpdateClinicDto {
 
   constructor(args: UpdatedClinicDtoArgs) {
     Object.assign(this, args);
+    this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
 
   static update(

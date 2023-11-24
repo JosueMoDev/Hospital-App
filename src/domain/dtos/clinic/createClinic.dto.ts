@@ -16,8 +16,8 @@ interface CreateClinicDtoArgs {
     registerNumber: string,
     name: string,
     phone: string,
-    address: Address | any,
-    createdBy: string
+    address: Address,
+    accountId: string
 }
 
 class Address {
@@ -33,10 +33,8 @@ class Address {
     @IsNotEmpty()
     public city!: string;
 
-    constructor(street: string, state: string, city: string) {
-        this.street = street;
-        this.state = state;
-        this.city = city;
+    constructor(args: Address) {
+      Object.assign(this, args)
     }
 }
 export class CreateClinicDto {
@@ -62,16 +60,12 @@ export class CreateClinicDto {
     public address!: Address;
 
     @IsMongoId()
-    public readonly createdBy!: string
+    public readonly accountId!: string
 
 
     constructor(args: CreateClinicDtoArgs) {
         Object.assign(this, args);
-        const street = args.address ? args.address.street : undefined;
-        const state = args.address ? args.address.state : undefined;
-        const city = args.address ? args.address.city : undefined;
-
-        this.address = new Address(street, state, city);
+        this.address = new Address(args.address);
     }
 
     static create(object: CreateClinicDtoArgs): [undefined | CustomErrors[], CreateClinicDto?] {
