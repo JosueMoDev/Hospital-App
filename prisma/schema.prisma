@@ -28,9 +28,9 @@ type LastUpdate {
 }
 
 type Address {
-  city String
-  street String
-  state String
+  city String?
+  street String?
+  state String?
 }
 
 model Account {

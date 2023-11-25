@@ -13,7 +13,6 @@ export class ClinicController {
   createClinic = (request: Request, response: Response) => {
     const [error, createClinicDto] = CreateClinicDto.create(request.body);
     if (error) return response.status(400).json({ error });
-
     this.clinicService
       .creatingClinic(createClinicDto!)
       .then((clinic) => response.json(clinic))
@@ -26,7 +25,6 @@ export class ClinicController {
   updateClinic = (request: Request, response: Response) => {
     const [error, updateClinicDto] = UpdateClinicDto.update(request.body);
     if (error) return response.status(400).json({ error });
-
     this.clinicService
       .updatingClinic(updateClinicDto!)
       .then((updatedClinic) => response.json(updatedClinic))

@@ -23,49 +23,57 @@ interface CreateClinicDtoArgs {
 class Address {
     @IsString()
     @IsNotEmpty()
-    public street!: string;
+    public street: string;
 
     @IsString()
     @IsNotEmpty()
-    public state!: string;
+    public state: string;
 
     @IsString()
     @IsNotEmpty()
-    public city!: string;
+    public city: string;
 
     constructor(args: Address) {
-        Object.assign(this, args)
+        const { street, state, city } = args;
+        this.street = street;
+        this.state = state;
+        this.city = city;
+
     }
 }
 export class CreateClinicDto {
 
     @Length(9, 9, { message: "Register Number  Format not valid" })
     @IsNotEmpty({ message: "Register Number is required" })
-    public registerNumber!: string;
+    public registerNumber: string;
 
 
     @IsString({ message: "Name should contain only letters" })
     @IsNotEmpty({ message: "Name is required" })
-    public name!: string;
+    public name: string;
 
 
     @IsPhoneNumber("SV", { message: "Phone Number not valid" })
     @IsNotEmpty({ message: "Phone Number is required" })
-    public phone!: string;
+    public phone: string;
 
 
     @IsObject()
     @ValidateNested()
     @Type(() => Address)
-    public address!: Address;
+    public address: Address;
 
     @IsMongoId()
-    public readonly createdBy!: string
+    public readonly createdBy: string
 
 
     constructor(args: CreateClinicDtoArgs) {
-        Object.assign(this, args);
-        this.address = new Address(args.address);
+        const { registerNumber, name, phone, address, createdBy } = args;
+        this.registerNumber = registerNumber;
+        this.name = name;
+        this.phone = phone;
+        this.address = new Address(address);
+        this.createdBy = createdBy;
     }
 
     static create(object: CreateClinicDtoArgs): [undefined | CustomErrors[], CreateClinicDto?] {

@@ -12,7 +12,6 @@ import {
 
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 
-
 interface UpdatedClinicDtoArgs {
   id: string;
   registerNumber?: string,
@@ -25,59 +24,66 @@ interface UpdatedClinicDtoArgs {
 }
 
 class Address {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  public street!: string;
+  public street?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  public province!: string;
+  public state?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  public city!: string;
+  public city?: string;
 
-  constructor(args: { street: string; province: string; city: string }) {
-    Object.assign(this, args);
+  constructor(args: Address) {
+    if (args.street) this.street = args?.street;
+    if (args.state) this.state = args?.state;
+    if (args.city) this.city = args?.city;
   }
 }
 export class UpdateClinicDto {
   @IsMongoId()
   @IsNotEmpty({ message: "Clinic ID is required" })
-  public id!: string;
+  public id: string;
 
   @IsOptional()
   @Length(9, 9, { message: "Register Number  Format not valid" })
-  @IsOptional()
-  public registerNumber!: string;
+  public registerNumber?: string;
+
   @IsOptional()
   @IsString({ message: "Name should contain only letters" })
-  public name!: string;
+  public name?: string;
 
   @IsPhoneNumber("SV", { message: "Phone Number not valid" })
   @IsOptional()
-  public phone!: string;
+  public phone?: string;
 
   @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => Address)
-  public address!: Address;
+  public address?: Address | undefined;
 
   @IsNotEmpty({ message: "Last Update is required" })
   @IsObject()
   @ValidateNested()
   @Type(() => LastUpdate)
-  public lastUpdate!: LastUpdate;
+  public lastUpdate: LastUpdate;
 
   constructor(args: UpdatedClinicDtoArgs) {
-    Object.assign(this, args);
-    this.lastUpdate = new LastUpdate(args.lastUpdate);
+    const { id, registerNumber, name, phone, address, lastUpdate } = args;
+    this.id = id;
+    this.registerNumber = registerNumber;
+    this.name = name;
+    this.phone = phone;
+    this.address = address ? new Address(address) : undefined;
+    this.lastUpdate = new LastUpdate(lastUpdate);
   }
-
   static update(
     object: UpdatedClinicDtoArgs
   ): [undefined | CustomErrors[], UpdateClinicDto?] {
+
     const updateClinicDto = new UpdateClinicDto(object);
 
     const [errors, validatedDto] =
@@ -85,6 +91,11 @@ export class UpdateClinicDto {
 
     if (errors) return [errors];
 
-    return [undefined, validatedDto];
+    const dto = Object.fromEntries(
+      Object.entries(validatedDto!).filter(([_, value]) => value !== undefined)
+    ) as UpdateClinicDto;
+
+
+    return [undefined, dto];
   }
 }
