@@ -31,9 +31,10 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         }
     }
     async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
+        
         const { id, lastUpdate, ...rest } = dto;
 
-        if (!rest.registerNumber && !rest.name && !rest.phone && !rest.address) throw CustomError.badRequest('Nothing to updated');
+        if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
 
         const clinic = await this.findOneById(id);
 

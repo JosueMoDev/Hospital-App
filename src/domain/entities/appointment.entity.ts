@@ -1,3 +1,5 @@
+import { LastUpdate } from "@prisma/client";
+
 export interface AppointmentEntityOptions {
   id: string;
   startDate: Date;
@@ -6,6 +8,7 @@ export interface AppointmentEntityOptions {
   patientId: string;
   createdAt: Date;
   createdBy: string;
+  lastUpdate: LastUpdate[]
 }
 
 export class AppointmentEntity {
@@ -16,6 +19,7 @@ export class AppointmentEntity {
   public patientId: string;
   public createdAt: Date;
   public createdBy: string;
+  public lastUpdate: LastUpdate[]
 
   constructor(options: AppointmentEntityOptions) {
     const {
@@ -25,21 +29,24 @@ export class AppointmentEntity {
       doctorId,
       patientId,
       createdAt,
-      createdBy
+      createdBy,
+      lastUpdate,
+
     } = options;
 
     this.id = id,
-      this.startDate = startDate,
-      this.endDate = endDate,
-      this.doctorId = doctorId,
-      this.patientId = patientId,
-      this.createdAt = createdAt,
-      this.createdBy = createdBy;
+    this.startDate = startDate,
+    this.endDate = endDate,
+    this.doctorId = doctorId,
+    this.patientId = patientId,
+    this.createdAt = createdAt,
+    this.createdBy = createdBy;
+    this.lastUpdate = lastUpdate;
 
   }
 
-  static fromObject(object: { [key: string]: any }): AppointmentEntity {
-    const { id, startDate, endDate, doctorId, patientId, createdAt, createdBy } = object;
+  static fromObject(object: AppointmentEntity ): AppointmentEntity {
+    const { id, startDate, endDate, doctorId, patientId, createdAt, createdBy, lastUpdate } = object;
     const appointment = new AppointmentEntity({
       id,
       startDate,
@@ -48,6 +55,7 @@ export class AppointmentEntity {
       patientId,
       createdAt,
       createdBy,
+      lastUpdate
     });
     return appointment;
   }

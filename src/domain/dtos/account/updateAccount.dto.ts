@@ -78,7 +78,16 @@ export class UpdateAccountDto {
   public lastUpdate!: LastUpdate;
 
   constructor(args: UpdateAccountDtoArgs) {
-    Object.assign(this, args);
+    this.id = args.id;
+    if(args.duiNumber) this.duiNumber = args.duiNumber;
+    if(args.email) this.email = args.email;
+    if(args.password) this.password = args.password;
+    if(args.name) this.name = args.name;
+    if(args.lastname) this.lastname = args.lastname;
+    if(args.gender) this.gender = args.gender;
+    if(args.phone) this.phone = args.phone;
+    if(args.isValidated) this.isValidated = args.isValidated;
+    if(args.role) this.role = args.role;
     this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
   static update(
