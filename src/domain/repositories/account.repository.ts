@@ -1,4 +1,4 @@
-import { CreateAccountDto, PaginationDto, UpdateAccountDto, UpdatePasswordDto } from "../dtos";
+import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, UpdatePasswordDto } from "../dtos";
 import { AccountEntity } from "../entities";
 
 export abstract class AccountRepository {
@@ -15,5 +15,5 @@ export abstract class AccountRepository {
 
     abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
 
-    abstract confirmPassword(password: string, id: string): Promise<Boolean>;
+    abstract confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean>;
 }

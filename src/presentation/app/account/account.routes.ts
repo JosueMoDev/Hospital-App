@@ -19,7 +19,7 @@ export class AccountRoutes {
         router.get('/find-many', controller.findManyAccounts);
         router.patch('/change-status', controller.changeAccountStatus);
         router.patch('/change-password', controller.changePassowordAccount);
-        router.get('/confirm-password/:id', controller.confirmPassword);
+        router.get('/confirm-password', controller.confirmPassword);
 
         return router;
     }

@@ -30,7 +30,29 @@ export class RecordDataSourceImpl implements RecordDataSource {
         }
     }
     async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
-        return dto as any;
+        const { id, lastUpdate, ...rest } = dto;
+        if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
+        const record = await this.findOneById(id);
+
+        try {
+            const recordUpdated = await prisma.record.update({
+                where: { id: id },
+                data: {
+                    ...rest,
+                    lastUpdate: [
+                        ...record.lastUpdate,
+                        {
+                            account: lastUpdate.account,
+                            date: DateFnsAdapter.formatDate(),
+                            action: "UPDATE RECORD",
+                        },
+                    ],
+                },
+            });
+            return RecordEntity.fromObject(recordUpdated);
+        } catch (error) {
+            throw CustomError.internalServer(`${error}`);
+        }
     }
     async changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
         const record = await this.findOneById(dto.id);

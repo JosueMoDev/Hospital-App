@@ -5,6 +5,7 @@ import {
   HandlerError,
   PaginationDto,
   UpdateAccountDto,
+  ConfirmPasswordDto,
   UpdatePasswordDto,
 } from "../../../domain";
 
@@ -65,7 +66,7 @@ export class AccountController {
     if (error) return response.status(400).json({ error });
 
     this.accountService
-      .changingPasswordAccoun(passwordDto!)
+      .changingPasswordAccount(passwordDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -87,10 +88,11 @@ export class AccountController {
   };
 
   confirmPassword = (request: Request, response: Response) => {
-    if (!request.params.id && request.body.password) return response.status(400).json({ error: "missing id or password" });
+    const [error, accountDto] = ConfirmPasswordDto.update(request.body);
+    if (error) return response.status(400).json({ error });
 
     this.accountService
-      .checkingPassword(request.body, request.params.id)
+      .checkingPassword(accountDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

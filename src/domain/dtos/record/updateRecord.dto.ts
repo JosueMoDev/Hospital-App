@@ -14,7 +14,6 @@ interface UpdateRecordDtoArgs {
   doctorId?: string;
   patientId?: string;
   title?: string;
-  pdf?: string;
   lastUpdate: LastUpdate;
 }
 
@@ -37,9 +36,6 @@ export class UpdateRecordDto {
   @IsString({ message: "Title should be a string" })
   public title!: string;
 
-  @IsOptional()
-  @IsString({ message: "Body should be a string" })
-  public pdf!: string;
 
   @IsNotEmpty({ message: "Last Update is required" })
   @IsObject()
@@ -48,7 +44,10 @@ export class UpdateRecordDto {
   public lastUpdate!: LastUpdate;
 
   constructor(args: UpdateRecordDtoArgs) {
-    Object.assign(this, args);
+    this.id = args.id;
+    if (args.doctorId) this.doctorId = args.doctorId;
+    if (args.patientId) this.patientId = args.patientId;
+    if (args.title) this.title = args.title;
     this.lastUpdate = new LastUpdate(args.lastUpdate);
 
   }

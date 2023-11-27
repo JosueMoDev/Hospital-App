@@ -4,7 +4,6 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsObject,
-  IsOptional,
   MinLength,
   ValidateNested,
 } from "class-validator";
@@ -21,11 +20,11 @@ export class UpdatePasswordDto {
   @IsNotEmpty({ message: "Id is required" })
   public id!: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   public newPassword!: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   public oldPassword!: string;
 
@@ -37,7 +36,10 @@ export class UpdatePasswordDto {
   public lastUpdate!: LastUpdate;
 
   constructor(args: UpdatePasswordDto) {
-    Object.assign(this, args);
+    this.id = args.id;
+    this.newPassword = args.newPassword;
+    this.oldPassword = args.oldPassword;
+    this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
   static update(
     object: UpdatePasswordDtoArgs

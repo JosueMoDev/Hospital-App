@@ -5,6 +5,7 @@ import {
   CreateAccountDto,
   PaginationDto,
   UpdateAccountDto,
+  ConfirmPasswordDto,
   UpdatePasswordDto,
 } from "../../domain";
 
@@ -34,7 +35,7 @@ export class AccountRepositoryImpl implements AccountRepository {
     return this.datasource.changePasswordAccount(dto);
   }
 
-  confirmPassword(password: string, id: string): Promise<Boolean> {
-    return this.datasource.confirmPassword(password, id);
+  confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean> {
+    return this.datasource.confirmPassword(dto);
   }
 }

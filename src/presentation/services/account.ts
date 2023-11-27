@@ -4,6 +4,7 @@ import {
   CreateAccountDto,
   PaginationDto,
   UpdateAccountDto,
+  ConfirmPasswordDto,
   UpdatePasswordDto,
 } from "../../domain";
 
@@ -32,16 +33,15 @@ export class AccountService {
     return await this.repository.changeStatusAccount(dto);
   }
 
-  public async changingPasswordAccoun(
+  public async changingPasswordAccount(
     dto: UpdatePasswordDto
   ): Promise<Boolean> {
     return await this.repository.changePasswordAccount(dto);
   }
 
   public async checkingPassword(
-    password: string,
-    id: string
+    dto: ConfirmPasswordDto
   ): Promise<Boolean> {
-    return await this.repository.confirmPassword(password, id);
+    return await this.repository.confirmPassword(dto);
   }
 }
