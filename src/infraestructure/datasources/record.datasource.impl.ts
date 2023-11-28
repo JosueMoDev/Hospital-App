@@ -40,7 +40,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
             nextPage,
             previousPage
         });
-        const recordsMapped = records.map((record) => RecordEntity.fromObject(record));
+        const recordsMapped = records.map(RecordEntity.fromObject);
         return { pagination, records: recordsMapped }
     }
     async create(dto: CreateRecordDto): Promise<RecordEntity> {

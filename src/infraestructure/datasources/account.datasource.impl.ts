@@ -41,7 +41,34 @@ export class AccountDataSourceImpl implements AccountDataSource {
     }
 
     async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
-        return dto as any;
+        const { page: currentPage, pageSize } = dto;
+        const [accounts, total] = await Promise.all([
+            prisma.account.findMany({
+                skip: (currentPage - 1) * pageSize,
+                take: pageSize,
+                where: {}
+            }),
+            prisma.account.count({ where: {} })
+        ]);
+        const totalPages = Math.ceil(total / pageSize);
+
+        const nextPage = (currentPage < totalPages)
+            ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
+            : null;
+
+        const previousPage = (currentPage > 1)
+            ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
+            : null;
+
+        const pagination = PaginationEntity.pagination({
+            currentPage,
+            total,
+            pageSize,
+            nextPage,
+            previousPage
+        });
+        const accountsMapped = accounts.map(AccountEntity.fromObject);
+        return { pagination, accounts: accountsMapped };
     }
 
     async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {

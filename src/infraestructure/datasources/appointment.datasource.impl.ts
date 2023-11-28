@@ -20,7 +20,34 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
   }
 
   async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, appointments: AppointmentEntity[] }> {
-    return dto as any;
+    const { page: currentPage, pageSize } = dto;
+    const [appointments, total] = await Promise.all([
+      prisma.appointment.findMany({
+        skip: (currentPage - 1) * pageSize,
+        take: pageSize,
+        where: {}
+      }),
+      prisma.appointment.count({ where: {} })
+    ]);
+    const totalPages = Math.ceil(total / pageSize);
+
+    const nextPage = (currentPage < totalPages)
+      ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
+      : null;
+
+    const previousPage = (currentPage > 1)
+      ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
+      : null;
+
+    const pagination = PaginationEntity.pagination({
+      currentPage,
+      total,
+      pageSize,
+      nextPage,
+      previousPage
+    });
+    const appointmentsMapped = appointments.map(AppointmentEntity.fromObject);
+    return { pagination, appointments: appointmentsMapped }
   }
 
   async create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {

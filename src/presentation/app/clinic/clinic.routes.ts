@@ -16,7 +16,7 @@ export class ClinicRoutes {
         router.post('/create', controller.createClinic);
         router.patch('/update', controller.updateClinic);
         router.get('/find-one/:id', controller.findOneById);
-        router.get('/find-many', controller.findOneById);
+        router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
 
         return router;

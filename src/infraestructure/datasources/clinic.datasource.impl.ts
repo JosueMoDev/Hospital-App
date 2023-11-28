@@ -14,7 +14,34 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     }
 
     async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }> {
-        return dto as any
+        const { page: currentPage, pageSize } = dto;
+        const [clinics, total] = await Promise.all([
+            prisma.clinic.findMany({
+                skip: (currentPage - 1) * pageSize,
+                take: pageSize,
+                where: {}
+            }),
+            prisma.clinic.count({ where: {} })
+        ]);
+        const totalPages = Math.ceil(total / pageSize);
+
+        const nextPage = (currentPage < totalPages)
+            ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
+            : null;
+
+        const previousPage = (currentPage > 1)
+            ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
+            : null;
+
+        const pagination = PaginationEntity.pagination({
+            currentPage,
+            total,
+            pageSize,
+            nextPage,
+            previousPage
+        });
+        const clinicsMapped = clinics.map(ClinicEntity.fromObject);
+        return { pagination, clinics: clinicsMapped }
     }
 
     async create(dto: CreateClinicDto): Promise<ClinicEntity> {
