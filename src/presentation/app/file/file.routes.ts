@@ -3,6 +3,7 @@ import { FileDataSourceImpl } from "../../../infraestructure/datasources/file.da
 import { FileRepositoryImpl } from "../../../infraestructure/repositories/file.repository.impl";
 import { FileService } from "../../services";
 import { FileController } from "./file.controller";
+import { FileUploadMiddleware } from "../../middlewares";
 
 export class FileRoutes {
 
@@ -14,10 +15,11 @@ export class FileRoutes {
         const fileService = new FileService(repository);
         const controller = new FileController(fileService);
 
+        router.use(FileUploadMiddleware.containFiles);
         router.post('/photo', controller.uploadPhoto);
 
         return router;
 
     }
-    
+
 }

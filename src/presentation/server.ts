@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import compression from 'compression';
+import fileUplad from 'express-fileupload'
 interface serverConfig {
     port: number;
     routes: Router;
@@ -14,15 +15,16 @@ export class Server {
         const { port, routes } = args;
 
         this.port = port,
-        this.routes = routes
+            this.routes = routes
     }
 
 
     async start() {
         //* Middlewares
-        this.app.use(express.json()); 
+        this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true })); //! x-www-form-urlencoded
         this.app.use(compression());
+        this.app.use(fileUplad({}))
         //* Routes
         this.app.use(this.routes);
 

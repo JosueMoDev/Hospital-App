@@ -2,7 +2,9 @@ import { FileDataSource } from "../../domain";
 
 export class FileDataSourceImpl implements FileDataSource {
 
-    async uploadFile(): Promise<boolean> {
+    async uploadFile(filePath: string): Promise<boolean> {
+
+        console.log(filePath);
         return true;
     }
     async deleteFile(id: string): Promise<boolean> {
