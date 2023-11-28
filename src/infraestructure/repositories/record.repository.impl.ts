@@ -1,4 +1,4 @@
-import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto } from "../../domain";
+import { CreateRecordDto, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto } from "../../domain";
 
 export class RecordRepositoryImpl implements RecordRepository {
 
@@ -8,7 +8,7 @@ export class RecordRepositoryImpl implements RecordRepository {
         throw new Error("Method not implemented.");
     }
 
-    findMany(dto: PaginationDto): Promise<RecordEntity[]> {
+    findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }> {
         return this.datasource.findMany(dto);
     }
     create(dto: CreateRecordDto): Promise<RecordEntity> {

@@ -1,4 +1,4 @@
-import { ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto, UpdateClinicDto } from "../../domain";
+import { ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto, PaginationEntity, UpdateClinicDto } from "../../domain";
 
 export class ClinicService {
 
@@ -16,7 +16,7 @@ export class ClinicService {
         return await this.repository.findOneById(id);
     }
 
-    public async findingMany(dto: PaginationDto): Promise<ClinicEntity[]> {
+    public async findingMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }> {
         return await this.repository.findMany(dto);
     }
 

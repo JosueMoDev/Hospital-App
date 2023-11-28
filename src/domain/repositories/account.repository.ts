@@ -1,11 +1,11 @@
 import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, UpdatePasswordDto } from "../dtos";
-import { AccountEntity } from "../entities";
+import { AccountEntity, PaginationEntity } from "../entities";
 
 export abstract class AccountRepository {
 
     abstract findOneById(id: string): Promise<AccountEntity>;
 
-    abstract findMany(dto: PaginationDto): Promise<AccountEntity[]>;
+    abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }>;
 
     abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
 

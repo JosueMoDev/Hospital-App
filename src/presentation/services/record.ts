@@ -1,4 +1,4 @@
-import { CreateRecordDto, PaginationDto, RecordEntity, RecordRepository } from "../../domain";
+import { CreateRecordDto, PaginationDto, PaginationEntity, RecordEntity, RecordRepository } from "../../domain";
 import { UpdateRecordDto } from "../../domain/dtos/record/updateRecord.dto";
 
 export class RecordService {
@@ -16,7 +16,7 @@ export class RecordService {
     return await this.repository.findOneById(id);
   }
 
-  public async findingMany(dto: PaginationDto): Promise<RecordEntity[]> {
+  public async findingMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }> {
     return await this.repository.findMany(dto);
   }
 

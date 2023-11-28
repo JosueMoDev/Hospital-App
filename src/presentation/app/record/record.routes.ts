@@ -17,7 +17,7 @@ export class RecordRoutes {
         router.patch('/update', controller.updateRecord);
         router.get('/find-one/:id', controller.findOneById);
         router.get('/find-many', controller.findMany);
-        router.get('/hidde/:id', controller.hiddeRecord);
+        router.get('/hidde/:id', controller.changeStatus);
 
         return router;
     }

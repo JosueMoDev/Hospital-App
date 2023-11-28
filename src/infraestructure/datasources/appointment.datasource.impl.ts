@@ -5,6 +5,7 @@ import {
   CreateAppointmentDto,
   CustomError,
   PaginationDto,
+  PaginationEntity,
   UpdateAppointmentDto,
 } from "../../domain";
 
@@ -18,7 +19,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     return AppointmentEntity.fromObject(appointment);
   }
 
-  async findMany(dto: PaginationDto): Promise<AppointmentEntity[]> {
+  async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, appointments: AppointmentEntity[] }> {
     return dto as any;
   }
 
@@ -42,8 +43,8 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
     const appointment = await this.findOneById(id);
 
-    if(rest.startDate) rest.startDate = DateFnsAdapter.formatDates(dto.startDate!);
-    if(rest.endDate) rest.endDate = DateFnsAdapter.formatDates(dto.endDate!);
+    if (rest.startDate) rest.startDate = DateFnsAdapter.formatDates(dto.startDate!);
+    if (rest.endDate) rest.endDate = DateFnsAdapter.formatDates(dto.endDate!);
 
     try {
       const appointmentUpdated = await prisma.appointment.update({

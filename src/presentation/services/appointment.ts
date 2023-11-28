@@ -1,4 +1,4 @@
-import { AppointmentEntity, AppointmentRepository, CreateAppointmentDto, PaginationDto, UpdateAppointmentDto } from "../../domain";
+import { AppointmentEntity, AppointmentRepository, CreateAppointmentDto, PaginationDto, PaginationEntity, UpdateAppointmentDto } from "../../domain";
 
 export class AppointmentService {
 
@@ -8,7 +8,7 @@ export class AppointmentService {
         return await this.repository.findOneById(id);
     }
 
-    public async findingManyAppointments(dto: PaginationDto): Promise<AppointmentEntity[]> {
+    public async findingManyAppointments(dto: PaginationDto): Promise<{ pagination: PaginationEntity, appointments: AppointmentEntity[] }> {
         return await this.repository.findMany(dto);
     }
 

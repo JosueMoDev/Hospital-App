@@ -1,11 +1,11 @@
 import { CreateRecordDto, PaginationDto, UpdateRecordDto } from "../dtos";
-import { RecordEntity } from "../entities";
+import { PaginationEntity, RecordEntity } from "../entities";
 
 export abstract class RecordDataSource {
 
   abstract findOneById(id: string): Promise<RecordEntity>
 
-  abstract findMany(dto: PaginationDto): Promise<RecordEntity[]>;
+  abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }>;
 
   abstract create(dto: CreateRecordDto): Promise<RecordEntity>;
 

@@ -1,6 +1,6 @@
 import { LastUpdate } from '../dtos/utils/lastUpdate';
 
-export interface RecordOptions {
+interface RecordOptions {
     id: string,
     doctorId: string;
     patientId: string;
@@ -9,8 +9,9 @@ export interface RecordOptions {
     pdf: string;
     status: boolean;
     lastUpdate: LastUpdate[];
-
 }
+
+
 
 export class RecordEntity {
     public id: string;
@@ -69,4 +70,5 @@ export class RecordEntity {
 
         return record;
     }
+
 }

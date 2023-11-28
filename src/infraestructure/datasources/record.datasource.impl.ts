@@ -1,5 +1,5 @@
-import { DateFnsAdapter, prisma } from "../../config";
-import { CreateRecordDto, CustomError, PaginationDto, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
+import { DateFnsAdapter, Environment, prisma } from "../../config";
+import { CreateRecordDto, CustomError, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
 
 export class RecordDataSourceImpl implements RecordDataSource {
 
@@ -13,8 +13,35 @@ export class RecordDataSourceImpl implements RecordDataSource {
         return RecordEntity.fromObject(record);
     }
 
-    async findMany(dto: PaginationDto): Promise<RecordEntity[]> {
-        return dto as any
+    async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }> {
+        const { page: currentPage, pageSize } = dto;
+        const [records, total] = await Promise.all([
+            prisma.record.findMany({
+                skip: (currentPage - 1) * pageSize,
+                take: pageSize,
+                where: {}
+            }),
+            prisma.record.count({ where: {} })
+        ]);
+        const totalPages = Math.ceil(total / pageSize);
+
+        const nextPage = (currentPage < totalPages)
+            ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
+            : null;
+
+        const previousPage = (currentPage > 1)
+            ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
+            : null;
+
+        const pagination = PaginationEntity.pagination({
+            currentPage,
+            total,
+            pageSize,
+            nextPage,
+            previousPage
+        });
+        const recordsMapped = records.map((record) => RecordEntity.fromObject(record));
+        return { pagination, records: recordsMapped }
     }
     async create(dto: CreateRecordDto): Promise<RecordEntity> {
         try {

@@ -42,8 +42,7 @@ export class RecordController {
   };
 
   findMany = (request: Request, response: Response) => {
-
-    const [error, pagDto] = PaginationDto.create(request.body);
+    const [error, pagDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
 
     this.recordService
@@ -56,7 +55,7 @@ export class RecordController {
   };
 
 
-  hiddeRecord = (request: Request, response: Response) => {
+  changeStatus = (request: Request, response: Response) => {
     const [error, recordDto] = UpdateRecordDto.update(request.body);
     if (error) return response.status(400).json({ error });
     this.recordService

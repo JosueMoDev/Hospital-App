@@ -6,6 +6,7 @@ import {
   UpdateAccountDto,
   ConfirmPasswordDto,
   UpdatePasswordDto,
+  PaginationEntity,
 } from "../../domain";
 
 export class AccountService {
@@ -17,7 +18,7 @@ export class AccountService {
 
   public async findingManyAccounts(
     dto: PaginationDto
-  ): Promise<AccountEntity[]> {
+  ): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
     return await this.repository.findMany(dto);
   }
 

@@ -7,6 +7,7 @@ import {
   UpdateAccountDto,
   ConfirmPasswordDto,
   UpdatePasswordDto,
+  PaginationEntity,
 } from "../../domain";
 
 export class AccountRepositoryImpl implements AccountRepository {
@@ -16,7 +17,7 @@ export class AccountRepositoryImpl implements AccountRepository {
     return this.datasource.findOneById(id);
   }
 
-  findMany(dto: PaginationDto): Promise<AccountEntity[]> {
+  findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
     return this.datasource.findMany(dto);
   }
 

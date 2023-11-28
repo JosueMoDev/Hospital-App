@@ -9,6 +9,7 @@ import {
     UpdateAccountDto,
     ConfirmPasswordDto,
     UpdatePasswordDto,
+    PaginationEntity,
 } from "../../domain";
 const genderT = {
     male: Gender.MALE,
@@ -39,7 +40,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
         return AccountEntity.fromObject(existAccount);
     }
 
-    async findMany(dto: PaginationDto): Promise<AccountEntity[]> {
+    async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
         return dto as any;
     }
 

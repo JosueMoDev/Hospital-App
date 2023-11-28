@@ -1,16 +1,8 @@
-import { IsEnum, IsInt, IsOptional, IsPositive, IsString, Min, validateSync } from "class-validator";
+import { IsInt, IsOptional, IsPositive, Min } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
-
-export enum By {
-  all = 'all',
-  doctor = 'doctor',
-  patient = 'patient'
-}
-
 interface PaginationDtoArgs {
-  limit?: number;
-  offset?: number;
-  by?: string;
+  pageSize?: number;
+  page?: number;
 }
 
 export class PaginationDto {
@@ -20,27 +12,18 @@ export class PaginationDto {
   @IsInt()
   @IsPositive()
   @Min(1, { message: 'Page should be greater than 0' })
-  public readonly offset!: number;
+  public readonly page!: number;
 
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @Min(1, { message: 'Limit should be greater than 0' })
-  public readonly limit!: number;
+  @Min(5, { message: 'Limit should be greater than 5' })
+  public readonly pageSize!: number;
 
-
-  @IsOptional()
-  @IsString()
-  @IsEnum(By)
-  public readonly by!: string | undefined;
 
   private constructor(args: PaginationDtoArgs) {
-
-    const by = args.by ? (By[args.by as By] ?? args.by) : By.all;
-
-    this.by = args.by ? by : undefined;
-    this.limit = args.limit ? +args.limit : 1
-    this.offset = args.offset ? +args.offset : 10
+    this.page = args.page ? +args.page : 1;
+    this.pageSize = args.pageSize ? +args.pageSize : 5;
   }
 
   static create(object: PaginationDtoArgs): [CustomErrors[]?, PaginationDto?] {

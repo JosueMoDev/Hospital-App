@@ -1,5 +1,5 @@
 import { DateFnsAdapter, prisma } from "../../config";
-import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError } from "../../domain";
+import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError, PaginationEntity } from "../../domain";
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
@@ -13,7 +13,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         return ClinicEntity.fromObject(clinic);
     }
 
-    async findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
+    async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }> {
         return dto as any
     }
 
@@ -31,7 +31,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         }
     }
     async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
-        
+
         const { id, lastUpdate, ...rest } = dto;
 
         if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");

@@ -1,11 +1,11 @@
 import { UpdateClinicDto, PaginationDto, CreateClinicDto } from "../dtos";
-import { ClinicEntity } from "../entities";
+import { ClinicEntity, PaginationEntity } from "../entities";
 
 export abstract class ClinicDataSource {
 
    abstract findOneById(id: string): Promise<ClinicEntity>;
 
-   abstract findMany(dto: PaginationDto): Promise<ClinicEntity[]>;
+   abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }>;
 
    abstract create(dto: CreateClinicDto): Promise<ClinicEntity>;
 
