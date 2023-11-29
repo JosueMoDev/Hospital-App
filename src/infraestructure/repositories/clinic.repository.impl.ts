@@ -4,6 +4,13 @@ export class ClinicRepositoyImpl implements ClinicRepository {
 
     constructor(private readonly datasource: ClinicDataSource) { }
 
+    uploadPhoto(dto: any): Promise<any> {
+        return this.datasource.uploadPhoto(dto);
+    }
+    deletePhoto(dto: any): Promise<any> {
+        return this.datasource.deletePhoto(dto);
+    }
+
     findOneById(id: string): Promise<ClinicEntity> {
         return this.datasource.findOneById(id);
     }
@@ -16,6 +23,7 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.update(dto);
     }
+  
     changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.changeStatus(dto);
     }

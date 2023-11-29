@@ -2,10 +2,12 @@ import { Router } from "express"
 import { ClinicDataSourceImpl, ClinicRepositoyImpl } from '../../../infraestructure';
 import { ClinicService } from "../../services";
 import { ClinicController } from "./clinic.controller";
+import { FileUploadMiddleware } from "../../middlewares";
 
 export class ClinicRoutes {
 
     static get routes(): Router {
+        
         const router = Router();
 
         const datasource = new ClinicDataSourceImpl();
@@ -18,6 +20,9 @@ export class ClinicRoutes {
         router.get('/find-one/:id', controller.findOneById);
         router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
+
+        router.use(FileUploadMiddleware.containFiles);
+        router.post('/upload-photo', controller.uploadPhoto);
 
         return router;
     }

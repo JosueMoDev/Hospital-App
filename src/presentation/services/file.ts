@@ -2,7 +2,6 @@ import { UploadedFile } from "express-fileupload";
 import { CustomError, FileRepository } from "../../domain";
 import path from "path";
 import fs from 'fs';
-import { UuidAdapter } from "../../config";
 
 
 export class FileService {
@@ -27,11 +26,27 @@ export class FileService {
             const destination = path.resolve(__dirname, '../../../', 'uploads');
             this.checkFolder(destination);
 
-            const fileName = `${UuidAdapter.uuidv4()}.${fileExtension}`;
+            const fileName = `${file.name}.${fileExtension}`;
             const temporaryDestination = `${destination}/${fileName}`;
             file.mv(temporaryDestination);
             // verificar que la funcion mv hay podido crear la imagen sino lanzar excepcion
-            return await this.repository.uploadFile(temporaryDestination);
+            const result = await this.repository.uploadFile(temporaryDestination);
+
+            try {
+                const wasdeleted = fs.unlinkSync(temporaryDestination);
+                const r = fs.existsSync(
+                  temporaryDestination
+                );
+                console.log({exists: r, wasdeleted})
+            } catch (error) {
+                console.log(error);
+            } 
+                
+
+            return result
+
+
+            
 
         } catch (error) {
 

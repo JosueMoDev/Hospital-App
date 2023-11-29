@@ -12,4 +12,8 @@ export abstract class ClinicRepository {
    abstract update(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
    abstract changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity>;
+
+   abstract uploadPhoto(dto: any): Promise<any>;
+
+   abstract deletePhoto(dto:any): Promise<any>;
 }
