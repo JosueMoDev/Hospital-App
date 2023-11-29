@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import compression from 'compression';
-import fileUplad from 'express-fileupload'
+import { ExpressFileUploadAdapter } from '../config/adapters/expressFileUploadAdapter';
 interface serverConfig {
     port: number;
     routes: Router;
@@ -24,7 +24,7 @@ export class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true })); //! x-www-form-urlencoded
         this.app.use(compression());
-        this.app.use(fileUplad({}))
+        this.app.use(ExpressFileUploadAdapter.configure())
         //* Routes
         this.app.use(this.routes);
 

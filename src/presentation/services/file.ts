@@ -1,58 +1,42 @@
 import { UploadedFile } from "express-fileupload";
 import { CustomError, FileRepository } from "../../domain";
-import path from "path";
 import fs from 'fs';
+import { Environment } from "../../config";
 
 
 export class FileService {
 
     constructor(private readonly repository: FileRepository) { }
 
-    private checkFolder(folderPath: string) {
+    private checkIfFolderExist(folderPath: string) {
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath);
         }
     }
 
-    public async uploadingFile(file: UploadedFile): Promise<any> {
+    public async uploadingFile(uploadArgs: any): Promise<any> {
+        const { file, args } = uploadArgs;
         try {
-            const isValidFileExtension = ['png', 'jpg', 'jpge', 'pdf'];
-            const fileExtension: string = file.mimetype.split('/').at(1) ?? '';
-            if (!isValidFileExtension.includes(fileExtension)) {
-                throw CustomError
-                    .badRequest(`Invalid extension: ${fileExtension}, valid ones ${isValidFileExtension}`);
-            }
+            // ? Get File Extension
+            const fileExtension = file.mimetype.split('/').at(1)!;
 
-            const destination = path.resolve(__dirname, '../../../', 'uploads');
-            this.checkFolder(destination);
+            this.checkIfFolderExist(Environment.TEMP_UPLOAD_PATH);
 
             const fileName = `${file.name}.${fileExtension}`;
-            const temporaryDestination = `${destination}/${fileName}`;
-            file.mv(temporaryDestination);
-            // verificar que la funcion mv hay podido crear la imagen sino lanzar excepcion
-            const result = await this.repository.uploadFile(temporaryDestination);
 
-            try {
-                const wasdeleted = fs.unlinkSync(temporaryDestination);
-                const r = fs.existsSync(
-                  temporaryDestination
-                );
-                console.log({exists: r, wasdeleted})
-            } catch (error) {
-                console.log(error);
-            } 
-                
+            const temporaryDestination = `${Environment.TEMP_UPLOAD_PATH}/${fileName}`;
+            // ? copy file on temp dir
+            await file.mv(temporaryDestination);
+
+            //? upload file to cloudinary
+            const result = await this.repository.uploadFile({ filePath: temporaryDestination, fileConfig: { folder: args.folder, public_id: args.id } });
+
+            // ? delete file from temp dir
+            if (fs.existsSync(temporaryDestination)) fs.unlinkSync(temporaryDestination);
 
             return result
-
-
-            
-
         } catch (error) {
-
-            // console.log({error});
-            throw error;
-
+            throw CustomError.internalServer(`${error}`)
         }
 
     }

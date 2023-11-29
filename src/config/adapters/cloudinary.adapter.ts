@@ -8,7 +8,7 @@ cloudinary.config({
     secure: true,
 });
 
-interface CloudinaryUploadFileOptions {
+export interface CloudinaryUploadFileArgs {
     filePath: string;
     fileConfig: FileConfig;
 }
@@ -19,7 +19,7 @@ interface FileConfig {
 }
 export class CloudinaryAdapter {
 
-    static async uploadFile(options: CloudinaryUploadFileOptions): Promise<UploadApiResponse>{
+    static async uploadFile(options: CloudinaryUploadFileArgs): Promise<UploadApiResponse> {
         const { filePath, fileConfig } = options;
         return await cloudinary.uploader.upload(filePath, { folder: fileConfig.folder, public_id: fileConfig.public_id });
     }
@@ -27,5 +27,5 @@ export class CloudinaryAdapter {
     static async deleteFile(id: string): Promise<boolean> {
         return await cloudinary.uploader.destroy(id);
     }
-    
+
 }

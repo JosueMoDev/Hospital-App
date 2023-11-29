@@ -4,35 +4,41 @@ import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
-    
-    private readonly datasource = new FileDataSourceImpl();
-    private readonly repository = new FileRepositoryImpl(this.datasource);
-    private readonly fileservice = new FileService(this.repository);
+
+  private readonly datasource = new FileDataSourceImpl();
+  private readonly repository = new FileRepositoryImpl(this.datasource);
+  private readonly fileservice = new FileService(this.repository);
 
 
-    async uploadPhoto(dto: any): Promise<any> {
-        const {file, id, lastUpdate} = dto;
-        const clinic = await this.findOneById(id);
-        if (!file) throw CustomError.badRequest("File no enviado");
-        const { fileId, fileUrl } = await this.fileservice.uploadingFile({
-          ...file,
-          name: clinic.id
-        });
-        // const updateClinicPhoto = await prisma.clinic.update({
-        //     where: { id: id },
-        //     data: {
-        //     photoId: fileId,
-        //     photoUrl: fileUrl,
-        //     lastUpdate: [...clinic.lastUpdate, lastUpdate],
-        //     },
-        // });
-        if (fileId && fileUrl) return true;
-        return false;
-    }
+  async uploadPhoto(dto: any): Promise<any> {
+    const { file, id, lastUpdate } = dto;
+    const clinic = await this.findOneById(id);
+    if (!file) throw CustomError.badRequest("File no enviado");
+    const { secure_url, asset_id } = await this.fileservice.uploadingFile({
+      file: {
+        ...file,
+        name: clinic.id
+      },
+      args: {
+        folder: 'clinics',
+        public_id: clinic.id
+      }
+    });
+    const updateClinicPhoto = await prisma.clinic.update({
+      where: { id: id },
+      data: {
+        photoId: asset_id,
+        photoUrl: secure_url,
+        lastUpdate: [...clinic.lastUpdate],
+      },
+    });
+    if (updateClinicPhoto) return true;
+    return false;
+  }
 
-    deletePhoto(dto: any): Promise<any> {
-        throw new Error("Method not implemented.");
-    }
+  deletePhoto(dto: any): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
 
   async findOneById(id: string): Promise<ClinicEntity> {
     const clinic = await prisma.clinic.findFirst({

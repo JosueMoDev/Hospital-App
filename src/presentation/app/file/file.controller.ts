@@ -10,7 +10,6 @@ export class FileController {
 
     uploadPhoto = (request: Request, response: Response) => {
         const file = request.body.files.at(0) as UploadedFile;
-
         this.fileService.uploadingFile(file)
             .then(uploaded => response.json(uploaded))
             .catch((error) => {
