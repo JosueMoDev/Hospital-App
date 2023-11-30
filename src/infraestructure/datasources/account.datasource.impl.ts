@@ -1,5 +1,5 @@
 import { Gender, Role } from "@prisma/client";
-import { BcryptAdapter, DateFnsAdapter, prisma } from "../../config";
+import { AllowedFolder, BcryptAdapter, DateFnsAdapter, prisma } from "../../config";
 import {
     AccountDataSource,
     AccountEntity,
@@ -10,7 +10,12 @@ import {
     ConfirmPasswordDto,
     UpdatePasswordDto,
     PaginationEntity,
+    UploadDto,
 } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { FileDataSourceImpl } from "./file.datasource.impl";
+import { FileRepositoryImpl } from "../repositories";
+import { FileService } from "../../presentation";
 const genderT = {
     male: Gender.MALE,
     female: Gender.FEMALE,
@@ -20,7 +25,46 @@ const roleT = {
     doctor: Role.DOCTOR,
     patient: Role.PATIENT,
 };
+
+
+const Folder: any = {
+    ADMIN: AllowedFolder.admin,
+    DOCTOR: "doctors",
+    PATIENT: "patients",
+};
 export class AccountDataSourceImpl implements AccountDataSource {
+    private readonly datasource = new FileDataSourceImpl();
+    private readonly repository = new FileRepositoryImpl(this.datasource);
+    private readonly fileservice = new FileService(this.repository);
+
+    async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+        const { id, lastUpdate } = dto;
+        const account = await this.findOneById(id);
+        if (!file) throw CustomError.badRequest("File no enviado");
+        const { fileUrl, fileId } = await this.fileservice.uploadingFile({
+            file: {
+                ...file,
+                name: account.id
+            },
+            args: {
+                folder: Folder[account.role],
+                public_id: account.id
+            }
+        });
+        const updateAccountPhoto = await prisma.account.update({
+            where: { id: id },
+            data: {
+                photoId: fileId,
+                photoUrl: fileUrl,
+                lastUpdate: [...account.lastUpdate],
+            },
+        });
+        if (updateAccountPhoto) return true;
+        return false;
+    }
+    deletePhoto(dto: UploadDto): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
     private async findAccountByEmail(email: string): Promise<void> {
         const emailExist = await prisma.account.findFirst({
             where: {

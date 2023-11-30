@@ -1,4 +1,5 @@
-import { ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto, PaginationEntity, UpdateClinicDto } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto, PaginationEntity, UpdateClinicDto, UploadDto } from "../../domain";
 
 export class ClinicService {
 
@@ -29,8 +30,8 @@ export class ClinicService {
     }
 
 
-    public async uploadingPhoto(dto: any): Promise<any>{
-        return await this.repository.uploadPhoto(dto)
+    public async uploadingPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+        return await this.repository.uploadPhoto(dto, file)
     }
 
 }

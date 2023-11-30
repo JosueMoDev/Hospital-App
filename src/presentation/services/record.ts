@@ -1,4 +1,5 @@
-import { CreateRecordDto, PaginationDto, PaginationEntity, RecordEntity, RecordRepository } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { CreateRecordDto, PaginationDto, PaginationEntity, RecordEntity, RecordRepository, UploadDto } from "../../domain";
 import { UpdateRecordDto } from "../../domain/dtos/record/updateRecord.dto";
 
 export class RecordService {
@@ -22,5 +23,8 @@ export class RecordService {
 
   public async changingRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
     return await this.repository.changeRecordStatus(dto);
+  }
+  public async uploadingPdf(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    return await this.repository.uploadPDF(dto, file)
   }
 }

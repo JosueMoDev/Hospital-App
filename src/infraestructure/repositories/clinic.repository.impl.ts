@@ -1,11 +1,12 @@
-import { ClinicDataSource, ClinicEntity, ClinicRepository, UpdateClinicDto, PaginationDto, CreateClinicDto, PaginationEntity } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { ClinicDataSource, ClinicEntity, ClinicRepository, UpdateClinicDto, PaginationDto, CreateClinicDto, PaginationEntity, UploadDto } from "../../domain";
 
 export class ClinicRepositoyImpl implements ClinicRepository {
 
     constructor(private readonly datasource: ClinicDataSource) { }
 
-    uploadPhoto(dto: any): Promise<any> {
-        return this.datasource.uploadPhoto(dto);
+    uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<any> {
+        return this.datasource.uploadPhoto(dto, file);
     }
     deletePhoto(dto: any): Promise<any> {
         return this.datasource.deletePhoto(dto);
@@ -23,7 +24,7 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.update(dto);
     }
-  
+
     changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.changeStatus(dto);
     }

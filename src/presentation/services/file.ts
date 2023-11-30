@@ -1,8 +1,15 @@
 import { UploadedFile } from "express-fileupload";
-import { CustomError, FileRepository } from "../../domain";
+import { CustomError, FileEntity, FileRepository } from "../../domain";
 import fs from 'fs';
-import { Environment } from "../../config";
+import { AllowedFolder, Environment } from "../../config";
 
+interface UploadFileArgs {
+    file: UploadedFile,
+    args: {
+        folder: AllowedFolder,
+        public_id: string;
+    }
+}
 
 export class FileService {
 
@@ -14,7 +21,7 @@ export class FileService {
         }
     }
 
-    public async uploadingFile(uploadArgs: any): Promise<any> {
+    public async uploadingFile(uploadArgs: UploadFileArgs): Promise<FileEntity> {
         const { file, args } = uploadArgs;
         try {
             // ? Get File Extension
@@ -29,7 +36,7 @@ export class FileService {
             await file.mv(temporaryDestination);
 
             //? upload file to cloudinary
-            const result = await this.repository.uploadFile({ filePath: temporaryDestination, fileConfig: { folder: args.folder, public_id: args.id } });
+            const result = await this.repository.uploadFile({ filePath: temporaryDestination, public_id: file.name, folder: args.folder });
 
             // ? delete file from temp dir
             if (fs.existsSync(temporaryDestination)) fs.unlinkSync(temporaryDestination);

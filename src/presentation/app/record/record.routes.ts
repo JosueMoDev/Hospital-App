@@ -2,6 +2,7 @@ import { Router } from "express";
 import { RecordDataSourceImpl, RecordRepositoryImpl } from "../../../infraestructure";
 import { RecordService } from "../../services";
 import { RecordController } from "./record.controller";
+import { FileUploadMiddleware } from "../../middlewares";
 
 export class RecordRoutes {
     static get routes(): Router {
@@ -18,6 +19,9 @@ export class RecordRoutes {
         router.get('/find-one/:id', controller.findOneById);
         router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
+
+        router.use(FileUploadMiddleware.containFiles);
+        router.post('/upload-pdf', controller.uploadFile);
 
         return router;
     }

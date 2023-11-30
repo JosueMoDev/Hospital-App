@@ -5,6 +5,7 @@ import {
   HandlerError,
   CreateClinicDto,
   PaginationDto,
+  UploadDto,
 } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
 
@@ -70,14 +71,13 @@ export class ClinicController {
   }
 
 
-  uploadPhoto = (request: Request, response: Response) => {
-    // const [error, clinicDto] = UpdateClinicDto.update(request.body);
-    // if (error) return response.status(400).json({ error });
+  uploadFile = (request: Request, response: Response) => {
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
-    const id = request.body.id;
-    
+
     this.clinicService
-      .uploadingPhoto({file: file, id: id})
+      .uploadingPhoto(fileDto!, file)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

@@ -1,11 +1,18 @@
-import { CreateRecordDto, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { CreateRecordDto, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto, UploadDto } from "../../domain";
 
 export class RecordRepositoryImpl implements RecordRepository {
 
     constructor(private readonly datasource: RecordDataSource) { }
+    uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+        return this.datasource.uploadPDF(dto, file);
+    }
+    deletePDF(dto: UploadDto): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
 
     findOneById(id: string): Promise<RecordEntity> {
-        throw new Error("Method not implemented.");
+        return this.datasource.findOneById(id);
     }
 
     findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }> {

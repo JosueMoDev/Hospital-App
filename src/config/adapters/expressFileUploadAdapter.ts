@@ -1,5 +1,4 @@
-import fileUpload, { UploadedFile } from 'express-fileupload';
-import { Environment } from '../envs';
+import fileUpload from 'express-fileupload';
 interface FileUploadConfig {
     limits: { fileSize: number };
     preserveExtension: boolean;

@@ -8,24 +8,29 @@ cloudinary.config({
     secure: true,
 });
 
+export enum AllowedFolder {
+    clinic = "clinics",
+    admin = "admins",
+    patient = "patients",
+    doctor = "doctots",
+    record = "records"
+}
 export interface CloudinaryUploadFileArgs {
     filePath: string;
-    fileConfig: FileConfig;
+    folder: AllowedFolder,
+    public_id: string;
 }
 
-interface FileConfig {
-    folder: string,
-    public_id: string,
-}
 export class CloudinaryAdapter {
 
     static async uploadFile(options: CloudinaryUploadFileArgs): Promise<UploadApiResponse> {
-        const { filePath, fileConfig } = options;
-        return await cloudinary.uploader.upload(filePath, { folder: fileConfig.folder, public_id: fileConfig.public_id });
+        const { filePath, public_id, folder } = options;
+        return await cloudinary.uploader.upload(filePath, { folder, public_id });
     }
 
     static async deleteFile(id: string): Promise<boolean> {
-        return await cloudinary.uploader.destroy(id);
+        const resp = await cloudinary.uploader.destroy(id);
+        console.log(resp);
+        return resp;
     }
-
 }

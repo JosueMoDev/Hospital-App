@@ -5,7 +5,6 @@ interface RecordDtoArgs {
     doctorId: string,
     patientId: string,
     title: string,
-    pdf: string,
 }
 
 export class CreateRecordDto {
@@ -22,13 +21,12 @@ export class CreateRecordDto {
     @IsNotEmpty({ message: 'Title is required' })
     public title!: string;
 
-    @IsString({ message: 'PDF URL should be a string' })
-    @IsNotEmpty({ message: 'PDF URL is required' })
-    public pdf!: string;
 
 
     constructor(args: RecordDtoArgs) {
-        Object.assign(this, args);
+        this.doctorId = args.doctorId;
+        this.patientId = args.patientId;
+        this.title = args.title;
     }
 
     static create(object: RecordDtoArgs): [undefined | CustomErrors[], CreateRecordDto?] {

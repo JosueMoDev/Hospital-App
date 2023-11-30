@@ -1,7 +1,43 @@
-import { DateFnsAdapter, Environment, prisma } from "../../config";
-import { CreateRecordDto, CustomError, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, UpdateRecordDto } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { AllowedFolder, DateFnsAdapter, Environment, prisma } from "../../config";
+import { CreateRecordDto, CustomError, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, UpdateRecordDto, UploadDto } from "../../domain";
+import { FileDataSourceImpl } from "./file.datasource.impl";
+import { FileRepositoryImpl } from "../repositories";
+import { FileService } from "../../presentation";
 
 export class RecordDataSourceImpl implements RecordDataSource {
+    private readonly datasource = new FileDataSourceImpl();
+    private readonly repository = new FileRepositoryImpl(this.datasource);
+    private readonly fileservice = new FileService(this.repository);
+
+    async uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+        const { id, lastUpdate } = dto;
+        const record = await this.findOneById(id);
+        if (!file) throw CustomError.badRequest("File no enviado");
+        const { fileUrl, fileId } = await this.fileservice.uploadingFile({
+            file: {
+                ...file,
+                name: record.id
+            },
+            args: {
+                folder: AllowedFolder.record,
+                public_id: record.id
+            }
+        });
+        const updateRecordPdf = await prisma.record.update({
+            where: { id: id },
+            data: {
+                pdfId: fileId,
+                pdfUrl: fileUrl,
+                lastUpdate: [...record.lastUpdate],
+            },
+        });
+        if (updateRecordPdf) return true;
+        return false;
+    }
+    deletePDF(dto: UploadDto): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
 
     async findOneById(id: string): Promise<RecordEntity> {
         const record = await prisma.record.findFirst({

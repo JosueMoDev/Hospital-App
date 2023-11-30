@@ -1,4 +1,5 @@
-import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, UpdatePasswordDto } from "../dtos";
+import { UploadedFile } from "express-fileupload";
+import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, UpdatePasswordDto, UploadDto } from "../dtos";
 import { AccountEntity } from "../entities";
 import { PaginationEntity } from '../entities/pagination.entity';
 
@@ -17,4 +18,8 @@ export abstract class AccountDataSource {
     abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
 
     abstract confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean>;
+
+    abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
+
+    abstract deletePhoto(dto: UploadDto): Promise<boolean>;
 }

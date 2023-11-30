@@ -105,7 +105,8 @@ model Record {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime 
   title String
-  pdf String
+  pdfUrl  String? @default("")
+  pdfId String? @default("")
   status Boolean? @default(true)
   lastUpdate LastUpdate[]
 

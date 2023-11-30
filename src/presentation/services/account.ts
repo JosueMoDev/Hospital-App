@@ -1,3 +1,4 @@
+import { UploadedFile } from "express-fileupload";
 import {
   AccountEntity,
   AccountRepository,
@@ -7,6 +8,7 @@ import {
   ConfirmPasswordDto,
   UpdatePasswordDto,
   PaginationEntity,
+  UploadDto,
 } from "../../domain";
 
 export class AccountService {
@@ -44,5 +46,9 @@ export class AccountService {
     dto: ConfirmPasswordDto
   ): Promise<Boolean> {
     return await this.repository.confirmPassword(dto);
+  }
+
+  public async uploadingPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    return await this.repository.uploadPhoto(dto, file)
   }
 }

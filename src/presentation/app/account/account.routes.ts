@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AccountDataSourceImpl, AccountRepositoryImpl } from "../../../infraestructure";
 import { AccountService } from "../../services";
 import { AccountController } from "./account.controller";
+import { FileUploadMiddleware } from "../../middlewares";
 
 export class AccountRoutes {
     static get routes(): Router {
@@ -20,6 +21,9 @@ export class AccountRoutes {
         router.patch('/change-status', controller.changeAccountStatus);
         router.patch('/change-password', controller.changePassowordAccount);
         router.get('/confirm-password', controller.confirmPassword);
+
+        router.use(FileUploadMiddleware.containFiles);
+        router.post('/upload-photo', controller.uploadFile);
 
         return router;
     }

@@ -7,7 +7,7 @@ import { FileUploadMiddleware } from "../../middlewares";
 export class ClinicRoutes {
 
     static get routes(): Router {
-        
+
         const router = Router();
 
         const datasource = new ClinicDataSourceImpl();
@@ -22,7 +22,7 @@ export class ClinicRoutes {
         router.patch('/change-status', controller.changeStatus);
 
         router.use(FileUploadMiddleware.containFiles);
-        router.post('/upload-photo', controller.uploadPhoto);
+        router.post('/upload-photo', controller.uploadFile);
 
         return router;
     }

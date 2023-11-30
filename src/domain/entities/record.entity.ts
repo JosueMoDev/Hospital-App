@@ -6,7 +6,8 @@ interface RecordOptions {
     patientId: string;
     createdAt: Date;
     title: string;
-    pdf: string;
+    pdfUrl: string;
+    pdfId: string;
     status: boolean;
     lastUpdate: LastUpdate[];
 }
@@ -19,7 +20,8 @@ export class RecordEntity {
     public patientId: string;
     public createdAt: Date;
     public title: string;
-    public pdf: string;
+    public pdfUrl: string;
+    public pdfId: string;
     public status: boolean;
     public lastUpdate: LastUpdate[];
 
@@ -30,7 +32,8 @@ export class RecordEntity {
             patientId,
             createdAt,
             title,
-            pdf,
+            pdfUrl,
+            pdfId,
             status,
             lastUpdate,
         } = options;
@@ -40,7 +43,8 @@ export class RecordEntity {
         this.patientId = patientId;
         this.createdAt = createdAt;
         this.title = title;
-        this.pdf = pdf;
+        this.pdfUrl = pdfUrl;
+        this.pdfId = pdfId;
         this.status = status;
         this.lastUpdate = lastUpdate;
     }
@@ -52,7 +56,8 @@ export class RecordEntity {
             patientId,
             createdAt,
             title,
-            pdf,
+            pdfUrl,
+            pdfId,
             status,
             lastUpdate
         } = object
@@ -63,7 +68,8 @@ export class RecordEntity {
             patientId,
             createdAt,
             title,
-            pdf,
+            pdfUrl,
+            pdfId,
             status,
             lastUpdate,
         });

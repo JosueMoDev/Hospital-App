@@ -1,4 +1,5 @@
-import { UpdateClinicDto, PaginationDto, CreateClinicDto } from "../dtos";
+import { UploadedFile } from "express-fileupload";
+import { UpdateClinicDto, PaginationDto, CreateClinicDto, UploadDto } from "../dtos";
 import { ClinicEntity, PaginationEntity } from "../entities";
 
 export abstract class ClinicRepository {
@@ -13,7 +14,7 @@ export abstract class ClinicRepository {
 
    abstract changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
-   abstract uploadPhoto(dto: any): Promise<any>;
+   abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
-   abstract deletePhoto(dto:any): Promise<any>;
+   abstract deletePhoto(dto: UploadDto): Promise<boolean>;
 }

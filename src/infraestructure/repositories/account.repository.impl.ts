@@ -1,3 +1,4 @@
+import { UploadedFile } from "express-fileupload";
 import {
   AccountDataSource,
   AccountEntity,
@@ -8,10 +9,17 @@ import {
   ConfirmPasswordDto,
   UpdatePasswordDto,
   PaginationEntity,
+  UploadDto,
 } from "../../domain";
 
 export class AccountRepositoryImpl implements AccountRepository {
   constructor(private readonly datasource: AccountDataSource) { }
+  uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    return this.datasource.uploadPhoto(dto, file);
+  }
+  deletePhoto(dto: UploadDto): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
 
   findOneById(id: string): Promise<AccountEntity> {
     return this.datasource.findOneById(id);

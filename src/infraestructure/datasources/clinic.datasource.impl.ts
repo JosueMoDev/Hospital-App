@@ -1,7 +1,8 @@
-import { DateFnsAdapter, prisma } from "../../config";
-import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError, PaginationEntity } from "../../domain";
+import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
+import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError, PaginationEntity, UploadDto } from "../../domain";
 import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
+import { UploadedFile } from "express-fileupload";
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
@@ -10,25 +11,25 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
   private readonly fileservice = new FileService(this.repository);
 
 
-  async uploadPhoto(dto: any): Promise<any> {
-    const { file, id, lastUpdate } = dto;
+  async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    const { id, lastUpdate } = dto;
     const clinic = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
-    const { secure_url, asset_id } = await this.fileservice.uploadingFile({
+    const { fileUrl, fileId } = await this.fileservice.uploadingFile({
       file: {
         ...file,
         name: clinic.id
       },
       args: {
-        folder: 'clinics',
+        folder: AllowedFolder.clinic,
         public_id: clinic.id
       }
     });
     const updateClinicPhoto = await prisma.clinic.update({
       where: { id: id },
       data: {
-        photoId: asset_id,
-        photoUrl: secure_url,
+        photoId: fileId,
+        photoUrl: fileUrl,
         lastUpdate: [...clinic.lastUpdate],
       },
     });

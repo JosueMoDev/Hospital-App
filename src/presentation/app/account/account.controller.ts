@@ -7,7 +7,9 @@ import {
   UpdateAccountDto,
   ConfirmPasswordDto,
   UpdatePasswordDto,
+  UploadDto,
 } from "../../../domain";
+import { UploadedFile } from "express-fileupload";
 
 export class AccountController {
   constructor(private readonly accountService: AccountService) { }
@@ -99,4 +101,19 @@ export class AccountController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
+
+  uploadFile = (request: Request, response: Response) => {
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+    const file = request.body.files.at(0) as UploadedFile;
+
+    this.accountService
+      .uploadingPhoto(fileDto!, file)
+      .then((account) => response.json(account))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  }
+
 }

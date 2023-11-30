@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { RecordService } from "../../services";
-import { CreateRecordDto, HandlerError, PaginationDto, UpdateAccountDto, UpdateRecordDto } from "../../../domain";
+import { CreateRecordDto, HandlerError, PaginationDto, UpdateAccountDto, UpdateRecordDto, UploadDto } from "../../../domain";
+import { UploadedFile } from "express-fileupload";
 
 export class RecordController {
   constructor(private readonly recordService: RecordService) { }
@@ -66,6 +67,20 @@ export class RecordController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
+
+  uploadFile = (request: Request, response: Response) => {
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+    const file = request.body.files.at(0) as UploadedFile;
+
+    this.recordService
+      .uploadingPdf(fileDto!, file)
+      .then((record) => response.json(record))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  }
 
 
 
