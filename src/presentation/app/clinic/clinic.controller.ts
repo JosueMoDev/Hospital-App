@@ -84,6 +84,18 @@ export class ClinicController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   }
+  deleteFile = (request: Request, response: Response) => {
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+
+    this.clinicService
+      .deletingPhoto(fileDto!)
+      .then((clinic) => response.json(clinic))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  }
 
 
 }

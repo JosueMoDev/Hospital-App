@@ -37,8 +37,27 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     return false;
   }
 
-  deletePhoto(dto: any): Promise<any> {
-    throw new Error("Method not implemented.");
+  async deletePhoto(dto: any): Promise<any> {
+    const clinic = await this.findOneById(dto.id);
+    if (!clinic.photoUrl.length && !clinic.photoId.length) throw CustomError.notFound('that clinic not have any photo associeted');
+
+    const { result } = await this.fileservice.deletingFile(clinic.photoId);
+    if (result === 'not found') throw CustomError.internalServer('we couldnt delete photo');
+    const clinicUpdated = await prisma.clinic.update({
+      where: { id: dto.id },
+      data: {
+        photoId: '',
+        photoUrl: '',
+        lastUpdate: [...clinic.lastUpdate, {
+          account: dto.lastUpdate.account,
+          date: DateFnsAdapter.formatDate(),
+          action: "UPDATE ACCOUNT",
+        },]
+      }
+    });
+
+    if (!clinicUpdated) return false;
+    return true;
   }
 
   async findOneById(id: string): Promise<ClinicEntity> {

@@ -35,8 +35,27 @@ export class RecordDataSourceImpl implements RecordDataSource {
         if (updateRecordPdf) return true;
         return false;
     }
-    deletePDF(dto: UploadDto): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deletePDF(dto: UploadDto): Promise<boolean> {
+        const record = await this.findOneById(dto.id);
+        if (!record.pdfUrl.length && !record.pdfId.length) throw CustomError.notFound('that record not have any pdf associeted');
+
+        const { result } = await this.fileservice.deletingFile(record.pdfId);
+        if (result === 'not found') throw CustomError.internalServer('we couldnt delete pfd');
+        const recordUpdated = await prisma.record.update({
+            where: { id: dto.id },
+            data: {
+                pdfId: '',
+                pdfUrl: '',
+                lastUpdate: [...record.lastUpdate, {
+                    account: dto.lastUpdate.account,
+                    date: DateFnsAdapter.formatDate(),
+                    action: "UPDATE RECORD",
+                },]
+            }
+        });
+
+        if (!recordUpdated) return false;
+        return true;
     }
 
     async findOneById(id: string): Promise<RecordEntity> {

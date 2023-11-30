@@ -27,4 +27,8 @@ export class RecordService {
   public async uploadingPdf(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     return await this.repository.uploadPDF(dto, file)
   }
+
+  public async deletingPdf(dto: UploadDto): Promise<boolean> {
+    return await this.repository.deletePDF(dto);
+  }
 }

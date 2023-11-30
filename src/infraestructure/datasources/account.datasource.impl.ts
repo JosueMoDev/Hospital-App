@@ -62,8 +62,27 @@ export class AccountDataSourceImpl implements AccountDataSource {
         if (updateAccountPhoto) return true;
         return false;
     }
-    deletePhoto(dto: UploadDto): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deletePhoto(dto: UploadDto): Promise<boolean> {
+        const account = await this.findOneById(dto.id);
+        if (!account.photoUrl.length && !account.photoId.length) throw CustomError.notFound('that account not have any photo associeted');
+
+        const { result } = await this.fileservice.deletingFile(account.photoId);
+        if (result === 'not found') throw CustomError.internalServer('we couldnt delete photo');
+        const accountUpdated = await prisma.account.update({
+            where: { id: dto.id },
+            data: {
+                photoId: '',
+                photoUrl: '',
+                lastUpdate: [...account.lastUpdate, {
+                    account: dto.lastUpdate.account,
+                    date: DateFnsAdapter.formatDate(),
+                    action: "UPDATE ACCOUNT",
+                },]
+            }
+        });
+
+        if (!accountUpdated) return false;
+        return true;
     }
     private async findAccountByEmail(email: string): Promise<void> {
         const emailExist = await prisma.account.findFirst({

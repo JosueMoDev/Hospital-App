@@ -19,7 +19,7 @@ export class RecordRoutes {
         router.get('/find-one/:id', controller.findOneById);
         router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
-
+        router.post('/delete-pdf', controller.deleteFile)
         router.use(FileUploadMiddleware.containFiles);
         router.post('/upload-pdf', controller.uploadFile);
 

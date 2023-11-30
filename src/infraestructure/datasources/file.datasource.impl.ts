@@ -7,8 +7,8 @@ export class FileDataSourceImpl implements FileDataSource {
         const result = await CloudinaryAdapter.uploadFile(uploadArgs);
         return FileEntity.mapper(result);
     }
-    async deleteFile(id: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteFile(id: string): Promise<{ [key: string]: string }> {
+        return await CloudinaryAdapter.deleteFile(id);
     }
 
 }

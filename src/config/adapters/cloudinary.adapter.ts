@@ -28,9 +28,7 @@ export class CloudinaryAdapter {
         return await cloudinary.uploader.upload(filePath, { folder, public_id });
     }
 
-    static async deleteFile(id: string): Promise<boolean> {
-        const resp = await cloudinary.uploader.destroy(id);
-        console.log(resp);
-        return resp;
+    static async deleteFile(id: string): Promise<{ [key: string]: string }> {
+        return await cloudinary.uploader.destroy(id);
     }
 }

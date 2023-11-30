@@ -18,7 +18,7 @@ export class AccountRepositoryImpl implements AccountRepository {
     return this.datasource.uploadPhoto(dto, file);
   }
   deletePhoto(dto: UploadDto): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    return this.datasource.deletePhoto(dto);
   }
 
   findOneById(id: string): Promise<AccountEntity> {

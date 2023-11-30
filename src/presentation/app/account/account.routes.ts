@@ -22,6 +22,7 @@ export class AccountRoutes {
         router.patch('/change-password', controller.changePassowordAccount);
         router.get('/confirm-password', controller.confirmPassword);
 
+        router.post('/delete-photo', controller.deleteFile);
         router.use(FileUploadMiddleware.containFiles);
         router.post('/upload-photo', controller.uploadFile);
 

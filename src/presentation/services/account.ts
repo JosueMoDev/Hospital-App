@@ -51,4 +51,7 @@ export class AccountService {
   public async uploadingPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     return await this.repository.uploadPhoto(dto, file)
   }
+  public async deletingPhoto(dto: UploadDto): Promise<boolean> {
+    return await this.repository.deletePhoto(dto);
+  }
 }

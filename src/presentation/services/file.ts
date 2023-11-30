@@ -1,5 +1,5 @@
 import { UploadedFile } from "express-fileupload";
-import { CustomError, FileEntity, FileRepository } from "../../domain";
+import { CustomError, FileEntity, FileRepository, UploadDto } from "../../domain";
 import fs from 'fs';
 import { AllowedFolder, Environment } from "../../config";
 
@@ -46,6 +46,10 @@ export class FileService {
             throw CustomError.internalServer(`${error}`)
         }
 
+    }
+
+    public async deletingFile(id: string): Promise<{ [key: string]: string }> {
+        return await this.repository.deleteFile(id);
     }
 
 }

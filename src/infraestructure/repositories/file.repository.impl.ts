@@ -8,7 +8,7 @@ export class FileRepositoryImpl implements FileRepository {
     async uploadFile(uploadArgs: CloudinaryUploadFileArgs): Promise<FileEntity> {
         return this.datasource.uploadFile(uploadArgs);
     }
-    async deleteFile(id: string): Promise<boolean> {
+    async deleteFile(id: string): Promise<{ [key: string]: string }> {
         return this.datasource.deleteFile(id);
     }
 

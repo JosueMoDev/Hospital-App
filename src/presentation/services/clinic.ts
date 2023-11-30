@@ -34,4 +34,8 @@ export class ClinicService {
         return await this.repository.uploadPhoto(dto, file)
     }
 
+    public async deletingPhoto(dto: UploadDto): Promise<boolean> {
+        return await this.repository.deletePhoto(dto);
+    }
+
 }

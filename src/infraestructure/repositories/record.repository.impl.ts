@@ -8,7 +8,7 @@ export class RecordRepositoryImpl implements RecordRepository {
         return this.datasource.uploadPDF(dto, file);
     }
     deletePDF(dto: UploadDto): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.datasource.deletePDF(dto);
     }
 
     findOneById(id: string): Promise<RecordEntity> {

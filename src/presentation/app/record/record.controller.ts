@@ -82,6 +82,19 @@ export class RecordController {
       });
   }
 
+  deleteFile = (request: Request, response: Response) => {
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
+
+    this.recordService
+      .deletingPdf(fileDto!)
+      .then((record) => response.json(record))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  }
+
 
 
 }
