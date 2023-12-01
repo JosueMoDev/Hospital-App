@@ -1,18 +1,25 @@
 import { BcryptAdapter, JWTAdapter, prisma } from "../../config";
 import { AuthenticationDataSource, AuthenticatedUserEntity, LoginDto, CustomError, AccountEntity } from "../../domain";
+import { GoogleOAuth2ClientAdapter } from '../../config/adapters/googleauth.adapter';
 
 export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
 
-    async loginWithEmailAndPassword(loginDto: LoginDto): Promise<AuthenticatedUserEntity> {
+    private async findAccountByEmail(email: string): Promise<AccountEntity> {
         const account = await prisma.account.findFirst({
             where: {
-                email: loginDto.email
+                email: email
             }
         });
 
         if (!account) throw CustomError.badRequest('Any user found');
 
-     
+        return AccountEntity.fromObject(account);
+    }
+
+    async loginWithEmailAndPassword(loginDto: LoginDto): Promise<AuthenticatedUserEntity> {
+
+        const account = await this.findAccountByEmail(loginDto.email);
+
         const isPasswordMatching = BcryptAdapter.comparePassword(loginDto.password, account.password);
         if (!isPasswordMatching) throw CustomError.badRequest('Wrong credentials');
 
@@ -22,18 +29,34 @@ export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
         if (!token) throw CustomError.internalServer('Error while creating token');
 
         return {
-          account: authenticatedAccount,
-          accessToken: token,
-          refreshToken: ''
+            account: authenticatedAccount,
+            accessToken: token,
+            refreshToken: ''
         }
     }
 
-    async loginWithGoogle(email: string): Promise<AuthenticatedUserEntity> {
-        throw new Error("Method not implemented.");
+    async loginWithGoogle(token: string): Promise<AuthenticatedUserEntity> {
+        const result = await GoogleOAuth2ClientAdapter.verify(token);
+        const { email }: any = result;
+        if (!email) throw CustomError.internalServer('no email')
+        const account = await this.findAccountByEmail(email);
+
+        const accesstoken = await JWTAdapter.generateToken({ id: account.id });
+
+        if (!accesstoken) throw CustomError.internalServer('Error while creating token');
+
+        return {
+            account: account,
+            accessToken: accesstoken,
+            refreshToken: ''
+        }
     }
 
     async refreshToken(token: any): Promise<AuthenticatedUserEntity> {
-        throw new Error("Method not implemented.");
+        // todo: fix validatetoken
+        const result = await JWTAdapter.validateToken(token);
+        console.log(result)
+        throw 'Token'
     }
-    
+
 }
