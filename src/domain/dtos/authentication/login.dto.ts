@@ -1,34 +1,31 @@
-import { IsEmail, IsNotEmpty, MinLength,  validateSync } from "class-validator";
+import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 interface LoginDtoOptions {
-    email: string ,
+    email: string,
     password: string
 }
 export class LoginDto {
-    @IsEmail({}, {message: 'Email is not valid'})
-    @IsNotEmpty({message: 'Email is required'})
-    public email: string;
+    @IsEmail({}, { message: 'Email is not valid' })
+    @IsNotEmpty({ message: 'Email is required' })
+    public email!: string;
 
     @MinLength(8, { message: 'Password should be at least 8 characters long' })
     @IsNotEmpty({ message: 'Password is required' })
-    public password: string;
+    public password!: string;
 
-    constructor(email: string, password: string) {
-        this.email = email;
-        this.password = password;
+    constructor(args: LoginDto) {
+        Object.assign(this, args)
     }
 
-    static create(object: LoginDtoOptions): [ undefined| {[key:string]: string}, LoginDto?] {
-        const { email, password } = object;
-        
-        const loginDto = new LoginDto(email, password);
+    static create(object: LoginDtoOptions): [undefined | CustomErrors[], LoginDto?] {
 
-        const errors = validateSync(loginDto);
+        const loginDto = new LoginDto(object);
 
-        if (errors.length > 0) {
-            return [errors[0].constraints];
-        }
+        const [errors, validatedDto] = CustomValidationErrors.validateDto<LoginDto>(loginDto);
 
-        return [undefined, loginDto];
+        if (errors) return [errors];
+
+        return [undefined, validatedDto];
 
     }
 }

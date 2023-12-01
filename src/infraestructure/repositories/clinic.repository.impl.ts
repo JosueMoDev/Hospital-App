@@ -1,23 +1,32 @@
-import { ClinicDataSource, ClinicEntity, ClinicRepository, CreateClinicDto, PaginationDto } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { ClinicDataSource, ClinicEntity, ClinicRepository, UpdateClinicDto, PaginationDto, CreateClinicDto, PaginationEntity, UploadDto } from "../../domain";
 
 export class ClinicRepositoyImpl implements ClinicRepository {
 
-    constructor(private readonly datasource: ClinicDataSource){}
+    constructor(private readonly datasource: ClinicDataSource) { }
+
+    uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<any> {
+        return this.datasource.uploadPhoto(dto, file);
+    }
+    deletePhoto(dto: any): Promise<any> {
+        return this.datasource.deletePhoto(dto);
+    }
 
     findOneById(id: string): Promise<ClinicEntity> {
         return this.datasource.findOneById(id);
     }
-    findMany(dto: PaginationDto): Promise<ClinicEntity[]> {
+    findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }> {
         return this.datasource.findMany(dto);
     }
     create(dto: CreateClinicDto): Promise<ClinicEntity> {
         return this.datasource.create(dto);
     }
-    update(dto: any): Promise<ClinicEntity> {
+    update(dto: UpdateClinicDto): Promise<ClinicEntity> {
         return this.datasource.update(dto);
     }
-    delete(id: string): Promise<ClinicEntity> {
-        return this.datasource.delete(id);
+
+    changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+        return this.datasource.changeStatus(dto);
     }
-    
+
 }

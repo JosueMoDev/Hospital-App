@@ -3,7 +3,7 @@ import { Environment } from '../envs';
 
 const JWT_SEED = Environment.SECRET_KEY_JWT;
 
-export class JWTAdapter { 
+export class JWTAdapter {
 
     static async generateToken(payload: any, duration: string = '2h'): Promise<string | null> {
         return new Promise((resolve) => {
@@ -15,7 +15,7 @@ export class JWTAdapter {
         });
     }
 
-    static validateToken<T>(token: string): Promise<T | null>{
+    static validateToken<T>(token: string): Promise<T | null> {
         return new Promise((resolve) => {
             jwt.verify(token, JWT_SEED, (err, decoded) => {
                 if (err) return resolve(null);

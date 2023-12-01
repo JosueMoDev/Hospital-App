@@ -1,25 +1,34 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsMongoId,  ValidateNested, validateSync } from "class-validator";
+import {
+  ArrayMinSize,
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  ValidateNested,
+} from "class-validator";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface AssignmentDtoArgs {
-    clinic: string,
-    doctors: string[]
+  clinic: string;
+  doctors: string[];
 }
 
 class Doctors {
-    
-  @IsMongoId({message: 'should be mongo id'})
+  @IsNotEmpty()
+  @IsMongoId()
   public readonly doctor: string;
 
   constructor(doctor: string) {
-    this.doctor = doctor
+    this.doctor = doctor;
   }
-
 }
 
 export class CreateClinicAssignmentDto {
   @IsMongoId()
+  @IsNotEmpty({ message: "Clinic ID is required" })
   public readonly clinic: string;
+
+  @IsNotEmpty({ message: "Assignment is required" })
   @IsArray()
   @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
   @Type(() => Doctors)
@@ -27,29 +36,22 @@ export class CreateClinicAssignmentDto {
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
-    const { clinic, doctors } = args; 
-    this.clinic = clinic,
-    this.doctors = doctors.map((doctor) =>  new Doctors(doctor));
- 
+    const { clinic, doctors } = args;
+    (this.clinic = clinic),
+      (this.doctors = doctors.map((doctor) => new Doctors(doctor)));
   }
 
-  static create( object: AssignmentDtoArgs): [undefined | { [key: string]: string }, CreateClinicAssignmentDto?] {
+  static create(
+    object: AssignmentDtoArgs
+  ): [undefined | CustomErrors[], CreateClinicAssignmentDto?] {
     const assignmentDto = new CreateClinicAssignmentDto(object);
-    const errors = validateSync(assignmentDto);
+    const [errors, validatedDto] =
+      CustomValidationErrors.validateDto<CreateClinicAssignmentDto>(
+        assignmentDto
+      );
 
-    const areMongoId = assignmentDto.doctors.map((doctor) => {
-        const hasError = validateSync(new Doctors(doctor.doctor));
-        if (hasError.length > 0) return hasError[0].constraints;
-    });
-    
-    if(areMongoId.filter(error=>error!==undefined).length >0 ) {
-        return [areMongoId.filter(error=>error!==undefined)[0]]
-    }
+    if (errors) return [errors];
 
-    if (errors.length > 0) {
-      return [errors[0].constraints];
-    }
- 
-    return [undefined, assignmentDto];
+    return [undefined, validatedDto];
   }
 }

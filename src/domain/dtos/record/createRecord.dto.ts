@@ -1,81 +1,40 @@
-import { Type } from "class-transformer";
-import { ArrayMinSize, IsDate, IsMongoId, IsNotEmpty, IsString, validateSync } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface RecordDtoArgs {
-    doctor: string,
-    patient: string,
+    doctorId: string,
+    patientId: string,
     title: string,
-    body: string,
-    lastEditedBy: LastEditedBy
 }
 
-class LastEditedBy {
-    @IsMongoId()
-    @IsNotEmpty({message: 'Doctor is required'})
-    public readonly doctor: string; 
-    @IsDate({ message: 'Date not valid' })
-    @IsNotEmpty({message: 'Date is required'})
-    public date: Date
-
-    constructor(doctor: string, date: Date) {
-        this.date = new Date(date),
-        this.doctor = doctor
-    }
-
-}
 export class CreateRecordDto {
 
     @IsMongoId()
-    @IsNotEmpty({message: 'Doctor is required'})
-    public readonly doctor: string;
+    @IsNotEmpty({ message: 'Doctor is required' })
+    public readonly doctorId!: string;
 
     @IsMongoId()
-    @IsNotEmpty({message: 'Patient is required'})
-    public readonly patient: string;
+    @IsNotEmpty({ message: 'Patient is required' })
+    public readonly patientId!: string;
 
     @IsString({ message: 'Title should be a string' })
     @IsNotEmpty({ message: 'Title is required' })
-    public title: string;
+    public title!: string;
 
-    @IsString({ message: 'Body should be a string' })
-    @IsNotEmpty({ message: 'Body is required' })
-    public body: string; @IsNotEmpty({ message: '' })   
-    
-    @ArrayMinSize(1, { message:'LastEdited field should have at least one item'})
-    @Type(() => LastEditedBy)
-    public lastEditedBy: LastEditedBy;
+
 
     constructor(args: RecordDtoArgs) {
-        const { doctor, patient, title, body, lastEditedBy } = args;
-      
-        this.doctor = doctor,
-        this.patient = patient,
-        this.title = title,
-        this.body = body,
-        this.lastEditedBy = new LastEditedBy(lastEditedBy.doctor, lastEditedBy.date);
-
+        this.doctorId = args.doctorId;
+        this.patientId = args.patientId;
+        this.title = args.title;
     }
 
-    static create(object: RecordDtoArgs): [undefined | {[key: string]: string}, CreateRecordDto?] {
-        
+    static create(object: RecordDtoArgs): [undefined | CustomErrors[], CreateRecordDto?] {
+
         const recordDto = new CreateRecordDto(object);
-
-        const errors = validateSync(recordDto);
-
-        const isValidObject = validateSync(new LastEditedBy(recordDto.lastEditedBy.doctor, recordDto.lastEditedBy.date));
-        
-    
-        if(isValidObject.length > 0) {
-            return [isValidObject[0].constraints];
-        }
-
-        if (errors.length > 0) {
-            return [errors[0].constraints];
-        }
-
-    
-
-        return [undefined, recordDto];
+        const [errors, updatedDto] = CustomValidationErrors.validateDto<CreateRecordDto>(recordDto);
+        if (errors) return [errors];
+        return [undefined, updatedDto];
 
     }
 }

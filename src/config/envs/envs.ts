@@ -10,4 +10,5 @@ export class Environment {
     static CLOUDINARY_API_KEY: string = get('CLOUDINARY_API_KEY').required().asString();
     static CLOUDINARY_API_SECRET: string = get('CLOUDINARY_API_SECRET').required().asString();
     static MONGO_URL: string = get('MONGO_URL').required().asString();
+    static TEMP_UPLOAD_PATH: string = get('TEMP_UPLOAD_PATH').required().asString();
 }

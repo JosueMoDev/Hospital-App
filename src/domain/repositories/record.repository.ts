@@ -1,15 +1,20 @@
-import { CreateRecordDto, PaginationDto } from "../dtos";
-import { RecordEntity } from "../entities";
+import { UploadedFile } from "express-fileupload";
+import { CreateRecordDto, PaginationDto, UpdateRecordDto, UploadDto } from "../dtos";
+import { PaginationEntity, RecordEntity } from "../entities";
 
 export abstract class RecordRepository {
 
   abstract findOneById(id: string): Promise<RecordEntity>;
 
-  abstract findMany(dto: PaginationDto): Promise<RecordEntity[]>;
+  abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }>;
 
   abstract create(dto: CreateRecordDto): Promise<RecordEntity>;
 
-  abstract uptate(dto: any): Promise<RecordEntity>;
+  abstract uptate(dto: UpdateRecordDto): Promise<RecordEntity>;
 
-  abstract hiddeRecords(id: string): Promise<Boolean>;
+  abstract changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity>;
+
+  abstract uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean>;
+
+  abstract deletePDF(dto: UploadDto): Promise<boolean>;
 }

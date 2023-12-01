@@ -1,15 +1,15 @@
 import { Type } from "class-transformer";
 import {
-  IsMongoId,
-  IsNotEmpty,
-  IsObject,
-  IsPhoneNumber,
-  IsString,
-  Length,
-  ValidateNested,
-  validateSync,
-  
+    IsMongoId,
+    IsNotEmpty,
+    IsObject,
+    IsPhoneNumber,
+    IsString,
+    Length,
+    ValidateNested,
 } from "class-validator";
+
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 
 interface CreateClinicDtoArgs {
@@ -18,7 +18,6 @@ interface CreateClinicDtoArgs {
     phone: string,
     address: Address,
     createdBy: string
-
 }
 
 class Address {
@@ -28,16 +27,18 @@ class Address {
 
     @IsString()
     @IsNotEmpty()
-    public province: string;
+    public state: string;
 
     @IsString()
     @IsNotEmpty()
     public city: string;
-        
-    constructor (street: string, province:string, city: string) {
-        this.street = street,
-        this.province = province,
-        this.city = city
+
+    constructor(args: Address) {
+        const { street, state, city } = args;
+        this.street = street;
+        this.state = state;
+        this.city = city;
+
     }
 }
 export class CreateClinicDto {
@@ -46,7 +47,7 @@ export class CreateClinicDto {
     @IsNotEmpty({ message: "Register Number is required" })
     public registerNumber: string;
 
-    
+
     @IsString({ message: "Name should contain only letters" })
     @IsNotEmpty({ message: "Name is required" })
     public name: string;
@@ -56,41 +57,32 @@ export class CreateClinicDto {
     @IsNotEmpty({ message: "Phone Number is required" })
     public phone: string;
 
-        
+
     @IsObject()
     @ValidateNested()
     @Type(() => Address)
-    public address: Address
+    public address: Address;
 
     @IsMongoId()
     public readonly createdBy: string
 
 
     constructor(args: CreateClinicDtoArgs) {
-        const {
-            registerNumber,
-            name,
-            phone,
-            address,
-            createdBy
-        } = args;
-        
-        this.registerNumber = registerNumber,
-        this.name = name,
-        this.phone = phone,
-        this.address = new Address(address.city, address.province, address.street),
-        this.createdBy = createdBy
+        const { registerNumber, name, phone, address, createdBy } = args;
+        this.registerNumber = registerNumber;
+        this.name = name;
+        this.phone = phone;
+        this.address = new Address(address);
+        this.createdBy = createdBy;
     }
 
-    static create(object: CreateClinicDtoArgs): [ undefined | {[key: string]: string}, CreateClinicDto?] {
+    static create(object: CreateClinicDtoArgs): [undefined | CustomErrors[], CreateClinicDto?] {
         const createClinicDto = new CreateClinicDto(object);
 
-        const errors = validateSync(createClinicDto);
+        const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateClinicDto>(createClinicDto);
 
-        if (errors.length > 0) {
-        return [errors[0].constraints];
-        }
+        if (errors) return [errors];
 
-        return [undefined, createClinicDto];
+        return [undefined, validatedDto];
     }
 }

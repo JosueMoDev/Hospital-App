@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AccountRoutes, AppointmentRoutes, AuthenticationRoutes, ClinicAssignmentRoutes, ClinicRoutes, FileRoutes, RecordRoutes } from "./app";
+import { AccountRoutes, AppointmentRoutes, AuthenticationRoutes, ClinicAssignmentRoutes, ClinicRoutes, RecordRoutes } from "./app";
 
 export class AppRoutes {
     static get routes(): Router {
@@ -11,7 +11,6 @@ export class AppRoutes {
         router.use('/api/authentication', AuthenticationRoutes.routes);
         router.use('/api/clinic-assignment', ClinicAssignmentRoutes.routes);
         router.use('/api/clinic', ClinicRoutes.routes);
-        router.use('/api/file', FileRoutes.routes);
         router.use('/api/record', RecordRoutes.routes);
 
 

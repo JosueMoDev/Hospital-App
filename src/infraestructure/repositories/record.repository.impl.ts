@@ -1,24 +1,31 @@
-import { CreateRecordDto, PaginationDto, RecordDataSource, RecordEntity, RecordRepository } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import { CreateRecordDto, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, RecordRepository, UpdateRecordDto, UploadDto } from "../../domain";
 
 export class RecordRepositoryImpl implements RecordRepository {
 
-    constructor(private readonly datasource: RecordDataSource){}
-    
-    findOneById(id: string): Promise<RecordEntity> {
-        throw new Error("Method not implemented.");
+    constructor(private readonly datasource: RecordDataSource) { }
+    uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+        return this.datasource.uploadPDF(dto, file);
+    }
+    deletePDF(dto: UploadDto): Promise<boolean> {
+        return this.datasource.deletePDF(dto);
     }
 
-    findMany(dto: PaginationDto): Promise<RecordEntity[]> {
+    findOneById(id: string): Promise<RecordEntity> {
+        return this.datasource.findOneById(id);
+    }
+
+    findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, records: RecordEntity[] }> {
         return this.datasource.findMany(dto);
     }
     create(dto: CreateRecordDto): Promise<RecordEntity> {
         return this.datasource.create(dto);
     }
-    uptate(dto: any): Promise<RecordEntity> {
+    uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return this.datasource.uptate(dto);
     }
-    hiddeRecords(id: string): Promise<Boolean> {
-        return this.datasource.hiddeRecords(id);
+    changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
+        return this.datasource.changeRecordStatus(dto);
     }
 
 }

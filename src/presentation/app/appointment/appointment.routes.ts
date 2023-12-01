@@ -14,8 +14,12 @@ export class AppointmentRoutes {
         const controller = new AppointmentController(appointmentService);
 
         router.post('/create', controller.createAppointment);
+        router.patch('/update', controller.updateAppointment);
+        router.get('/find-one/:id', controller.findOneById);
+        router.get('/find-many', controller.findMany);
+        router.delete('/delete/:id', controller.deleteAppointment);
 
         return router;
     }
-    
+
 }

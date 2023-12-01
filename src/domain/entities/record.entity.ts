@@ -1,68 +1,80 @@
-export interface LastEditedBy {
-    doctor: string;
-    date: Date;
-}
-export interface RecordOptions {
+import { LastUpdate } from '../dtos/utils/lastUpdate';
+
+interface RecordOptions {
     id: string,
-    doctor: string;
-    patient: string;
+    doctorId: string;
+    patientId: string;
     createdAt: Date;
     title: string;
-    body: string;
-    lastEditedBy: LastEditedBy[];
-    
+    pdfUrl: string;
+    pdfId: string;
+    status: boolean;
+    lastUpdate: LastUpdate[];
 }
+
+
 
 export class RecordEntity {
     public id: string;
-    public doctor: string;
-    public patient: string;
+    public doctorId: string;
+    public patientId: string;
     public createdAt: Date;
     public title: string;
-    public body: string;
-    public lastEditedBy: LastEditedBy[];
+    public pdfUrl: string;
+    public pdfId: string;
+    public status: boolean;
+    public lastUpdate: LastUpdate[];
 
-    constructor(options: RecordOptions){
+    constructor(options: RecordOptions) {
         const {
             id,
-            doctor,
-            patient,
+            doctorId,
+            patientId,
             createdAt,
             title,
-            body,
-            lastEditedBy,
+            pdfUrl,
+            pdfId,
+            status,
+            lastUpdate,
         } = options;
 
         this.id = id;
-        this.doctor = doctor;
-        this.patient = patient;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
         this.createdAt = createdAt;
         this.title = title;
-        this.body = body;
-        this.lastEditedBy = lastEditedBy;
+        this.pdfUrl = pdfUrl;
+        this.pdfId = pdfId;
+        this.status = status;
+        this.lastUpdate = lastUpdate;
     }
 
-    static fromObject(object: {[key: string]: any}): RecordEntity {
+    static fromObject(object: { [key: string]: any }): RecordEntity {
         const {
             id,
-            doctor,
-            patient,
+            doctorId,
+            patientId,
             createdAt,
             title,
-            body,
-            lastEditedBy
-        }= object
+            pdfUrl,
+            pdfId,
+            status,
+            lastUpdate
+        } = object
 
         const record = new RecordEntity({
-          id,
-          doctor,
-          patient,
-          createdAt,
-          title,
-          body,
-          lastEditedBy,
+            id,
+            doctorId,
+            patientId,
+            createdAt,
+            title,
+            pdfUrl,
+            pdfId,
+            status,
+            lastUpdate,
         });
 
         return record;
     }
+
 }

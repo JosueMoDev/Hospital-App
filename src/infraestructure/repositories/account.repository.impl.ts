@@ -1,34 +1,50 @@
-import { AccountDataSource, AccountEntity, AccountRepository, CreateAccountDto, PaginationDto } from "../../domain";
+import { UploadedFile } from "express-fileupload";
+import {
+  AccountDataSource,
+  AccountEntity,
+  AccountRepository,
+  CreateAccountDto,
+  PaginationDto,
+  UpdateAccountDto,
+  ConfirmPasswordDto,
+  UpdatePasswordDto,
+  PaginationEntity,
+  UploadDto,
+} from "../../domain";
 
 export class AccountRepositoryImpl implements AccountRepository {
+  constructor(private readonly datasource: AccountDataSource) { }
+  uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    return this.datasource.uploadPhoto(dto, file);
+  }
+  deletePhoto(dto: UploadDto): Promise<boolean> {
+    return this.datasource.deletePhoto(dto);
+  }
 
-    constructor(private readonly datasource: AccountDataSource){}
+  findOneById(id: string): Promise<AccountEntity> {
+    return this.datasource.findOneById(id);
+  }
 
-    findOneById(id: string): Promise<AccountEntity> {
-        return this.datasource.findOneById(id);
-    }
+  findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
+    return this.datasource.findMany(dto);
+  }
 
-    getMany(by: string, dto: PaginationDto): Promise<AccountEntity[]> {
-        return this.getMany(by, dto);
-    }
+  createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
+    return this.datasource.createAccount(dto);
+  }
 
-    createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
-        return this.datasource.createAccount(dto);
-    }
+  updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
+    return this.datasource.updateAccount(dto);
+  }
+  changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
+    return this.datasource.changeStatusAccount(dto);
+  }
 
-    updateAccount(dto: any): Promise<AccountEntity> {
-        return this.datasource.updateAccount(dto);
-    }
-    changeStatusAccount(id: string): Promise<AccountEntity> {
-        return this.datasource.changeStatusAccount(id);
-    }
+  changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {
+    return this.datasource.changePasswordAccount(dto);
+  }
 
-    changePasswordAccount(oldPassword: string, newPassword: string, id: string): Promise<Boolean> {
-        return this.datasource.changePasswordAccount(oldPassword, newPassword, id);
-    }
-    
-    confirmPassword(password: string, id: string): Promise<Boolean> {
-        return this.datasource.confirmPassword(password, id);
-    }
-
+  confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean> {
+    return this.datasource.confirmPassword(dto);
+  }
 }

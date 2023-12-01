@@ -20,83 +20,112 @@ enum Role {
   ADMIN
   DOCTOR
 }
+
+type LastUpdate {
+  account String
+  date DateTime
+  action String?
+}
+
+type Address {
+  city String?
+  street String?
+  state String?
+}
+
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   duiNumber String @unique
-  email String 
+  email String @unique
   password String
   name String
   lastname String
   gender Gender
   phone String
-  isValidated Boolean
+  isValidated Boolean? @default(false)
   role Role
-  photoUrl String
-  photoId String
-  createdAt DateTime
-  //! Relations
-  clinics Clinic[]
-  doctors_appointment Appointment[] @relation("doctor_in_appointment")
-  patients_appointment Appointment[] @relation("patient_in_appointmn")
+  photoUrl String? @default("")
+  photoId String? @default("")
+  createdAt DateTime @default(now())
+  lastUpdate LastUpdate[]
 
-  doctors_record Record[] @relation("doctor_record")
-  patients_record Record[] @relation("patient_record")
+ 
+  clinic_account Clinic? @relation("clinic_account")
 
-  doctors ClinicAssignment[] @relation("doctors_assigned")
+  assignment_account_doctors ClinicAssignment[] @relation("doctors_assigned")
 
+  appointment_account_doctor Appointment? @relation("appointment_doctor")
+  appointment_account_patient Appointment? @relation("appointment_patient")
+  appointment_account_createdBy Appointment? @relation("appointment_account")
+
+  record_account_doctor Record? @relation("doctor_record")
+  record_account_patient Record? @relation("patient_record")
 }
 
-type Address {
-  city String
-  street String
-  state String
-}
+
 model Clinic {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   registerNumber String @unique
   name String
   phone String
   address Address
-  photoURl String
-  photoId String
+  photoUrl String? @default("")
+  photoId String? @default("")
   createdAt DateTime
-  createdBy Account @relation(fields: [accountId], references: [id])
-  accountId String @db.ObjectId
-  clinicAssignment ClinicAssignment[] 
+  status Boolean ? @default(true)
+  lastUpdate LastUpdate[]
+
+  clinic_account Account @relation("clinic_account", fields: [createdBy], references: [id])
+  createdBy String @unique @db.ObjectId
+
+  clinicAssignment_clinic ClinicAssignment? @relation("clinic_assigned")
 }
 
 model Appointment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   startDate DateTime
   endDate DateTime
-  doctor Account @relation("doctor_in_appointment", fields: [doctorId], references: [id])
+  lastUpdate LastUpdate[]
+  createdAt DateTime 
+
+  appointment_doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
   doctorId String @unique @db.ObjectId
-  patient Account @relation("patient_in_appointmn", fields: [patientId], references: [id])
+
+  appointment_patient Account @relation("appointment_patient", fields: [patientId], references: [id])
   patientId String @unique @db.ObjectId
 
+  appointmetAccount Account @relation("appointment_account", fields: [createdBy], references: [id])
+  createdBy String @unique @db.ObjectId
+
 }
 
-type LastEditedBy {
-  doctor String
-  date DateTime 
-}
+
 
 model Record {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  doctor Account @relation("doctor_record",fields: [doctorId], references: [id])
-  doctorId String @unique @db.ObjectId
-  patient Account @relation("patient_record",fields: [patientId], references: [id])
-  patientId String @unique @db.ObjectId
-  createdAt DateTime
+  createdAt DateTime 
   title String
-  body String
-  lastEditedBy LastEditedBy
+  pdfUrl  String? @default("")
+  pdfId String? @default("")
+  status Boolean? @default(true)
+  lastUpdate LastUpdate[]
+
+  doctor_record Account @relation("doctor_record",fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+
+  patient_record Account @relation("patient_record",fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
 }
 
 model ClinicAssignment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  clinic Clinic @relation(fields: [clinicId], references: [id])
+
+  clinicAssignment_clinic Clinic @relation("clinic_assigned", fields: [clinicId], references: [id])
   clinicId String @unique @db.ObjectId
-  doctors Account @relation("doctors_assigned", fields: [doctorsId], references: [id])
-  doctorsId String @unique @db.ObjectId
+
+  lastUpdate LastUpdate[]
+
+  clinicAssignment_account_doctors Account @relation("doctors_assigned", fields: [doctorsId], references: [id])
+  doctorsId String[] @unique @db.ObjectId
+  
 }
