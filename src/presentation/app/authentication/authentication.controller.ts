@@ -34,9 +34,8 @@ export class AuthenticationController {
     const bearerToken = request.headers['authorization'];
     if (!bearerToken) return response.status(400).json({ error: " NO token provided" });
     const accessToken = bearerToken.split(' ');
-    console.log(accessToken[1])
     this.authService
-      .authenticationWithGoogle(accessToken[1])
+      .refreshToken(accessToken[1])
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

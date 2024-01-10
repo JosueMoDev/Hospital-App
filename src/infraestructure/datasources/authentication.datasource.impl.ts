@@ -16,6 +16,18 @@ export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
         return AccountEntity.fromObject(account);
     }
 
+     private async findAccountById(id: string): Promise<AccountEntity> {
+        const account = await prisma.account.findFirst({
+            where: {
+                id: id
+            }
+        });
+
+        if (!account) throw CustomError.badRequest('Any user found');
+
+        return AccountEntity.fromObject(account);
+    }
+
     async loginWithEmailAndPassword(loginDto: LoginDto): Promise<AuthenticatedUserEntity> {
 
         const account = await this.findAccountByEmail(loginDto.email);
@@ -52,11 +64,24 @@ export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
         }
     }
 
-    async refreshToken(token: any): Promise<AuthenticatedUserEntity> {
-        // todo: fix validatetoken
-        const result = await JWTAdapter.validateToken(token);
-        console.log(result)
-        throw 'Token'
+    async refreshToken(token: string): Promise<AuthenticatedUserEntity> {
+        const isValidToken: any = await JWTAdapter.validateToken(token);
+
+        if (!isValidToken) throw CustomError.badRequest('Token not valid');
+
+        const account = await this.findAccountById(isValidToken.id);
+
+        const { password, ...authenticatedAccount } = AccountEntity.fromObject(account);
+
+        const accesstoken = await JWTAdapter.generateToken({ id: account.id });
+        
+        if (!accesstoken) throw CustomError.internalServer('Error while creating token');
+        
+        return {
+            account: authenticatedAccount,
+            accessToken: accesstoken,
+            refreshToken: ''
+        }
     }
 
 }
