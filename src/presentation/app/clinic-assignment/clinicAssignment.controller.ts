@@ -1,11 +1,21 @@
-import { Request, Response } from "express";
+import { Request, Response} from "express";
 import { ClinicAssignmentService } from "../../services";
 import { CreateClinicAssignmentDto, HandlerError } from "../../../domain";
 
 export class ClinicAssignmentController {
   constructor(
     private readonly clinicAssignmentService: ClinicAssignmentService
-  ) { }
+  ) {}
+
+  getAssignableDoctors = (request: Request, response: Response) => {
+    this.clinicAssignmentService
+      .gettingAssignableDoctor()
+      .then((doctorList) => response.json(doctorList))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  };
 
   createClinicAssignment = (request: Request, response: Response) => {
     const [error, createClinicAssignmentDto] = CreateClinicAssignmentDto.create(
@@ -39,7 +49,6 @@ export class ClinicAssignmentController {
   };
 
   deleteClinicAssignment = (request: Request, response: Response) => {
-
     this.clinicAssignmentService
       .deletingClinicAssignment(request.params.id!)
       .then((result) => response.json(result))
@@ -48,6 +57,4 @@ export class ClinicAssignmentController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
-
-
 }

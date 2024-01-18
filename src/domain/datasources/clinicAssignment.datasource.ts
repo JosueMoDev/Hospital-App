@@ -1,5 +1,7 @@
-import { ClinicAssignmentEntity, CreateClinicAssignmentDto } from '..';
+import { AccountEntity, ClinicAssignmentEntity, CreateClinicAssignmentDto } from '..';
 export abstract class CLinicAssignmentDataSource {
+
+    abstract getAssingnableDoctors(): Promise<AccountEntity[]>;
 
     abstract createAssignment(dto: CreateClinicAssignmentDto): Promise<ClinicAssignmentEntity>;
 

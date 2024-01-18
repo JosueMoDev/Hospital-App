@@ -43,6 +43,7 @@ model Account {
   gender Gender
   phone String
   isValidated Boolean? @default(false)
+  isAssignable Boolean? @default(false)
   role Role
   photoUrl String? @default("")
   photoId String? @default("")

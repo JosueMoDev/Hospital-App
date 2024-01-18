@@ -7,10 +7,11 @@ import {
   ValidateNested,
 } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
+import { AccountEntity } from "../../entities";
 
 interface AssignmentDtoArgs {
   clinic: string;
-  doctors: string[];
+  doctors: AccountEntity[];
 }
 
 class Doctors {
@@ -32,13 +33,12 @@ export class CreateClinicAssignmentDto {
   @IsArray()
   @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
   @Type(() => Doctors)
-  @ValidateNested({ each: true })
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
     const { clinic, doctors } = args;
-    (this.clinic = clinic),
-      (this.doctors = doctors.map((doctor) => new Doctors(doctor)));
+    (this.clinic = clinic);
+    (this.doctors = doctors.map((doctor) => new Doctors(doctor.id)));
   }
 
   static create(
