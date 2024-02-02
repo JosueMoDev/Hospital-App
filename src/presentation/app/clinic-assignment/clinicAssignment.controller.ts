@@ -43,8 +43,13 @@ export class ClinicAssignmentController {
   };
 
   deleteClinicAssignment = (request: Request, response: Response) => {
+    const [error, deleteClinicAssignmentDto] = ClinicAssignmentDto.create(
+      request.body
+    );
+    if (error) return response.status(400).json({ error });
+
     this.clinicAssignmentService
-      .deletingClinicAssignment(request.params.id!)
+      .deletingClinicAssignment(deleteClinicAssignmentDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

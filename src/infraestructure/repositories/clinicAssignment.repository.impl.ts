@@ -12,10 +12,10 @@ export class ClinicAssignmentRepositoryImpl implements ClinicAssignmentRepositor
     createAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         return this.datasourse.createAssignment(dto);
     }
-    updateAssignment(dto: any): Promise<boolean> {
+    updateAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         return this.datasourse.updateAssignment(dto);
     }
-    deleteAssignment(id: string): Promise<boolean> {
-        return this.datasourse.deleteAssignment(id);
+    deleteAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
+        return this.datasourse.deleteAssignment(dto);
     }
 }

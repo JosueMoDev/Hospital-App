@@ -12,12 +12,12 @@ export class ClinicAssignmentService {
         return await this.repository.createAssignment(dto);
     }
 
-    public async updatingClinicAssignment(dto: any): Promise<boolean> {
+    public async updatingClinicAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         return await this.repository.updateAssignment(dto);
     }
 
-    public async deletingClinicAssignment(id: string): Promise<boolean> {
-        return this.repository.deleteAssignment(id);
+    public async deletingClinicAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
+        return this.repository.deleteAssignment(dto);
     }
 
 }
