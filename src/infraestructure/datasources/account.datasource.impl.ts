@@ -147,6 +147,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     role: roleT[dto.role],
                     createdAt: DateFnsAdapter.formatDate(),
                     lastUpdate: [],
+                    isAssignable: roleT[dto.role] === 'DOCTOR' ? true : false
                 },
             });
             return AccountEntity.fromObject(saveAccount);

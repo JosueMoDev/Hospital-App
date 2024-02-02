@@ -4,14 +4,13 @@ import {
   IsArray,
   IsMongoId,
   IsNotEmpty,
-  ValidateNested,
 } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
 import { AccountEntity } from "../../entities";
 
 interface AssignmentDtoArgs {
   clinic: string;
-  doctors: AccountEntity[];
+  doctors: string[];
 }
 
 class Doctors {
@@ -29,16 +28,16 @@ export class CreateClinicAssignmentDto {
   @IsNotEmpty({ message: "Clinic ID is required" })
   public readonly clinic: string;
 
-  @IsNotEmpty({ message: "Assignment is required" })
-  @IsArray()
+  @IsNotEmpty({ message: "You should provide some doctors to assign" })
+  @IsArray({message:"incorrect type"})
   @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
   @Type(() => Doctors)
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
     const { clinic, doctors } = args;
-    (this.clinic = clinic);
-    (this.doctors = doctors.map((doctor) => new Doctors(doctor.id)));
+    this.clinic = clinic;
+    this.doctors = (typeof doctors !== 'object') ? [] : doctors.map((doctor: string) => new Doctors(doctor));
   }
 
   static create(
