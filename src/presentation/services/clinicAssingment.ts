@@ -1,5 +1,4 @@
-import { AccountEntity, ClinicAssignmentRepository, CreateClinicAssignmentDto } from "../../domain";
-import { ClinicAssignmentEntity } from '../../domain/entities/clinicAssigment.entity';
+import { AccountEntity, ClinicAssignmentRepository, ClinicAssignmentDto } from "../../domain";
 
 export class ClinicAssignmentService {
 
@@ -9,11 +8,11 @@ export class ClinicAssignmentService {
         return await this.repository.getAssingnableDoctors();
     };
 
-    public async creatingClinicAssignment(dto: CreateClinicAssignmentDto): Promise<ClinicAssignmentEntity> {
+    public async creatingClinicAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         return await this.repository.createAssignment(dto);
     }
 
-    public async updatingClinicAssignment(dto: any): Promise<ClinicAssignmentEntity> {
+    public async updatingClinicAssignment(dto: any): Promise<boolean> {
         return await this.repository.updateAssignment(dto);
     }
 

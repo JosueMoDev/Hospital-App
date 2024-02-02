@@ -1,1 +1,1 @@
-export * from './createClinicAssignment.dto';
+export * from './clinicAssignment.dto';

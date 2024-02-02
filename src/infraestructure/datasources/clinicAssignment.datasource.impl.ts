@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 import { prisma } from "../../config";
-import { AccountEntity, CLinicAssignmentDataSource, ClinicAssignmentEntity, CreateClinicAssignmentDto } from "../../domain";
+import { AccountEntity, CLinicAssignmentDataSource, ClinicAssignmentDto } from "../../domain";
 export class ClinicAssignmentDataSourceImpl implements CLinicAssignmentDataSource {
     
     public async getAssingnableDoctors(): Promise<AccountEntity[]> {
@@ -13,7 +13,7 @@ export class ClinicAssignmentDataSourceImpl implements CLinicAssignmentDataSourc
         return assignableDoctors.map(AccountEntity.fromObject);
     }
 
-    async createAssignment(dto: CreateClinicAssignmentDto): Promise<ClinicAssignmentEntity | any> {
+    async createAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         const { doctors, clinic } = dto;
         const doctors_id = doctors.map((doctor) => doctor.doctor);
         const prismaTx = await prisma.$transaction(async (transaction) => {
@@ -40,7 +40,7 @@ export class ClinicAssignmentDataSourceImpl implements CLinicAssignmentDataSourc
 
             await Promise.all(assignments);
 
-            await transaction.account.updateMany({
+           const resp = await transaction.account.updateMany({
                 where: {
                     id: {
                         in: doctors_id
@@ -51,33 +51,12 @@ export class ClinicAssignmentDataSourceImpl implements CLinicAssignmentDataSourc
                 }
             });
 
-            const assignmentResponse = await transaction.clinicAssignment.findMany({
-                where: {
-                    clinicId: clinic,
-                },
-                include: {
-                    clinicAssignment_account_doctor: {
-                        select: {
-                            name: true,
-                            lastname: true,
-                            duiNumber: true,
-
-                        }
-                    },
-                    clinicAssignment_clinic: {
-                        select: {
-                            name: true,
-                            address: true
-                        }
-                    }
-                }
-            })
-            console.log(assignmentResponse)
-            return { assignmentResponse }
+            return resp.count !== 0 ? true : false
+       
         });
-        return ClinicAssignmentEntity.fromObject(prismaTx.assignmentResponse);
+        return prismaTx
     }
-    async updateAssignment(dto: any): Promise<ClinicAssignmentEntity> {
+    async updateAssignment(dto: any): Promise<boolean> {
         return dto as any;
     }
     async deleteAssignment(id: string): Promise<boolean> {

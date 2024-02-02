@@ -19,14 +19,4 @@ export class ClinicAssignmentEntity {
     this.doctors = doctors;
   }
 
-  static fromObject(object: { [key: string]: any }): ClinicAssignmentEntity {
-    const { id, clinic, doctors } = object;
-
-    const clinicAssignment = new ClinicAssignmentEntity({
-      id,
-      clinic,
-      doctors,
-    });
-    return clinicAssignment;
-  }
 }

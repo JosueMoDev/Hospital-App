@@ -23,7 +23,7 @@ class Doctors {
   }
 }
 
-export class CreateClinicAssignmentDto {
+export class ClinicAssignmentDto {
   @IsMongoId()
   @IsNotEmpty({ message: "Clinic ID is required" })
   public readonly clinic: string;
@@ -42,10 +42,10 @@ export class CreateClinicAssignmentDto {
 
   static create(
     object: AssignmentDtoArgs
-  ): [undefined | CustomErrors[], CreateClinicAssignmentDto?] {
-    const assignmentDto = new CreateClinicAssignmentDto(object);
+  ): [undefined | CustomErrors[], ClinicAssignmentDto?] {
+    const assignmentDto = new ClinicAssignmentDto(object);
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<CreateClinicAssignmentDto>(
+      CustomValidationErrors.validateDto<ClinicAssignmentDto>(
         assignmentDto
       );
 

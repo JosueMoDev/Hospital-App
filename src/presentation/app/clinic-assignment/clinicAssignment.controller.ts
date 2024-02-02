@@ -1,6 +1,6 @@
 import { Request, Response} from "express";
 import { ClinicAssignmentService } from "../../services";
-import { CreateClinicAssignmentDto, HandlerError } from "../../../domain";
+import { ClinicAssignmentDto, HandlerError } from "../../../domain";
 
 export class ClinicAssignmentController {
   constructor(
@@ -18,7 +18,7 @@ export class ClinicAssignmentController {
   };
 
   createClinicAssignment = (request: Request, response: Response) => {
-    const [error, createClinicAssignmentDto] = CreateClinicAssignmentDto.create(
+    const [error, createClinicAssignmentDto] = ClinicAssignmentDto.create(
       request.body
     );
     if (error) return response.status(400).json({ error });
@@ -33,12 +33,6 @@ export class ClinicAssignmentController {
   };
 
   updateClinicAssignment = (request: Request, response: Response) => {
-    // TODO: implement dto for update
-    // const [error, updateClinicAssignmentDto] = CreateClinicAssignmentDto.create(
-    //   request.body
-    // );
-    // if (error) return response.status(400).json({ error });
-
     this.clinicAssignmentService
       .updatingClinicAssignment(request.body!)
       .then((clinicAssignmentUpdated) => response.json(clinicAssignmentUpdated))
