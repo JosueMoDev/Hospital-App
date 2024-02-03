@@ -33,13 +33,18 @@ export class ClinicAssignmentController {
   };
 
   updateClinicAssignment = (request: Request, response: Response) => {
-    this.clinicAssignmentService
-      .updatingClinicAssignment(request.body!)
-      .then((clinicAssignmentUpdated) => response.json(clinicAssignmentUpdated))
-      .catch((error) => {
-        const { statusCode, errorMessage } = HandlerError.hasError(error);
-        return response.status(statusCode).json({ error: errorMessage });
-      });
+   const [error, updateClinicAssignmentDto] = ClinicAssignmentDto.create(
+     request.body
+   );
+   if (error) return response.status(400).json({ error });
+
+   this.clinicAssignmentService
+     .updatingClinicAssignment(updateClinicAssignmentDto!)
+     .then((clinicAssignment) => response.json(clinicAssignment))
+     .catch((error) => {
+       const { statusCode, errorMessage } = HandlerError.hasError(error);
+       return response.status(statusCode).json({ error: errorMessage });
+     });
   };
 
   deleteClinicAssignment = (request: Request, response: Response) => {
