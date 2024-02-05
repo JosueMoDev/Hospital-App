@@ -1,4 +1,4 @@
-import { AccountEntity, ClinicAssignmentEntity, ClinicAssignmentDto } from '..';
+import { AccountEntity, ClinicAssignmentDto } from '..';
 export abstract class CLinicAssignmentDataSource {
 
     abstract getAssingnableDoctors(): Promise<AccountEntity[]>;
@@ -7,5 +7,5 @@ export abstract class CLinicAssignmentDataSource {
 
     abstract updateAssignment(dto: ClinicAssignmentDto): Promise<boolean>
     
-    abstract deleteAssignment(id: ClinicAssignmentDto): Promise<boolean>;
+    abstract deleteAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
 }

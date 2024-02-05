@@ -6,5 +6,5 @@ export abstract class ClinicAssignmentRepository {
 
   abstract updateAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
 
-  abstract deleteAssignment(id: ClinicAssignmentDto): Promise<boolean>;
+  abstract deleteAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
 }

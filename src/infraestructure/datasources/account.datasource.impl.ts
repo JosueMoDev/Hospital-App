@@ -56,7 +56,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
             data: {
                 photoId: fileId,
                 photoUrl: fileUrl,
-                lastUpdate: [...account.lastUpdate],
+                lastUpdate: [...account.lastUpdate, lastUpdate],
             },
         });
         if (updateAccountPhoto) return true;

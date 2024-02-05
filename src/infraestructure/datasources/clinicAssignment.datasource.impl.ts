@@ -4,7 +4,6 @@ import {
   AccountEntity,
   CLinicAssignmentDataSource,
   ClinicAssignmentDto,
-  CustomError,
 } from "../../domain";
 export class ClinicAssignmentDataSourceImpl
   implements CLinicAssignmentDataSource
