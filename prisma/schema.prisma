@@ -43,6 +43,7 @@ model Account {
   gender Gender
   phone String
   isValidated Boolean? @default(false)
+  isAssignable Boolean
   role Role
   photoUrl String? @default("")
   photoId String? @default("")
@@ -52,7 +53,7 @@ model Account {
  
   clinic_account Clinic? @relation("clinic_account")
 
-  assignment_account_doctors ClinicAssignment[] @relation("doctors_assigned")
+  assignment_account_doctors ClinicAssignment? @relation("doctors_assigned")
 
   appointment_account_doctor Appointment? @relation("appointment_doctor")
   appointment_account_patient Appointment? @relation("appointment_patient")
@@ -78,7 +79,7 @@ model Clinic {
   clinic_account Account @relation("clinic_account", fields: [createdBy], references: [id])
   createdBy String @unique @db.ObjectId
 
-  clinicAssignment_clinic ClinicAssignment? @relation("clinic_assigned")
+  clinicAssignment_clinic ClinicAssignment[] @relation("clinic_assigned")
 }
 
 model Appointment {
@@ -121,11 +122,11 @@ model ClinicAssignment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   clinicAssignment_clinic Clinic @relation("clinic_assigned", fields: [clinicId], references: [id])
-  clinicId String @unique @db.ObjectId
+  clinicId String  @db.ObjectId
 
   lastUpdate LastUpdate[]
 
-  clinicAssignment_account_doctors Account @relation("doctors_assigned", fields: [doctorsId], references: [id])
-  doctorsId String[] @unique @db.ObjectId
+  clinicAssignment_account_doctor Account @relation("doctors_assigned", fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
   
 }

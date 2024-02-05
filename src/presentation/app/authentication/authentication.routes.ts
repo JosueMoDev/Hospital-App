@@ -14,7 +14,7 @@ export class AuthenticationRoutes {
 
         router.post('/login', controller.loginWithEmailAndPassword);
         router.post('/google-sign-in', controller.googleSignIn);
-        router.get('/refresh-token', controller.refreshToken)
+        router.get('/refresh-token', controller.refreshToken);
 
         return router;
     }

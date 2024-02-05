@@ -1,5 +1,5 @@
 import { UploadedFile } from "express-fileupload";
-import { AllowedFolder, DateFnsAdapter, Environment, prisma } from "../../config";
+import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
 import { CreateRecordDto, CustomError, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, UpdateRecordDto, UploadDto } from "../../domain";
 import { FileDataSourceImpl } from "./file.datasource.impl";
 import { FileRepositoryImpl } from "../repositories";
@@ -11,8 +11,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
     private readonly fileservice = new FileService(this.repository);
 
     async uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-        const { id, lastUpdate } = dto;
-        const record = await this.findOneById(id);
+        const record = await this.findOneById(dto.id);
         if (!file) throw CustomError.badRequest("File no enviado");
         const { fileUrl, fileId } = await this.fileservice.uploadingFile({
             file: {
@@ -25,12 +24,19 @@ export class RecordDataSourceImpl implements RecordDataSource {
             }
         });
         const updateRecordPdf = await prisma.record.update({
-            where: { id: id },
-            data: {
-                pdfId: fileId,
-                pdfUrl: fileUrl,
-                lastUpdate: [...record.lastUpdate],
-            },
+          where: { id: dto.id },
+          data: {
+            pdfId: fileId,
+            pdfUrl: fileUrl,
+            lastUpdate: [
+              ...record.lastUpdate,
+              {
+                account: dto.lastUpdate.account,
+                date: DateFnsAdapter.formatDate(),
+                action: "UPDATE RECORD",
+              },
+            ],
+          },
         });
         if (updateRecordPdf) return true;
         return false;

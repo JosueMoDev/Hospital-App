@@ -4,9 +4,9 @@ import {
   IsArray,
   IsMongoId,
   IsNotEmpty,
-  ValidateNested,
 } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
+import { AccountEntity } from "../../entities";
 
 interface AssignmentDtoArgs {
   clinic: string;
@@ -23,30 +23,29 @@ class Doctors {
   }
 }
 
-export class CreateClinicAssignmentDto {
+export class ClinicAssignmentDto {
   @IsMongoId()
   @IsNotEmpty({ message: "Clinic ID is required" })
   public readonly clinic: string;
 
-  @IsNotEmpty({ message: "Assignment is required" })
-  @IsArray()
+  @IsNotEmpty({ message: "You should provide some doctors to assign" })
+  @IsArray({message:"incorrect type"})
   @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
   @Type(() => Doctors)
-  @ValidateNested({ each: true })
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
     const { clinic, doctors } = args;
-    (this.clinic = clinic),
-      (this.doctors = doctors.map((doctor) => new Doctors(doctor)));
+    this.clinic = clinic;
+    this.doctors = (typeof doctors !== 'object') ? [] : doctors.map((doctor: string) => new Doctors(doctor));
   }
 
   static create(
     object: AssignmentDtoArgs
-  ): [undefined | CustomErrors[], CreateClinicAssignmentDto?] {
-    const assignmentDto = new CreateClinicAssignmentDto(object);
+  ): [undefined | CustomErrors[], ClinicAssignmentDto?] {
+    const assignmentDto = new ClinicAssignmentDto(object);
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<CreateClinicAssignmentDto>(
+      CustomValidationErrors.validateDto<ClinicAssignmentDto>(
         assignmentDto
       );
 

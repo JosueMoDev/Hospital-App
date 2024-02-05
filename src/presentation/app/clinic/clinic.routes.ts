@@ -14,7 +14,6 @@ export class ClinicRoutes {
         const repository = new ClinicRepositoyImpl(datasource);
         const clinicService = new ClinicService(repository);
         const controller = new ClinicController(clinicService);
-
         router.post('/create', controller.createClinic);
         router.patch('/update', controller.updateClinic);
         router.get('/find-one/:id', controller.findOneById);

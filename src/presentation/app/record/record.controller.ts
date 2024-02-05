@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { RecordService } from "../../services";
-import { CreateRecordDto, HandlerError, PaginationDto, UpdateAccountDto, UpdateRecordDto, UploadDto } from "../../../domain";
+import { CreateRecordDto, HandlerError, PaginationDto, UpdateRecordDto, UploadDto } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
 
 export class RecordController {

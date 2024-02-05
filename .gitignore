@@ -4,3 +4,4 @@ node_modules/
 .env.test
 uploads/
 .DS_Store
+/postgres

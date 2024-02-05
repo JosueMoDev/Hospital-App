@@ -1,9 +1,10 @@
-import { ClinicAssignmentEntity, CreateClinicAssignmentDto } from "..";
+import { AccountEntity, ClinicAssignmentDto } from "..";
 export abstract class ClinicAssignmentRepository {
-  
-  abstract createAssignment(dto: CreateClinicAssignmentDto): Promise<ClinicAssignmentEntity>;
+  abstract getAssingnableDoctors(): Promise<AccountEntity[]>;
 
-  abstract updateAssignment(dto: any): Promise<ClinicAssignmentEntity>;
+  abstract createAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
 
-  abstract deleteAssignment(id: string): Promise<boolean>;
+  abstract updateAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
+
+  abstract deleteAssignment(dto: ClinicAssignmentDto): Promise<boolean>;
 }

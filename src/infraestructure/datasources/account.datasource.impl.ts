@@ -56,7 +56,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
             data: {
                 photoId: fileId,
                 photoUrl: fileUrl,
-                lastUpdate: [...account.lastUpdate],
+                lastUpdate: [...account.lastUpdate, lastUpdate],
             },
         });
         if (updateAccountPhoto) return true;
@@ -147,6 +147,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     role: roleT[dto.role],
                     createdAt: DateFnsAdapter.formatDate(),
                     lastUpdate: [],
+                    isAssignable: roleT[dto.role] === 'DOCTOR' ? true : false
                 },
             });
             return AccountEntity.fromObject(saveAccount);

@@ -1,6 +1,6 @@
 import { UploadedFile } from "express-fileupload";
 import { UpdateClinicDto, PaginationDto, CreateClinicDto, UploadDto } from "../dtos";
-import { ClinicEntity, FileEntity, PaginationEntity } from "../entities";
+import { ClinicEntity,PaginationEntity } from "../entities";
 
 export abstract class ClinicDataSource {
 
@@ -13,7 +13,7 @@ export abstract class ClinicDataSource {
    abstract update(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
    abstract changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity>;
-   // Todo: UploadedFile needs to be adapted;
+
    abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
    abstract deletePhoto(dto: UploadDto): Promise<boolean>;

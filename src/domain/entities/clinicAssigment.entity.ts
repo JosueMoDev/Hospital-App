@@ -1,26 +1,22 @@
+import { AccountEntity } from "./account.entity";
+import { ClinicEntity } from "./clinic.entity";
+
 export interface ClinicAssignmentOptions {
-    clinic: string,
-    doctors: string[]
+  id: string;
+  clinic: ClinicEntity;
+  doctors: AccountEntity[];
 }
 
 export class ClinicAssignmentEntity {
+  public id: string;
+  public clinic: ClinicEntity;
+  public doctors: AccountEntity[];
 
-    public clinic: string;
-    public doctors: string[];
-
-    constructor(options: ClinicAssignmentOptions) {
-        const {clinic, doctors} = options;
-        this.clinic = clinic;
-        this.doctors = doctors;
-    }
-
-    static fromObject(object: {[key:string]: any}): ClinicAssignmentEntity {
-        const {clinic, doctors} = object;
-        const clinicAssignment = new ClinicAssignmentEntity({
-            clinic,
-            doctors
-        });
-        return clinicAssignment;
-    }
+  constructor(options: ClinicAssignmentOptions) {
+    const { clinic, doctors, id } = options;
+    this.id = id;
+    this.clinic = clinic;
+    this.doctors = doctors;
+  }
 
 }
