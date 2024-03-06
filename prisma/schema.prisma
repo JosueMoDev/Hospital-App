@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+enum Gender {
+  FEMALE
+  MALE
+}
+
+enum Role {
+  PATIENT
+  ADMIN
+  DOCTOR
+}
+
+type LastUpdate {
+  account String
+  date DateTime
+  action String?
+}
+
+type Address {
+  city String?
+  street String?
+  state String?
+}
+
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  duiNumber String @unique
+  email String @unique
+  password String
+  name String
+  lastname String
+  gender Gender
+  phone String
+  isValidated Boolean? @default(false)
+  isAssignable Boolean
+  role Role
+  photoUrl String? @default("")
+  photoId String? @default("")
+  createdAt DateTime @default(now())
+  lastUpdate LastUpdate[]
+
+ 
+  clinic_account Clinic? @relation("clinic_account")
+
+  assignment_account_doctors ClinicAssignment? @relation("doctors_assigned")
+
+  appointment_account_doctor Appointment? @relation("appointment_doctor")
+  appointment_account_patient Appointment? @relation("appointment_patient")
+  appointment_account_createdBy Appointment? @relation("appointment_account")
+
+  record_account_doctor Record? @relation("doctor_record")
+  record_account_patient Record? @relation("patient_record")
+}
+
+
+model Clinic {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  registerNumber String @unique
+  name String
+  phone String
+  address Address
+  photoUrl String? @default("")
+  photoId String? @default("")
+  createdAt DateTime
+  status Boolean ? @default(true)
+  lastUpdate LastUpdate[]
+
+  clinic_account Account @relation("clinic_account", fields: [createdBy], references: [id])
+  createdBy String @unique @db.ObjectId
+
+  clinicAssignment_clinic ClinicAssignment[] @relation("clinic_assigned")
+}
+
+model Appointment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  startDate DateTime
+  endDate DateTime
+  lastUpdate LastUpdate[]
+  createdAt DateTime 
+
+  appointment_doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+
+  appointment_patient Account @relation("appointment_patient", fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
+
+  appointmetAccount Account @relation("appointment_account", fields: [createdBy], references: [id])
+  createdBy String @unique @db.ObjectId
+
+}
+
+
+
+model Record {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime 
+  title String
+  pdfUrl  String? @default("")
+  pdfId String? @default("")
+  status Boolean? @default(true)
+  lastUpdate LastUpdate[]
+
+  doctor_record Account @relation("doctor_record",fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+
+  patient_record Account @relation("patient_record",fields: [patientId], references: [id])
+  patientId String @unique @db.ObjectId
+}
+
+model ClinicAssignment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  clinicAssignment_clinic Clinic @relation("clinic_assigned", fields: [clinicId], references: [id])
+  clinicId String  @db.ObjectId
+
+  lastUpdate LastUpdate[]
+
+  clinicAssignment_account_doctor Account @relation("doctors_assigned", fields: [doctorId], references: [id])
+  doctorId String @unique @db.ObjectId
+  
+}
