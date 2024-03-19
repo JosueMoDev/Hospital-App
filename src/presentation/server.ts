@@ -1,6 +1,15 @@
 import express, { Router } from "express";
 import compression from 'compression';
+import cors from 'cors'
 import { ExpressFileUploadAdapter } from '../config/adapters/expressFileUploadAdapter';
+
+const corsOptions = {
+  origin: "http://localhost:4200",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  credentials: true, // Habilita las cookies a través de las solicitudes CORS
+};
 interface serverConfig {
     port: number;
     routes: Router;
@@ -21,6 +30,7 @@ export class Server {
 
     async start() {
         //* Middlewares
+        this.app.use(cors(corsOptions));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true })); //! x-www-form-urlencoded
         this.app.use(compression());

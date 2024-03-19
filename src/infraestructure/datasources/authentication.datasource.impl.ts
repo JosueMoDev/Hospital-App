@@ -5,10 +5,8 @@ import { GoogleOAuth2ClientAdapter } from '../../config/adapters/googleauth.adap
 export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
 
     private async findAccountByEmail(email: string): Promise<AccountEntity> {
-        const account = await prisma.account.findFirst({
-            where: {
-                email: email
-            }
+        const account = await prisma.account.findUnique({
+            where: { email },
         });
 
         if (!account) throw CustomError.badRequest('Any user found');
