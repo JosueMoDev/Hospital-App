@@ -43,7 +43,7 @@ class Address {
 }
 export class CreateClinicDto {
 
-    @Length(9, 9, { message: "Register Number  Format not valid" })
+    @Length(12, 12, { message: "Register Number  Format not valid" })
     @IsNotEmpty({ message: "Register Number is required" })
     public registerNumber: string;
 
