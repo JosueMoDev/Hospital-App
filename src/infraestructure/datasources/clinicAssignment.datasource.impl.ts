@@ -8,6 +8,21 @@ import {
 export class ClinicAssignmentDataSourceImpl
   implements CLinicAssignmentDataSource
 {
+  public async getAssignedDoctors(id: string): Promise<AccountEntity[]> {
+    const doctorsAssigned = await prisma.clinicAssignment.findMany({
+      where: {
+        clinicId: id,
+      },
+      include: {
+        clinicAssignment_account_doctor: true,
+      },
+    });
+
+    return doctorsAssigned.map(({ clinicAssignment_account_doctor }) =>
+      AccountEntity.fromObject(clinicAssignment_account_doctor)
+    );
+  }
+
   public async getAssingnableDoctors(): Promise<AccountEntity[]> {
     const doctorsAvaibleToAssign = await prisma.account.findMany({
       where: {
@@ -18,9 +33,7 @@ export class ClinicAssignmentDataSourceImpl
     return doctorsAvaibleToAssign.map(AccountEntity.fromObject);
   }
 
-  private async checkIfDoctorsExicist(
-    doctors: any
-  ): Promise<string[]> {
+  private async checkIfDoctorsExicist(doctors: any): Promise<string[]> {
     const doctors_id = doctors.map((doctor: any) => doctor.doctor);
     const response = await prisma.account.findMany({
       where: {
@@ -30,12 +43,14 @@ export class ClinicAssignmentDataSourceImpl
         role: Role.DOCTOR,
       },
     });
-    return response.map((doctor)=>doctor.id);
+    return response.map((doctor) => doctor.id);
   }
 
   async createAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
     const { doctors, clinic } = dto;
-    const doctorsAvaibleToAssign = await this.checkIfDoctorsExicist(doctors as []);
+    const doctorsAvaibleToAssign = await this.checkIfDoctorsExicist(
+      doctors as []
+    );
 
     const prismaTx = await prisma.$transaction(async (transaction) => {
       const assignments = doctorsAvaibleToAssign.map((doctor) => {
@@ -69,7 +84,6 @@ export class ClinicAssignmentDataSourceImpl
     const { doctors, clinic } = dto;
     const doctors_id = await this.checkIfDoctorsExicist(doctors as []);
     const prismaTx = await prisma.$transaction(async (transaction) => {
-
       const resp = await transaction.clinicAssignment.updateMany({
         where: {
           doctorId: {
@@ -77,14 +91,14 @@ export class ClinicAssignmentDataSourceImpl
           },
         },
         data: {
-          clinicId: clinic
+          clinicId: clinic,
         },
       });
       return resp.count !== 0 ? true : false;
     });
     return prismaTx;
   }
-  
+
   async deleteAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
     const { doctors, clinic } = dto;
     const doctors_id = await this.checkIfDoctorsExicist(doctors as []);

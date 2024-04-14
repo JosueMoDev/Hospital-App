@@ -8,6 +8,10 @@ export class ClinicAssignmentService {
         return await this.repository.getAssingnableDoctors();
     };
 
+    public async gettingAssignedDoctors(id: string): Promise<AccountEntity[]>{
+        return await this.repository.getAssignedDoctors(id);
+    }
+
     public async creatingClinicAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
         return await this.repository.createAssignment(dto);
     }
