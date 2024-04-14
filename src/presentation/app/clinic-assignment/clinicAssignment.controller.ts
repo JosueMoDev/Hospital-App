@@ -23,7 +23,7 @@ export class ClinicAssignmentController {
 
   getAssignedDoctors = (request: Request, response: Response) => {
     const [error, getDoctorsAssigned] = GetDoctorsAssignedDto.create(
-      request.body.clinic
+      request.params.clinic
     );
     if (error) return response.status(400).json({ error });
     this.clinicAssignmentService
