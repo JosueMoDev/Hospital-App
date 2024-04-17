@@ -158,7 +158,6 @@ export class AccountDataSourceImpl implements AccountDataSource {
 
     async updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
         const { id, lastUpdate, isValidated, ...rest }: any = dto;
-
         if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
         if (rest.role) rest.role = roleT[dto.role];
         if (rest.gender) rest.gender = genderT[dto.gender];
@@ -173,7 +172,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     lastUpdate: [
                         ...account.lastUpdate,
                         {
-                            account: lastUpdate.account,
+                            account: account.id,
                             date: DateFnsAdapter.formatDate(),
                             action: "UPDATE ACCOUNT",
                         },
@@ -198,7 +197,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     lastUpdate: [
                         ...account.lastUpdate,
                         {
-                            ...dto.lastUpdate,
+                            account: account.id,
                             date: DateFnsAdapter.formatDate(),
                             action: "ACCOUNT VALIDATION",
                         },
