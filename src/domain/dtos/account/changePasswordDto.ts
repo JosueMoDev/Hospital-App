@@ -9,16 +9,15 @@ import {
 } from "class-validator";
 
 interface UpdatePasswordDtoArgs {
-  id: string;
+  account: string;
   newPassword: string;
   oldPassword: string;
-  lastUpdate: LastUpdate;
 }
 
 export class UpdatePasswordDto {
   @IsMongoId()
-  @IsNotEmpty({ message: "Id is required" })
-  public id!: string;
+  @IsNotEmpty({ message: "account is required" })
+  public account!: string;
 
   @IsNotEmpty()
   @MinLength(8, { message: "Password should be at least 8 characters long" })
@@ -28,18 +27,10 @@ export class UpdatePasswordDto {
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   public oldPassword!: string;
 
-
-  @IsNotEmpty({ message: "Last Update is required" })
-  @IsObject()
-  @ValidateNested()
-  @Type(() => LastUpdate)
-  public lastUpdate!: LastUpdate;
-
   constructor(args: UpdatePasswordDto) {
-    this.id = args.id;
+    this.account = args.account;
     this.newPassword = args.newPassword;
     this.oldPassword = args.oldPassword;
-    this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
   static update(
     object: UpdatePasswordDtoArgs

@@ -212,7 +212,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
     }
 
     async changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {
-        const account = await this.findOneById(dto.id);
+        const account = await this.findOneById(dto.account);
         try {
             const { newPassword, oldPassword } = dto;
             const hasMatch = BcryptAdapter.comparePassword(
@@ -229,7 +229,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
                     password: hashPassword,
                     lastUpdate: [
                         ...account.lastUpdate,
-                        { ...dto.lastUpdate, date: new Date(), action: "CHANGE PASSWORD" },
+                        { account: account.id, date: new Date(), action: "CHANGE PASSWORD" },
                     ],
                 },
             });
