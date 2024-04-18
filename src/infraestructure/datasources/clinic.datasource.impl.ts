@@ -161,7 +161,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           id: clinic.id,
         },
         data: {
-          status: !clinic.stutus,
+          status: !clinic.status,
           lastUpdate: [
             ...clinic.lastUpdate,
             {

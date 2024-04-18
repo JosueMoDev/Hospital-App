@@ -1,4 +1,3 @@
-import { Type } from "class-transformer";
 import { Gender, Role } from "../../entities";
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 import {
@@ -7,13 +6,11 @@ import {
   IsEnum,
   IsMongoId,
   IsNotEmpty,
-  IsObject,
   IsOptional,
   IsPhoneNumber,
   IsString,
   Length,
   MinLength,
-  ValidateNested,
 
 } from "class-validator";
 
