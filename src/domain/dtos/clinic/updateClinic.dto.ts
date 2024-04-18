@@ -48,7 +48,7 @@ export class UpdateClinicDto {
   public id: string;
 
   @IsOptional()
-  @Length(9, 9, { message: "Register Number  Format not valid" })
+  @Length(12, 12 , { message: "Register Number  Format not valid" })
   public registerNumber?: string;
 
   @IsOptional()
