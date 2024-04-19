@@ -18,6 +18,10 @@ export class AccountService {
     return await this.repository.findOneById(id);
   }
 
+  public async findingAccountByDocument(document: string): Promise<AccountEntity>{
+    return await this.repository.findOneByDocument(document);
+  }
+
   public async findingManyAccounts(
     dto: PaginationDto
   ): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {

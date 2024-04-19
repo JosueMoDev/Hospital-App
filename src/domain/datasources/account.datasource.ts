@@ -1,25 +1,33 @@
 import { UploadedFile } from "express-fileupload";
-import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, UpdatePasswordDto, UploadDto } from "../dtos";
+import {
+  CreateAccountDto,
+  PaginationDto,
+  UpdateAccountDto,
+  ConfirmPasswordDto,
+  UpdatePasswordDto,
+  UploadDto,
+} from "../dtos";
 import { AccountEntity } from "../entities";
-import { PaginationEntity } from '../entities/pagination.entity';
+import { PaginationEntity } from "../entities/pagination.entity";
 
 export abstract class AccountDataSource {
+  abstract findOneById(id: string): Promise<AccountEntity>;
 
-    abstract findOneById(id: string): Promise<AccountEntity>;
+  abstract findOneByDocument(document: string): Promise<AccountEntity>;
 
-    abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }>;
+  abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }>;
 
-    abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
+  abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
 
-    abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
+  abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
-    abstract changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
+  abstract changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
-    abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
+  abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
 
-    abstract confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean>;
+  abstract confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean>;
 
-    abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
+  abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
-    abstract deletePhoto(dto: UploadDto): Promise<boolean>;
+  abstract deletePhoto(dto: UploadDto): Promise<boolean>;
 }

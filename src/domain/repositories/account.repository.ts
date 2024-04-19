@@ -6,6 +6,8 @@ export abstract class AccountRepository {
 
     abstract findOneById(id: string): Promise<AccountEntity>;
 
+    abstract findOneByDocument(document: string): Promise<AccountEntity>;
+
     abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }>;
 
     abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;

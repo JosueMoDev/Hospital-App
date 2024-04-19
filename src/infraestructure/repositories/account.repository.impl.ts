@@ -14,6 +14,9 @@ import {
 
 export class AccountRepositoryImpl implements AccountRepository {
   constructor(private readonly datasource: AccountDataSource) { }
+  findOneByDocument(document: string): Promise<AccountEntity> {
+    return this.datasource.findOneByDocument(document);
+  }
   uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     return this.datasource.uploadPhoto(dto, file);
   }

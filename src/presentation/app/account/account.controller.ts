@@ -12,7 +12,7 @@ import {
 import { UploadedFile } from "express-fileupload";
 
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(private readonly accountService: AccountService) {}
 
   createAccount = (request: Request, response: Response) => {
     const [error, createAccountDto] = CreateAccountDto.create(request.body);
@@ -43,6 +43,16 @@ export class AccountController {
   findAccountById = (request: Request, response: Response) => {
     this.accountService
       .findingAccountById(request.params.id)
+      .then((account) => response.json(account))
+      .catch((error) => {
+        const { statusCode, errorMessage } = HandlerError.hasError(error);
+        return response.status(statusCode).json({ error: errorMessage });
+      });
+  };
+
+  findAccountByDocument = (request: Request, response: Response) => {
+    this.accountService
+      .findingAccountByDocument(request.params.document)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -114,7 +124,7 @@ export class AccountController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   deleteFile = (request: Request, response: Response) => {
     const [error, fileDto] = UploadDto.update(request.body);
@@ -127,6 +137,5 @@ export class AccountController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
-
+  };
 }

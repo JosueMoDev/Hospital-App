@@ -17,6 +17,7 @@ export class AccountRoutes {
         router.post('/create', controller.createAccount);
         router.patch('/update', controller.updateAccount);
         router.get('/find-one/:id', controller.findAccountById);
+        router.get("/find-by-document/:document", controller.findAccountByDocument);
         router.get('/find-many', controller.findManyAccounts);
         router.patch('/change-status', controller.changeAccountStatus);
         router.patch('/change-password', controller.changePassowordAccount);
