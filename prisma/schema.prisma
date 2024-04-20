@@ -79,6 +79,9 @@ model Clinic {
   clinic_account Account @relation("clinic_account", fields: [createdBy], references: [id])
   createdBy String @unique @db.ObjectId
 
+  appointment_clinic Appointment? @relation("appointment_clinic")
+
+
   clinicAssignment_clinic ClinicAssignment[] @relation("clinic_assigned")
 }
 
@@ -95,7 +98,10 @@ model Appointment {
   appointment_patient Account @relation("appointment_patient", fields: [patientId], references: [id])
   patientId String @unique @db.ObjectId
 
-  appointmetAccount Account @relation("appointment_account", fields: [createdBy], references: [id])
+  appointment_clinic Clinic @relation("appointment_clinic", fields: [clinicId], references: [id])
+  clinicId String @unique @db.ObjectId
+
+  appointmet_ccount Account @relation("appointment_account", fields: [createdBy], references: [id])
   createdBy String @unique @db.ObjectId
 
 }

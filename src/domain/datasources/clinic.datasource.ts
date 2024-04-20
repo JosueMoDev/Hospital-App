@@ -6,7 +6,7 @@ export abstract class ClinicDataSource {
 
    abstract findOneById(id: string): Promise<ClinicEntity>;
 
-   abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }>;
+   abstract findMany(dto: PaginationDto, sort?: string | undefined): Promise<{ pagination: PaginationEntity, clinics: ClinicEntity[] }>;
 
    abstract create(dto: CreateClinicDto): Promise<ClinicEntity>;
 
