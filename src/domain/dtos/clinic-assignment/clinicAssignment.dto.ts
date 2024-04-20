@@ -6,7 +6,6 @@ import {
   IsNotEmpty,
 } from "class-validator";
 import { CustomErrors, CustomValidationErrors } from "../utils";
-import { AccountEntity } from "../../entities";
 
 interface AssignmentDtoArgs {
   clinic: string;

@@ -1,4 +1,3 @@
-import { Type } from "class-transformer";
 import { Gender, Role } from "../../entities";
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
 import {
@@ -7,13 +6,11 @@ import {
   IsEnum,
   IsMongoId,
   IsNotEmpty,
-  IsObject,
   IsOptional,
   IsPhoneNumber,
   IsString,
   Length,
   MinLength,
-  ValidateNested,
 
 } from "class-validator";
 
@@ -71,12 +68,6 @@ export class UpdateAccountDto {
   @IsEnum(Role, { message: "Role is not valid" })
   public role!: Role;
 
-  @IsNotEmpty({ message: "Last Update is required" })
-  @IsObject()
-  @ValidateNested()
-  @Type(() => LastUpdate)
-  public lastUpdate!: LastUpdate;
-
   constructor(args: UpdateAccountDtoArgs) {
     this.id = args.id;
     if(args.duiNumber) this.duiNumber = args.duiNumber;
@@ -88,7 +79,6 @@ export class UpdateAccountDto {
     if(args.phone) this.phone = args.phone;
     if(args.isValidated) this.isValidated = args.isValidated;
     if(args.role) this.role = args.role;
-    this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
   static update(
     object: UpdateAccountDtoArgs

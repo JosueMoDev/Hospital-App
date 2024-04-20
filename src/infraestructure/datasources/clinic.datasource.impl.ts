@@ -72,16 +72,20 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
 
 
   async findMany(
-    dto: PaginationDto
+    dto: PaginationDto,
+    sort?: string | undefined,
   ): Promise<{ pagination: PaginationEntity; clinics: ClinicEntity[] }> {
+    const sortting = sort !== undefined ? sort === "true" ? true : false : undefined;
     const { page: currentPage, pageSize } = dto;
     const [clinics, total] = await Promise.all([
       prisma.clinic.findMany({
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
-        where: {},
+        where: {
+          status: sortting,
+        },
       }),
-      prisma.clinic.count({ where: {} }),
+      prisma.clinic.count({ where: { status: sortting } }),
     ]);
     const totalPages = Math.ceil(total / pageSize);
 
@@ -161,7 +165,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           id: clinic.id,
         },
         data: {
-          status: !clinic.stutus,
+          status: !clinic.status,
           lastUpdate: [
             ...clinic.lastUpdate,
             {

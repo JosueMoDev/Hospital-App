@@ -29,7 +29,7 @@ export class ClinicEntity {
   public photoId: string;
   public createdAt: Date;
   public createdBy: string;
-  public stutus: boolean;
+  public status: boolean;
   public lastUpdate: LastUpdate[]
 
   constructor(options: ClinicOptions) {
@@ -56,7 +56,7 @@ export class ClinicEntity {
       this.photoId = photoId,
       this.createdAt = createdAt,
       this.createdBy = createdBy,
-      this.stutus = status,
+      this.status = status,
       this.lastUpdate = lastUpdate
   }
 

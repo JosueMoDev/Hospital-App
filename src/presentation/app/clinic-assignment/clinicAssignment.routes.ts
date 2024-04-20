@@ -13,6 +13,7 @@ export class ClinicAssignmentRoutes {
         const controller = new ClinicAssignmentController(clinicAssignmentService);
 
         router.get("/assignable-doctors", controller.getAssignableDoctors);
+        router.get("/assigned-doctors/:clinic", controller.getAssignedDoctors);
         router.post('/create', controller.createClinicAssignment);
         router.post('/update', controller.updateClinicAssignment);
         router.post('/delete', controller.deleteClinicAssignment);
