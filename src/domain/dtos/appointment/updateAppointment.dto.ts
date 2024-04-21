@@ -8,6 +8,7 @@ interface UpdateAppointmentDtArgs {
   endDate?: string;
   doctorId?: string;
   patientId?: string;
+  clinicId?: string;
   lastUpdate: LastUpdate;
 }
 export class UpdateAppointmentDto {
@@ -17,21 +18,19 @@ export class UpdateAppointmentDto {
 
   @IsOptional()
   @IsISO8601({ strict: true })
-  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
-    message: "Start Date should be YYYY-MM-DD format .",
-  })
   public startDate?: string | undefined;
 
   @IsOptional()
   @IsISO8601({ strict: true })
-  @Matches(/^(\d{4})-(\d{2})-(\d{2})$/, {
-    message: "Start Date should be YYYY-MM-DD format .",
-  })
   public endDate?: string | undefined;
 
   @IsOptional()
   @IsMongoId()
   public readonly doctorId?: string;
+
+  @IsOptional()
+  @IsMongoId()
+  public readonly clinicId?: string;
 
   @IsOptional()
   @IsMongoId()
@@ -45,11 +44,15 @@ export class UpdateAppointmentDto {
 
   constructor(args: UpdateAppointmentDtArgs) {
     this.id = args.id;
-    if(args.startDate) this.startDate = typeof args.startDate === "string" ? args.startDate : undefined;
-    if(args.endDate) this.endDate = typeof args.endDate === "string" ? args.endDate : undefined;
-    if(args.doctorId) this.doctorId = args.doctorId;
-    if(args.patientId) this.patientId = args.patientId;
-    
+    if (args.startDate)
+      this.startDate =
+        typeof args.startDate === "string" ? args.startDate : undefined;
+    if (args.endDate)
+      this.endDate =
+        typeof args.endDate === "string" ? args.endDate : undefined;
+    if (args.doctorId) this.doctorId = args.doctorId;
+    if (args.patientId) this.patientId = args.patientId;
+    if (args.clinicId) this.clinicId = args.clinicId;
     this.lastUpdate = new LastUpdate(args.lastUpdate);
   }
 

@@ -70,8 +70,8 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
     const appointment = await this.findOneById(id);
 
-    if (rest.startDate) rest.startDate = DateFnsAdapter.formatDates(dto.startDate!);
-    if (rest.endDate) rest.endDate = DateFnsAdapter.formatDates(dto.endDate!);
+    if (rest.startDate) rest.startDate = new Date(dto.startDate!);
+    if (rest.endDate) rest.endDate = new Date(dto.endDate!);
 
     try {
       const appointmentUpdated = await prisma.appointment.update({
