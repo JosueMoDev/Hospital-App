@@ -73,7 +73,6 @@ export class ClinicController {
 
 
   uploadFile = (request: Request, response: Response) => {
-    console.log(request.body)
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
