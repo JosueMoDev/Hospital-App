@@ -12,7 +12,7 @@ export enum AllowedFolder {
     clinic = "clinics",
     admin = "admins",
     patient = "patients",
-    doctor = "doctots",
+    doctor = "doctors",
     record = "records"
 }
 export interface CloudinaryUploadFileArgs {

@@ -42,7 +42,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
   private readonly fileservice = new FileService(this.repository);
 
   async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    const { id, lastUpdate } = dto;
+    const { id } = dto;
     const account = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
     const { fileUrl, fileId } = await this.fileservice.uploadingFile({
@@ -56,17 +56,25 @@ export class AccountDataSourceImpl implements AccountDataSource {
       },
     });
     const updateAccountPhoto = await prisma.account.update({
-      where: { id: id },
+      where: { id: account.id },
       data: {
         photoId: fileId,
         photoUrl: fileUrl,
-        lastUpdate: [...account.lastUpdate, lastUpdate],
+        lastUpdate: [
+          ...account.lastUpdate,
+          {
+            account: dto.id,
+            date: DateFnsAdapter.formatDate(),
+            action: "UPDATE ACCOUNT",
+          },
+        ],
       },
     });
     if (updateAccountPhoto) return true;
     return false;
   }
   async deletePhoto(dto: UploadDto): Promise<boolean> {
+    
     const account = await this.findOneById(dto.id);
     if (!account.photoUrl.length && !account.photoId.length)
       throw CustomError.notFound("that account not have any photo associeted");
@@ -82,7 +90,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
         lastUpdate: [
           ...account.lastUpdate,
           {
-            account: dto.lastUpdate.account,
+            account: account.id,
             date: DateFnsAdapter.formatDate(),
             action: "UPDATE ACCOUNT",
           },

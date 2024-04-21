@@ -15,7 +15,6 @@ export class FileUploadMiddleware {
     static containFiles(request: Request, response: Response, next: NextFunction) {
 
         const fileUploaded = request.files;
-
         if (!fileUploaded || Object.keys(fileUploaded).length === 0) {
             return response.status(400).json({ error: 'No files were selected' });
         }
