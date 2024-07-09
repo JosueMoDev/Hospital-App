@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { AuthenticationService } from "../../services";
 import { AuthenticationController } from "./authentication.controller";
 import { AuthenticationDataSourceImpl, AuthenticationRepositoryImpl } from '../../../infraestructure';
 
@@ -9,8 +8,7 @@ export class AuthenticationRoutes {
 
         const datasource = new AuthenticationDataSourceImpl();
         const repository = new AuthenticationRepositoryImpl(datasource);
-        const authService = new AuthenticationService(repository);
-        const controller = new AuthenticationController(authService);
+        const controller = new AuthenticationController(repository);
 
         router.post('/login', controller.loginWithEmailAndPassword);
         router.post('/google-sign-in', controller.googleSignIn);
