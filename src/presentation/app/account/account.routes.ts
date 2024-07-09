@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { AccountDataSourceImpl, AccountRepositoryImpl } from "../../../infraestructure";
-import { AccountService } from "../../services";
 import { AccountController } from "./account.controller";
 import { FileUploadMiddleware } from "../../middlewares";
 
@@ -11,8 +10,7 @@ export class AccountRoutes {
 
         const datasource = new AccountDataSourceImpl();
         const repository = new AccountRepositoryImpl(datasource);
-        const accountService = new AccountService(repository);
-        const controller = new AccountController(accountService);
+        const controller = new AccountController(repository);
 
         router.post('/create', controller.createAccount);
         router.patch('/update', controller.updateAccount);

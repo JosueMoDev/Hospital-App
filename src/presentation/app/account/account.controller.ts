@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { AccountService } from "../../services";
 import {
   CreateAccountDto,
   HandlerError,
@@ -8,18 +7,29 @@ import {
   ConfirmPasswordDto,
   UpdatePasswordDto,
   UploadDto,
+  CreateAccount,
+  AccountRepository,
+  UpdateAccount,
+  FindAccountById,
+  FindAccountByDocument,
+  FindManyAccounts,
+  ChangeAccountPassword,
+  ChangeAccountStatus,
+  CheckPassword,
+  UploadPhoto,
+  DeletePhoto
 } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
 
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(private readonly accountRepository: AccountRepository) {}
 
   createAccount = (request: Request, response: Response) => {
     const [error, createAccountDto] = CreateAccountDto.create(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .creatingAccount(createAccountDto!)
+    new CreateAccount(this.accountRepository)
+      .execute(createAccountDto!)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -31,8 +41,8 @@ export class AccountController {
     const [error, updateAccountDto] = UpdateAccountDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .updatingAccount(updateAccountDto!)
+    new UpdateAccount(this.accountRepository)
+      .execute(updateAccountDto!)
       .then((updatedAccount) => response.json(updatedAccount))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -41,8 +51,8 @@ export class AccountController {
   };
 
   findAccountById = (request: Request, response: Response) => {
-    this.accountService
-      .findingAccountById(request.params.id)
+      new FindAccountById(this.accountRepository)
+      .execute(request.params.id)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -51,8 +61,8 @@ export class AccountController {
   };
 
   findAccountByDocument = (request: Request, response: Response) => {
-    this.accountService
-      .findingAccountByDocument(request.params.document)
+    new FindAccountByDocument(this.accountRepository)
+      .execute(request.params.document)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -64,8 +74,8 @@ export class AccountController {
     const [error, pagDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .findingManyAccounts(pagDto!)
+    new FindManyAccounts(this.accountRepository)
+      .execute(pagDto!)
       .then((accounts) => response.json(accounts))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -77,8 +87,8 @@ export class AccountController {
     const [error, passwordDto] = UpdatePasswordDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .changingPasswordAccount(passwordDto!)
+    new ChangeAccountPassword(this.accountRepository)
+      .execute(passwordDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -90,8 +100,8 @@ export class AccountController {
     const [error, accountDto] = UpdateAccountDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .changingStatusAccount(accountDto!)
+    new ChangeAccountStatus(this.accountRepository)
+      .execute(accountDto!)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -103,8 +113,8 @@ export class AccountController {
     const [error, accountDto] = ConfirmPasswordDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .checkingPassword(accountDto!)
+    new CheckPassword(this.accountRepository)
+      .execute(accountDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -117,8 +127,8 @@ export class AccountController {
     if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
 
-    this.accountService
-      .uploadingPhoto(fileDto!, file)
+    new UploadPhoto(this.accountRepository)
+      .execute(fileDto!, file)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -130,8 +140,8 @@ export class AccountController {
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.accountService
-      .deletingPhoto(fileDto!)
+    new DeletePhoto(this.accountRepository)
+      .execute(fileDto!)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
