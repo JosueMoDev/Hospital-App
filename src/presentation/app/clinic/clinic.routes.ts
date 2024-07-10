@@ -1,6 +1,5 @@
 import { Router } from "express"
 import { ClinicDataSourceImpl, ClinicRepositoyImpl } from '../../../infraestructure';
-import { ClinicService } from "../../services";
 import { ClinicController } from "./clinic.controller";
 import { FileUploadMiddleware } from "../../middlewares";
 
@@ -12,8 +11,8 @@ export class ClinicRoutes {
 
         const datasource = new ClinicDataSourceImpl();
         const repository = new ClinicRepositoyImpl(datasource);
-        const clinicService = new ClinicService(repository);
-        const controller = new ClinicController(clinicService);
+        const controller = new ClinicController(repository);
+
         router.post('/create', controller.createClinic);
         router.patch('/update', controller.updateClinic);
         router.get('/find-one/:id', controller.findOneById);

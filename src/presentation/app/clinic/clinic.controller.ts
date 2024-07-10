@@ -1,22 +1,29 @@
 import { Request, Response } from "express";
-import { ClinicService } from "../../services";
 import {
   UpdateClinicDto,
   HandlerError,
   CreateClinicDto,
   PaginationDto,
   UploadDto,
+  ClinicRepository,
+  CreateClinic,
+  UpdateClinic,
+  FindClinicById,
+  FindManyClinics,
+  ChangeClinicStatus,
+  UploadClinicPhoto,
+  DeleteClinicPhoto,
 } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
 
 export class ClinicController {
-  constructor(private readonly clinicService: ClinicService) { }
+  constructor(private readonly clinicRepository: ClinicRepository) { }
 
   createClinic = (request: Request, response: Response) => {
     const [error, createClinicDto] = CreateClinicDto.create(request.body);
     if (error) return response.status(400).json({ error });
-    this.clinicService
-      .creatingClinic(createClinicDto!)
+    new CreateClinic(this.clinicRepository)
+      .excute(createClinicDto!)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -27,8 +34,8 @@ export class ClinicController {
   updateClinic = (request: Request, response: Response) => {
     const [error, updateClinicDto] = UpdateClinicDto.update(request.body);
     if (error) return response.status(400).json({ error });
-    this.clinicService
-      .updatingClinic(updateClinicDto!)
+    new UpdateClinic(this.clinicRepository)
+      .excute(updateClinicDto!)
       .then((updatedClinic) => response.json(updatedClinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -37,8 +44,8 @@ export class ClinicController {
   };
 
   findOneById = (request: Request, response: Response) => {
-    this.clinicService
-      .findingOneById(request.params.id)
+    new FindClinicById(this.clinicRepository)
+      .execute(request.params.id)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -50,8 +57,8 @@ export class ClinicController {
     const [error, paginationDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
   
-    this.clinicService
-      .findingMany(paginationDto!, request.query.sort?.toString())
+    new FindManyClinics(this.clinicRepository)
+      .execute(paginationDto!, request.query.sort?.toString())
       .then((clinics) => response.json(clinics))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -62,8 +69,8 @@ export class ClinicController {
   changeStatus = (request: Request, response: Response) => {
     const [error, clinicDto] = UpdateClinicDto.update(request.body);
     if (error) return response.status(400).json({ error });
-    this.clinicService
-      .changingStatus(clinicDto!)
+      new ChangeClinicStatus(this.clinicRepository)
+      .execute(clinicDto!)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -77,20 +84,21 @@ export class ClinicController {
     if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
 
-    this.clinicService
-      .uploadingPhoto(fileDto!, file)
+    new UploadClinicPhoto(this.clinicRepository)
+      .excute(fileDto!, file)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
   }
+
   deleteFile = (request: Request, response: Response) => {
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.clinicService
-      .deletingPhoto(fileDto!)
+    new DeleteClinicPhoto(this.clinicRepository)
+      .excute(fileDto!)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

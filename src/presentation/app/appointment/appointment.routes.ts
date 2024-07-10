@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { AppointmentDataSourceImpl, AppointmentRepositoryImpl } from "../../../infraestructure";
-import { AppointmentService } from "../../services";
 import { AppointmentController } from './appointment.controller';
 
 export class AppointmentRoutes {
@@ -10,8 +9,7 @@ export class AppointmentRoutes {
 
         const datasource = new AppointmentDataSourceImpl();
         const repository = new AppointmentRepositoryImpl(datasource);
-        const appointmentService = new AppointmentService(repository);
-        const controller = new AppointmentController(appointmentService);
+        const controller = new AppointmentController(repository);
 
         router.post('/create', controller.createAppointment);
         router.patch('/update', controller.updateAppointment);
