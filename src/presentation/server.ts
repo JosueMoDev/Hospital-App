@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import compression from "compression";
 import cors from "cors";
 import { ExpressFileUploadAdapter } from "../config/adapters/expressFileUploadAdapter";
+import { setupSwagger } from "../config";
 
 
 interface serverConfig {
@@ -38,8 +39,9 @@ export class Server {
     this.app.use(compression());
     this.app.use(ExpressFileUploadAdapter.configure());
     //* Routes
-    this.app.use(this.routes);
-
+    this.app.use('/api', this.routes);
+    // * Swagger Documentation API
+    setupSwagger(this.app);
     this.serverListener = this.app.listen(this.port, () =>
       console.log(`Server running on port ${this.port}`)
     );

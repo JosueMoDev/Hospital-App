@@ -7,13 +7,13 @@ export class AppRoutes {
 
         const router = Router();
 
-        router.use('/api/authentication', AuthenticationRoutes.routes);
+        router.use('/authentication', AuthenticationRoutes.routes);
         router.use(JWTStrategy.validateAccessToken);
-        router.use('/api/account', AccountRoutes.routes);
-        router.use('/api/appointment', AppointmentRoutes.routes);
-        router.use('/api/clinic-assignment', ClinicAssignmentRoutes.routes);
-        router.use('/api/clinic', ClinicRoutes.routes);
-        router.use('/api/record', RecordRoutes.routes);
+        router.use('/account', AccountRoutes.routes);
+        router.use('/appointment', AppointmentRoutes.routes);
+        router.use('/clinic-assignment', ClinicAssignmentRoutes.routes);
+        router.use('/clinic', ClinicRoutes.routes);
+        router.use('/record', RecordRoutes.routes);
 
 
         return router;

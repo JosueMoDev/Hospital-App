@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { Gender, Role } from '../../entities';
 import { CustomErrors, CustomValidationErrors } from '../utils';
 import {
@@ -10,6 +11,7 @@ import {
   Length,
   MinLength,
 } from "class-validator";
+import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 
 interface CreateAccountDtoArgs {
   duiNumber: string;
@@ -24,40 +26,43 @@ interface CreateAccountDtoArgs {
 }
 
 export class CreateAccountDto {
+  @Transform(({ value }) => value.toString()) // Transforma el valor a string para Swagger
   @Length(9, 9, { message: "DUI Format not valid" })
   @IsNotEmpty({ message: "DUI is required" })
-  public duiNumber!: string;
+  duiNumber!: string;
 
   @IsEmail({}, { message: "Email is not valid" })
   @IsNotEmpty({ message: "Email is required" })
-  public email!: string;
+  email!: string;
 
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   @IsNotEmpty({ message: "Password is required" })
-  public password!: string;
+  password!: string;
 
   @IsString({ message: "Name should contain only letters" })
   @IsNotEmpty({ message: "Name is required" })
-  public name!: string;
+  name!: string;
 
-  @IsString({ message: "Lastame should contain only letters" })
+  @IsString({ message: "Lastname should contain only letters" })
   @IsNotEmpty({ message: "Lastname is required" })
-  public lastname!: string;
+  lastname!: string;
 
   @IsEnum(Gender, { message: "Gender is not valid" })
   @IsNotEmpty({ message: "Gender is required" })
-  public gender!: Gender;
+  gender!: Gender;
 
+  @Transform(({ value }) => value.toString()) // Transforma el valor a string para Swagger
   @IsPhoneNumber("SV", { message: "Phone Number not valid" })
   @IsNotEmpty({ message: "Phone Number is required" })
-  public phone!: string;
+  phone!: string;
 
+  @Transform(({ value }) => value === "true") // Transforma el valor a boolean para Swagger
   @IsBoolean()
-  public isValidated: boolean;
+  isValidated: boolean;
 
   @IsEnum(Role, { message: "Role is not valid" })
   @IsNotEmpty({ message: "Role is required" })
-  public role!: Role;
+  role!: Role;
 
   constructor(args: CreateAccountDtoArgs) {
     Object.assign(this, args);
@@ -66,14 +71,16 @@ export class CreateAccountDto {
   static create(
     object: CreateAccountDtoArgs
   ): [undefined | CustomErrors[], CreateAccountDto?] {
-
     const createAccountDto = new CreateAccountDto(object);
 
-    const [errors, validatedDto] = CustomValidationErrors.validateDto<CreateAccountDto>(createAccountDto);
+    const [errors, validatedDto] =
+      CustomValidationErrors.validateDto<CreateAccountDto>(createAccountDto);
 
     if (errors) return [errors];
 
     return [undefined, validatedDto];
   }
-
 }
+const schemas = validationMetadatasToSchemas();
+export const  createAccountDtoSchema = schemas.CreateAccountDto;
+
