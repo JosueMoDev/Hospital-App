@@ -1,7 +1,5 @@
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { Gender, Role } from "../../entities";
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
-import { UpdateAccount } from '../../use-cases/account/update-account.use-case';
 import {
   IsBoolean,
   IsEmail,
@@ -95,5 +93,3 @@ export class UpdateAccountDto {
     return [undefined, validatedDto];
   }
 }
-const schemas = validationMetadatasToSchemas();
-export const updateAccountDtoSchema = schemas.UpdateAccountDto;

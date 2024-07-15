@@ -81,6 +81,3 @@ export class CreateAccountDto {
     return [undefined, validatedDto];
   }
 }
-const schemas = validationMetadatasToSchemas();
-export const  createAccountDtoSchema = schemas.CreateAccountDto;
-

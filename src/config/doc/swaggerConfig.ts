@@ -2,8 +2,8 @@ import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 import { Environment } from "../envs";
 import { OpenAPIV3 } from "openapi-types";
-import { apiPath } from "./apiPaths";
-import { createAccountDtoSchema, updateAccountDtoSchema } from "../../domain";
+import { FromDtoToSchema } from "./fromDtoToSchema";
+import * as paths from './api';
 
 const swaggerOptions: OpenAPIV3.Document = {
   openapi: "3.1.1",
@@ -19,7 +19,18 @@ const swaggerOptions: OpenAPIV3.Document = {
       description: "Development server",
     },
   ],
-  paths: apiPath,
+  paths: {
+    //! Authentication Paths
+    "/authentication/login": paths.authentication.login,
+    "/authentication/refresh-token": paths.authentication.refresh_token,
+
+    // !Account Paths
+    "/account/create": paths.account.create,
+    "/account/update": paths.account.update,
+    "/account/find-one/{id}": paths.account.find_one,
+    "/account/find-by-document/{document}": paths.account.find_by_document,
+    "/account/find-many": paths.account.find_many,
+  },
   components: {
     securitySchemes: {
       bearerAuth: {
@@ -28,13 +39,9 @@ const swaggerOptions: OpenAPIV3.Document = {
         bearerFormat: "JWT",
       },
     },
-    schemas: {
-      CreateAccountDto: createAccountDtoSchema as Object,
-      UpdateAccountDto: updateAccountDtoSchema as Object,
-    },
+    schemas: FromDtoToSchema.getShemas() as any,
   },
 };
-
 
 export const setupSwagger = (app: Express) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerOptions));
