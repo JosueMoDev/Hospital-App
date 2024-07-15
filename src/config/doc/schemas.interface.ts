@@ -1,6 +1,6 @@
 export interface APIDOCSCHEMAS {
   LastUpdate?: LastUpdateClass;
-  UpdatePasswordDto?: UpdatePasswordDto;
+  ChangePasswordDto?: ChangePasswordDto;
   ConfirmPasswordDto?: ConfirmPasswordDto;
   CreateAccountDto?: CreateAccountDto;
   UpdateAccountDto?: UpdateAccountDto;
@@ -13,7 +13,6 @@ export interface APIDOCSCHEMAS {
   Address?: Address;
   CreateClinicDto?: CreateClinicDto;
   UpdateClinicDto?: UpdateClinicDto;
-  UploadDto?: UploadDto;
   PaginationDto?: PaginationDto;
   CreateRecordDto?: CreateRecordDto;
   UpdateRecordDto?: UpdateRecordDto;
@@ -317,7 +316,7 @@ export interface UpdateClinicDtoProperties {
   lastUpdate: PurpleLastUpdate;
 }
 
-export interface UpdatePasswordDto {
+export interface ChangePasswordDto {
   properties: UpdatePasswordDtoProperties;
   type: string;
   required: string[];
@@ -343,11 +342,6 @@ export interface UpdateRecordDtoProperties {
   lastUpdate: PurpleLastUpdate;
 }
 
-export interface UploadDto {
-  properties: UploadDtoProperties;
-  type: string;
-  required: string[];
-}
 
 export interface UploadDtoProperties {
   id: Clinic;

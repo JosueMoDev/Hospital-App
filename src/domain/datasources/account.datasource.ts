@@ -4,7 +4,7 @@ import {
   PaginationDto,
   UpdateAccountDto,
   ConfirmPasswordDto,
-  UpdatePasswordDto,
+  ChangePasswordDto,
   UploadDto,
 } from "../dtos";
 import { AccountEntity } from "../entities";
@@ -21,13 +21,13 @@ export abstract class AccountDataSource {
 
   abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
-  abstract changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
+  abstract changeStatusAccount(id: string): Promise<boolean>;
 
-  abstract changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean>;
+  abstract changePasswordAccount(dto: ChangePasswordDto): Promise<boolean>;
 
-  abstract confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean>;
+  abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
 
-  abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
+  abstract uploadPhoto(id: string, file: UploadedFile): Promise<boolean>;
 
-  abstract deletePhoto(dto: UploadDto): Promise<boolean>;
+  abstract deletePhoto(id: string): Promise<boolean>;
 }

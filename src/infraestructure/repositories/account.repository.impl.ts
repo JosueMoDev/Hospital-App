@@ -7,7 +7,7 @@ import {
   PaginationDto,
   UpdateAccountDto,
   ConfirmPasswordDto,
-  UpdatePasswordDto,
+  ChangePasswordDto,
   PaginationEntity,
   UploadDto,
 } from "../../domain";
@@ -17,11 +17,11 @@ export class AccountRepositoryImpl implements AccountRepository {
   findOneByDocument(document: string): Promise<AccountEntity> {
     return this.datasource.findOneByDocument(document);
   }
-  uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    return this.datasource.uploadPhoto(dto, file);
+  uploadPhoto(id: string, file: UploadedFile): Promise<boolean> {
+    return this.datasource.uploadPhoto(id, file);
   }
-  deletePhoto(dto: UploadDto): Promise<boolean> {
-    return this.datasource.deletePhoto(dto);
+  deletePhoto(id: string): Promise<boolean> {
+    return this.datasource.deletePhoto(id);
   }
 
   findOneById(id: string): Promise<AccountEntity> {
@@ -39,15 +39,15 @@ export class AccountRepositoryImpl implements AccountRepository {
   updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
     return this.datasource.updateAccount(dto);
   }
-  changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
-    return this.datasource.changeStatusAccount(dto);
+  changeStatusAccount(id: string): Promise<boolean> {
+    return this.datasource.changeStatusAccount(id);
   }
 
-  changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {
+  changePasswordAccount(dto: ChangePasswordDto): Promise<boolean> {
     return this.datasource.changePasswordAccount(dto);
   }
 
-  confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean> {
+  confirmPassword(dto: ConfirmPasswordDto): Promise<boolean> {
     return this.datasource.confirmPassword(dto);
   }
 }

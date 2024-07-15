@@ -17,13 +17,13 @@ export class AccountRoutes {
         router.get('/find-one/:id', controller.findAccountById);
         router.get("/find-by-document/:document", controller.findAccountByDocument);
         router.get('/find-many', controller.findManyAccounts);
-        router.patch('/change-status', controller.changeAccountStatus);
-        router.patch('/change-password', controller.changePassowordAccount);
-        router.get('/confirm-password', controller.confirmPassword);
+        router.patch('/change-status/:id', controller.changeAccountStatus);
+        router.patch('/change-password', controller.changePasswordAccount);
+        router.post('/confirm-password', controller.confirmPassword);
 
-        router.post('/delete-photo', controller.deleteFile);
+        router.delete('/delete-photo/:id', controller.deleteFile);
         router.use(FileUploadMiddleware.containFiles);
-        router.post('/upload-photo', controller.uploadFile);
+        router.patch('/upload-photo', controller.uploadFile);
 
         return router;
     }

@@ -1,6 +1,5 @@
 import { OpenAPIV3 } from "openapi-types";
 import { FromDtoToSchema } from "../fromDtoToSchema";
-import { format } from "date-fns";
 
 type AccountPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -8,6 +7,11 @@ type AccountPaths = {
   find_one: OpenAPIV3.PathItemObject;
   find_by_document: OpenAPIV3.PathItemObject;
   find_many: OpenAPIV3.PathItemObject;
+  change_status: OpenAPIV3.PathItemObject;
+  change_password: OpenAPIV3.PathItemObject;
+  confirm_password: OpenAPIV3.PathItemObject;
+  delete_photo: OpenAPIV3.PathItemObject;
+  upload_photo: OpenAPIV3.PathItemObject;
 };
 
 export const account: AccountPaths = {
@@ -139,7 +143,7 @@ export const account: AccountPaths = {
         {
           in: "query",
           name: "PaginationDto",
-          schema:  FromDtoToSchema.getShemas().PaginationDto as Object
+          schema: FromDtoToSchema.getShemas().PaginationDto as Object,
         },
       ],
       responses: {
@@ -152,5 +156,162 @@ export const account: AccountPaths = {
       },
     },
   },
+  change_status: {
+    patch: {
+      tags: ["Account"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      summary:
+        "This endpoint has de functionallity to change an account status",
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          example: "e21754E65Dff2ee9B2245b90",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "User found",
+        },
+        404: {
+          description: "User not found",
+        },
+      },
+    },
+  },
+  change_password: {
+    patch: {
+      tags: ["Account"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      summary:
+        "This endpoint has de functionallity to change an account password",
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: FromDtoToSchema.getShemas().ChangePasswordDto as Object,
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "User found",
+        },
+        404: {
+          description: "User not found",
+        },
+      },
+    },
+  },
+  confirm_password: {
+    post: {
+      tags: ["Account"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      summary:
+        "This endpoint has de functionallity to confirm your account password",
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: FromDtoToSchema.getShemas().ConfirmPasswordDto as Object,
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "User found",
+        },
+        404: {
+          description: "User not found",
+        },
+      },
+    },
+  },
+  delete_photo: {
+    delete: {
+      tags: ["Account"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      summary: "This endpoint delete your account photo",
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "User found",
+        },
+        404: {
+          description: "User not found",
+        },
+      },
+    },
+  },
+  upload_photo: {
+    patch: {
+      tags: ["Account"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      summary: "This endpoint upload your account photo",
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              title:"photo",
+              type: "object",
+              properties: {
+                id: {
+                  type: "string",
+                },
+                file: {
+                  type: "string",
+                  format:"binary"
+
+                },
+              },
+              required: ['id', 'file']
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "User found",
+        },
+        404: {
+          description: "User not found",
+        },
+      },
+    },
+  },
 };
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmNmOWRmMmFkMWIwZjkzZTk2MTczYSIsImlhdCI6MTcyMTA2MjY3MiwiZXhwIjoxNzIxMDY5ODcyfQ.YJ95kuRXaLCtlrexPKP0kHT3VJvyLZQHNFUv2PMCESY`;
+

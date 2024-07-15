@@ -13,7 +13,7 @@ import {
   PaginationDto,
   UpdateAccountDto,
   ConfirmPasswordDto,
-  UpdatePasswordDto,
+  ChangePasswordDto,
   PaginationEntity,
   UploadDto,
 } from "../../domain";
@@ -41,8 +41,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
   private readonly repository = new FileRepositoryImpl(this.datasource);
   private readonly fileservice = new FileService(this.repository);
 
-  async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    const { id } = dto;
+  async uploadPhoto(id: string, file: UploadedFile): Promise<boolean> {
     const account = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
     const { fileUrl, fileId } = await this.fileservice.uploadingFile({
@@ -63,7 +62,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
         lastUpdate: [
           ...account.lastUpdate,
           {
-            account: dto.id,
+            account: account.id,
             date: DateFnsAdapter.formatDate(),
             action: "UPDATE ACCOUNT",
           },
@@ -73,9 +72,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
     if (updateAccountPhoto) return true;
     return false;
   }
-  async deletePhoto(dto: UploadDto): Promise<boolean> {
+  async deletePhoto(id: string): Promise<boolean> {
     
-    const account = await this.findOneById(dto.id);
+    const account = await this.findOneById(id);
     if (!account.photoUrl.length && !account.photoId.length)
       throw CustomError.notFound("that account not have any photo associeted");
 
@@ -83,7 +82,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
     if (result === "not found")
       throw CustomError.internalServer("we couldnt delete photo");
     const accountUpdated = await prisma.account.update({
-      where: { id: dto.id },
+      where: { id: account.id },
       data: {
         photoId: "",
         photoUrl: "",
@@ -220,8 +219,8 @@ export class AccountDataSourceImpl implements AccountDataSource {
     }
   }
 
-  async changeStatusAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
-    const account = await this.findOneById(dto.id);
+  async changeStatusAccount(id: string): Promise<boolean> {
+    const account = await this.findOneById(id);
     try {
       const accountInvalidated = await prisma.account.update({
         where: {
@@ -239,13 +238,15 @@ export class AccountDataSourceImpl implements AccountDataSource {
           ],
         },
       });
-      return AccountEntity.fromObject(accountInvalidated);
+
+      return true
+     
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
   }
 
-  async changePasswordAccount(dto: UpdatePasswordDto): Promise<Boolean> {
+  async changePasswordAccount(dto: ChangePasswordDto): Promise<boolean> {
     const account = await this.findOneById(dto.account);
     try {
       const { newPassword, oldPassword } = dto;
@@ -277,7 +278,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
     }
   }
 
-  async confirmPassword(dto: ConfirmPasswordDto): Promise<Boolean> {
+  async confirmPassword(dto: ConfirmPasswordDto): Promise<boolean> {
     const account = await prisma.account.findFirst({ where: { id: dto.id } });
     if (!account) throw CustomError.badRequest("Any Account was found");
     return BcryptAdapter.comparePassword(dto.password, account.password);

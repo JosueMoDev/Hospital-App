@@ -14,7 +14,7 @@ interface UpdatePasswordDtoArgs {
   oldPassword: string;
 }
 
-export class UpdatePasswordDto {
+export class ChangePasswordDto {
   @IsMongoId()
   @IsNotEmpty({ message: "account is required" })
   public account!: string;
@@ -27,18 +27,18 @@ export class UpdatePasswordDto {
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   public oldPassword!: string;
 
-  constructor(args: UpdatePasswordDto) {
+  constructor(args: ChangePasswordDto) {
     this.account = args.account;
     this.newPassword = args.newPassword;
     this.oldPassword = args.oldPassword;
   }
   static update(
     object: UpdatePasswordDtoArgs
-  ): [undefined | CustomErrors[], UpdatePasswordDto?] {
-    const updateAccountDto = new UpdatePasswordDto(object);
+  ): [undefined | CustomErrors[], ChangePasswordDto?] {
+    const updateAccountDto = new ChangePasswordDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<UpdatePasswordDto>(updateAccountDto);
+      CustomValidationErrors.validateDto<ChangePasswordDto>(updateAccountDto);
 
     if (errors) return [errors];
 

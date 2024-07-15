@@ -1,13 +1,13 @@
 import { AccountRepository, UploadDto } from "../..";
 
 interface DeletePhotoUseCase {
-  execute(uploadDto: UploadDto): Promise<Boolean>;
+  execute(id: string): Promise<Boolean>;
 }
 
 export class DeletePhoto implements DeletePhotoUseCase {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async execute(uploadDto: UploadDto): Promise<Boolean> {
-    return await this.accountRepository.deletePhoto(uploadDto);
+  async execute(id: string): Promise<Boolean> {
+    return await this.accountRepository.deletePhoto(id);
   }
 }

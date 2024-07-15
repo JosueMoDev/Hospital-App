@@ -30,6 +30,11 @@ const swaggerOptions: OpenAPIV3.Document = {
     "/account/find-one/{id}": paths.account.find_one,
     "/account/find-by-document/{document}": paths.account.find_by_document,
     "/account/find-many": paths.account.find_many,
+    "/account/change-status/{id}": paths.account.change_status,
+    "/account/change-password": paths.account.change_password,
+    "/account/confirm-password": paths.account.confirm_password,
+    "/account/delete-photo": paths.account.delete_photo,
+    "/account/upload-photo": paths.account.upload_photo,
   },
   components: {
     securitySchemes: {

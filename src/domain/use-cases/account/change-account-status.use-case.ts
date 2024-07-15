@@ -5,13 +5,13 @@ import {
 } from "../../../domain";
 
 interface ChangeAccountStatusUseCase {
-  execute(updateAccountDto: UpdateAccountDto): Promise<AccountEntity>;
+  execute(id: string): Promise<boolean>;
 }
 
 export class ChangeAccountStatus implements ChangeAccountStatusUseCase {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async execute(updateAccountDto: UpdateAccountDto): Promise<AccountEntity> {
-    return await this.accountRepository.changeStatusAccount(updateAccountDto);
+  async execute(id: string): Promise<boolean> {
+    return await this.accountRepository.changeStatusAccount(id);
   }
 }

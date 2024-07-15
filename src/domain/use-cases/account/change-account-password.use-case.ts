@@ -1,16 +1,16 @@
 import {
   AccountRepository,
-  UpdatePasswordDto,
+  ChangePasswordDto,
 } from "../../../domain";
 
 interface ChangeAccountPasswordUseCase {
-  execute(updatePasswordDto: UpdatePasswordDto): Promise<Boolean>;
+  execute(changePasswordDto: ChangePasswordDto): Promise<Boolean>;
 }
 
 export class ChangeAccountPassword implements ChangeAccountPasswordUseCase {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async execute(updatePasswordDto: UpdatePasswordDto): Promise<Boolean> {
-    return await this.accountRepository.changePasswordAccount(updatePasswordDto);
+  async execute(changePasswordDto: ChangePasswordDto): Promise<Boolean> {
+    return await this.accountRepository.changePasswordAccount(changePasswordDto);
   }
 }

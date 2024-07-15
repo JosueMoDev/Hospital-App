@@ -5,7 +5,7 @@ import {
   PaginationDto,
   UpdateAccountDto,
   ConfirmPasswordDto,
-  UpdatePasswordDto,
+  ChangePasswordDto,
   UploadDto,
   CreateAccount,
   AccountRepository,
@@ -83,13 +83,13 @@ export class AccountController {
       });
   };
 
-  changePassowordAccount = (request: Request, response: Response) => {
-    const [error, passwordDto] = UpdatePasswordDto.update(request.body);
+  changePasswordAccount = (request: Request, response: Response) => {
+    const [error, passwordDto] = ChangePasswordDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
     new ChangeAccountPassword(this.accountRepository)
       .execute(passwordDto!)
-      .then((result) => response.json(result))
+      .then(() => response.json({message: "Password has been changed"}))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -97,12 +97,10 @@ export class AccountController {
   };
 
   changeAccountStatus = (request: Request, response: Response) => {
-    const [error, accountDto] = UpdateAccountDto.update(request.body);
-    if (error) return response.status(400).json({ error });
 
     new ChangeAccountStatus(this.accountRepository)
-      .execute(accountDto!)
-      .then((account) => response.json(account))
+      .execute(request.params.id!)
+      .then(() => response.json({message: "Account status has been changed"}))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -123,13 +121,13 @@ export class AccountController {
   };
 
   uploadFile = (request: Request, response: Response) => {
-    const [error, fileDto] = UploadDto.update(request.body);
-    if (error) return response.status(400).json({ error });
+    // const [error, fileDto] = UploadDto.update(request.body);
+    // if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
-
+    const id = request.body.id;
     new UploadPhoto(this.accountRepository)
-      .execute(fileDto!, file)
-      .then((account) => response.json(account))
+      .execute(id!, file)
+      .then(() => response.json({message: "Photo has been uploaded"}))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -137,12 +135,12 @@ export class AccountController {
   };
 
   deleteFile = (request: Request, response: Response) => {
-    const [error, fileDto] = UploadDto.update(request.body);
-    if (error) return response.status(400).json({ error });
+    // const [error, fileDto] = UploadDto.update(request.body);
+    // if (error) return response.status(400).json({ error });
 
     new DeletePhoto(this.accountRepository)
-      .execute(fileDto!)
-      .then((account) => response.json(account))
+      .execute(request.params.id!)
+      .then(() => response.json({ message: "Photo has been deleted" }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
