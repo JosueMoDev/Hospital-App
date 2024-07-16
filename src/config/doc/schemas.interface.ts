@@ -13,10 +13,10 @@ export interface APIDOCSCHEMAS {
   Address?: Address;
   CreateClinicDto?: CreateClinicDto;
   UpdateClinicDto?: UpdateClinicDto;
+  UploadDto?: UploadDto;
   PaginationDto?: PaginationDto;
   CreateRecordDto?: CreateRecordDto;
   UpdateRecordDto?: UpdateRecordDto;
-  UploadDto?: UploadDto;
 }
 
 export interface Address {
@@ -343,15 +343,13 @@ export interface UpdateRecordDtoProperties {
   lastUpdate: PurpleLastUpdate;
 }
 
+export interface UploadDto {
+  properties: UploadDtoProperties;
+  type: string;
+  required: string[];
+}
 
 export interface UploadDtoProperties {
   id: Clinic;
-  lastUpdate: PurpleLastUpdate;
-}
-
-
-export interface UploadDto {
-  properties: UpdateRecordDtoProperties;
-  type: string;
-  required: string[];
+  lastUpdate: LastUpdate;
 }

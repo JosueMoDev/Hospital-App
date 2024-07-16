@@ -14,7 +14,7 @@ export class ClinicAssignmentRoutes {
         router.get("/assigned-doctors/:clinic", controller.getAssignedDoctors);
         router.post('/create', controller.createClinicAssignment);
         router.post('/update', controller.updateClinicAssignment);
-        router.patch('/delete', controller.deleteClinicAssignment);
+        router.delete('/delete', controller.deleteClinicAssignment);
 
         return router;
     }

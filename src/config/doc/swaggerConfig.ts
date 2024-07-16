@@ -49,6 +49,12 @@ const swaggerOptions: OpenAPIV3.Document = {
     "/clinic/change-status": paths.clinic.change_status,
     "/clinic/upload-photo": paths.clinic.upload_photo,
     "/clinic/delete-photo": paths.clinic.delete_photo,
+    // !Clinic Assignment Paths
+    "/clinic-assignment/create": paths.clinicAssignment.create,
+    "/clinic-assignment/update": paths.clinicAssignment.update,
+    "/clinic-assignment/assigned-doctors/{id}": paths.clinicAssignment.assigned_doctors,
+    "/clinic-assignment/assignable-doctors": paths.clinicAssignment.assignable_doctors,
+    "/clinic-assignment/delete": paths.clinicAssignment.delete,
   },
   components: {
     securitySchemes: {
