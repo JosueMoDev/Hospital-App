@@ -5,7 +5,6 @@ import {
   UpdateAccountDto,
   ConfirmPasswordDto,
   ChangePasswordDto,
-  UploadDto,
 } from "../dtos";
 import { AccountEntity } from "../entities";
 import { PaginationEntity } from "../entities/pagination.entity";

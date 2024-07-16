@@ -2,9 +2,7 @@ import { Type } from "class-transformer";
 import {
     IsMongoId,
     IsNotEmpty,
-    IsObject,
     IsOptional,
-    ValidateNested,
 } from "class-validator";
 
 import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
@@ -21,10 +19,8 @@ export class UploadDto {
     public id: string;
 
 
-    // @IsNotEmpty({ message: "Last Update is required" })
     @IsOptional()
-    // @IsObject()
-    // @ValidateNested()
+
     @Type(() => LastUpdate)
     public lastUpdate: LastUpdate;
 

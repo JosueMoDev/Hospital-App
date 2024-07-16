@@ -8,7 +8,7 @@ export class AppRoutes {
         const router = Router();
 
         router.use('/authentication', AuthenticationRoutes.routes);
-        router.use(JWTStrategy.validateAccessToken);
+        // router.use(JWTStrategy.validateAccessToken);
         router.use('/account', AccountRoutes.routes);
         router.use('/appointment', AppointmentRoutes.routes);
         router.use('/clinic-assignment', ClinicAssignmentRoutes.routes);

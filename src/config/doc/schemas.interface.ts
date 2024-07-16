@@ -16,6 +16,7 @@ export interface APIDOCSCHEMAS {
   PaginationDto?: PaginationDto;
   CreateRecordDto?: CreateRecordDto;
   UpdateRecordDto?: UpdateRecordDto;
+  UploadDto?: UploadDto;
 }
 
 export interface Address {
@@ -345,5 +346,12 @@ export interface UpdateRecordDtoProperties {
 
 export interface UploadDtoProperties {
   id: Clinic;
-  lastUpdate: LastUpdate;
+  lastUpdate: PurpleLastUpdate;
+}
+
+
+export interface UploadDto {
+  properties: UpdateRecordDtoProperties;
+  type: string;
+  required: string[];
 }

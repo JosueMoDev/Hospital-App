@@ -12,7 +12,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
 
 
   async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    const { id, lastUpdate } = dto;
+    const { id } = dto;
     const clinic = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
     const { fileUrl, fileId } = await this.fileservice.uploadingFile({
@@ -157,7 +157,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
       throw CustomError.internalServer(`${error}`);
     }
   }
-  async changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+  async changeStatus(dto: UpdateClinicDto): Promise<boolean> {
     const clinic = await this.findOneById(dto.id);
     try {
       const clinicInvalidated = await prisma.clinic.update({
@@ -176,7 +176,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           ],
         },
       });
-      return ClinicEntity.fromObject(clinicInvalidated);
+      return clinicInvalidated ? true : false ;
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }

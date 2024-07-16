@@ -19,9 +19,9 @@ export class ClinicRoutes {
         router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
 
-        router.post('/delete-photo', controller.deleteFile);
+        router.delete('/delete-photo', controller.deleteFile);
         router.use(FileUploadMiddleware.containFiles);
-        router.post('/upload-photo', controller.uploadFile);
+        router.patch('/upload-photo', controller.uploadFile);
 
         return router;
     }

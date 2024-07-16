@@ -35,6 +35,20 @@ const swaggerOptions: OpenAPIV3.Document = {
     "/account/confirm-password": paths.account.confirm_password,
     "/account/delete-photo": paths.account.delete_photo,
     "/account/upload-photo": paths.account.upload_photo,
+    // !Appoinment Paths
+    "/appointment/create": paths.appointment.create,
+    "/appointment/update": paths.appointment.update,
+    "/appointment/find-one/{id}": paths.appointment.find_one,
+    "/appointment/find-many": paths.appointment.find_many,
+    "/appointment/delete/{id}": paths.appointment.delete,
+    // !Clinic Paths
+    "/clinic/create": paths.clinic.create,
+    "/clinic/update": paths.clinic.update,
+    "/clinic/find-one/{id}": paths.clinic.find_one,
+    "/clinic/find-many": paths.clinic.find_many,
+    "/clinic/change-status": paths.clinic.change_status,
+    "/clinic/upload-photo": paths.clinic.upload_photo,
+    "/clinic/delete-photo": paths.clinic.delete_photo,
   },
   components: {
     securitySchemes: {

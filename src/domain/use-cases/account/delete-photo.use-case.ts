@@ -1,4 +1,4 @@
-import { AccountRepository, UploadDto } from "../..";
+import { AccountRepository } from "../../../domain";
 
 interface DeletePhotoUseCase {
   execute(id: string): Promise<Boolean>;

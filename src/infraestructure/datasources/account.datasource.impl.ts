@@ -15,7 +15,6 @@ import {
   ConfirmPasswordDto,
   ChangePasswordDto,
   PaginationEntity,
-  UploadDto,
 } from "../../domain";
 import { UploadedFile } from "express-fileupload";
 import { FileDataSourceImpl } from "./file.datasource.impl";

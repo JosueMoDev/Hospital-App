@@ -1,7 +1,5 @@
 import {
-  AccountEntity,
   AccountRepository,
-  UpdateAccountDto,
 } from "../../../domain";
 
 interface ChangeAccountStatusUseCase {
