@@ -3,6 +3,7 @@ import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateC
 import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
 import { UploadedFile } from "express-fileupload";
+import { account } from '../../config/doc/api/account.api-doc';
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
 
@@ -30,14 +31,21 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
       data: {
         photoId: fileId,
         photoUrl: fileUrl,
-        lastUpdate: [...clinic.lastUpdate],
+        lastUpdate: [
+          ...clinic.lastUpdate,
+          {
+            updatedBy: dto.updatedBy,
+            date: DateFnsAdapter.formatDate(),
+            action: "UPLOAD_FILE"
+          },
+        ],
       },
     });
     if (updateClinicPhoto) return true;
     return false;
   }
 
-  async deletePhoto(dto: any): Promise<any> {
+  async deletePhoto(dto: UploadDto): Promise<boolean> {
     const clinic = await this.findOneById(dto.id);
     if (!clinic.photoUrl.length && !clinic.photoId.length) throw CustomError.notFound('that clinic not have any photo associeted');
 
@@ -49,9 +57,9 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         photoId: '',
         photoUrl: '',
         lastUpdate: [...clinic.lastUpdate, {
-          account: dto.lastUpdate.account,
+          updatedBy: dto.updatedBy,
           date: DateFnsAdapter.formatDate(),
-          action: "UPDATE ACCOUNT",
+          action: "DELETE_FILE",
         },]
       }
     });
@@ -124,7 +132,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     }
   }
   async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
-    const { id, lastUpdate, ...rest } = dto;
+    const { id, updatedBy, ...rest } = dto;
 
     if (Object.keys(rest).length === 0)
       throw CustomError.badRequest("Nothing to update");
@@ -145,9 +153,9 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           lastUpdate: [
             ...clinic.lastUpdate,
             {
-              account: lastUpdate.account,
+              updatedBy,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE CLINIC",
+              action: "UPDATE",
             },
           ],
         },
@@ -169,10 +177,10 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           lastUpdate: [
             ...clinic.lastUpdate,
             {
-              ...dto.lastUpdate,
+              updatedBy: dto.updatedBy,
               date: DateFnsAdapter.formatDate(),
-              action: "CHANGE CLINIC STATUS",
-            },
+               action:"STATUS_CHANGED"
+            }
           ],
         },
       });

@@ -1,6 +1,5 @@
-import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601, Matches, IsObject, ValidateNested } from "class-validator";
-import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
-import { Type } from "class-transformer";
+import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601 } from "class-validator";
+import { CustomErrors, CustomValidationErrors,} from "../utils";
 
 interface UpdateAppointmentDtArgs {
   id: string;
@@ -9,7 +8,7 @@ interface UpdateAppointmentDtArgs {
   doctorId?: string;
   patientId?: string;
   clinicId?: string;
-  lastUpdate: LastUpdate;
+  updatedBy: string;
 }
 export class UpdateAppointmentDto {
   @IsNotEmpty({ message: "Appointment ID is required" })
@@ -36,11 +35,9 @@ export class UpdateAppointmentDto {
   @IsMongoId()
   public readonly patientId?: string;
 
-  @IsNotEmpty({ message: "Last Update is required" })
-  @IsObject()
-  @ValidateNested()
-  @Type(() => LastUpdate)
-  public lastUpdate!: LastUpdate;
+  @IsNotEmpty({ message: "Appointment ID is required" })
+  @IsMongoId()
+  public updatedBy!: string;
 
   constructor(args: UpdateAppointmentDtArgs) {
     this.id = args.id;
@@ -53,7 +50,7 @@ export class UpdateAppointmentDto {
     if (args.doctorId) this.doctorId = args.doctorId;
     if (args.patientId) this.patientId = args.patientId;
     if (args.clinicId) this.clinicId = args.clinicId;
-    this.lastUpdate = new LastUpdate(args.lastUpdate);
+    this.updatedBy = args.updatedBy;
   }
 
   static update(

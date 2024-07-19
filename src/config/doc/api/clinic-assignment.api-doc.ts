@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from "openapi-types";
-import { FromDtoToSchema } from "../fromDtoToSchema";
+import { GlobasSchemas } from "../fromDtoToSchema";
 
 type ClinicAssignmentPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -24,7 +24,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().ClinicAssignmentDto as Object,
+            schema: GlobasSchemas.ClinicAssignmentDto,
           },
         },
       },
@@ -51,7 +51,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().ClinicAssignmentDto as Object,
+            schema: GlobasSchemas.ClinicAssignmentDto,
           },
         },
       },
@@ -74,7 +74,6 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         },
       ],
       summary: "Get all doctor who are avialable to assign a clinic",
-      parameters: [],
       responses: {
         200: {
           description: "User found",
@@ -115,7 +114,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
     },
   },
   delete: {
-    delete: {
+    patch: {
       tags: ["Clinic Assignment"],
       security: [
         {
@@ -129,20 +128,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         content: {
           "application/json": {
 
-            schema: {
-              properties: {
-                clinic: {
-                  type: "string",
-                  example: "65615020a9ad9cf7a4dc1176",
-                },
-                doctors: {
-                    type: "array",
-                    items: {
-                        type: "string"
-                    },
-                }
-              },
-            },
+            schema: GlobasSchemas.ClinicAssignmentDto
           },
         },
       },

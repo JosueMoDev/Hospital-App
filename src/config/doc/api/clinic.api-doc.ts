@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from "openapi-types";
-import { FromDtoToSchema } from "../fromDtoToSchema";
+import { GlobasSchemas} from "../fromDtoToSchema";
 
 type ClinicPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -25,7 +25,7 @@ export const clinic: ClinicPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().CreateClinicDto as Object,
+            schema: GlobasSchemas.CreateClinicDto,
           },
         },
       },
@@ -81,7 +81,7 @@ export const clinic: ClinicPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().UpdateClinicDto as Object,
+            schema: GlobasSchemas.UpdateClinicDto,
           },
         },
       },
@@ -108,7 +108,7 @@ export const clinic: ClinicPaths = {
         {
           in: "query",
           name: "PaginationDto",
-          schema: FromDtoToSchema.getShemas().PaginationDto as Object,
+          schema: GlobasSchemas.PaginationDto,
         },
       ],
       responses: {
@@ -134,7 +134,7 @@ export const clinic: ClinicPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().UpdateClinicDto as Object,
+            schema: GlobasSchemas.UpdateClinicDto,
           },
         },
       },
@@ -161,7 +161,7 @@ export const clinic: ClinicPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().UploadDto as Object,
+            schema: GlobasSchemas.DeleteFileDto,
           },
         },
       },
@@ -188,20 +188,7 @@ export const clinic: ClinicPaths = {
         required: true,
         content: {
           "multipart/form-data": {
-            schema: {
-              title: "photo",
-              type: "object",
-              properties: {
-                id: {
-                  type: "string",
-                },
-                file: {
-                  type: "string",
-                  format: "binary",
-                },
-              },
-              required: ["id", "file"],
-            },
+            schema: GlobasSchemas.UploadFileDto
           },
         },
       },

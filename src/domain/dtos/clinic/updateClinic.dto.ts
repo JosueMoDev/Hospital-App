@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 
 interface UpdatedClinicDtoArgs {
   id: string;
@@ -19,7 +19,8 @@ interface UpdatedClinicDtoArgs {
   phone?: string,
   address?: Address,
   createdBy?: string,
-  lastUpdate: LastUpdate,
+  updatedBy: string
+
 
 }
 
@@ -48,7 +49,7 @@ export class UpdateClinicDto {
   public id: string;
 
   @IsOptional()
-  @Length(12, 12 , { message: "Register Number  Format not valid" })
+  @Length(12, 12, { message: "Register Number  Format not valid" })
   public registerNumber?: string;
 
   @IsOptional()
@@ -65,25 +66,22 @@ export class UpdateClinicDto {
   @Type(() => Address)
   public address?: Address | undefined;
 
-  @IsNotEmpty({ message: "Last Update is required" })
-  @IsObject()
-  @ValidateNested()
-  @Type(() => LastUpdate)
-  public lastUpdate: LastUpdate;
+  @IsMongoId()
+  @IsNotEmpty({ message: "Account ID is required to Update" })
+  public updatedBy: string;
 
   constructor(args: UpdatedClinicDtoArgs) {
-    const { id, registerNumber, name, phone, address, lastUpdate } = args;
+    const { id, registerNumber, name, phone, address, updatedBy } = args;
     this.id = id;
     this.registerNumber = registerNumber;
     this.name = name;
     this.phone = phone;
     this.address = address ? new Address(address) : undefined;
-    this.lastUpdate = new LastUpdate(lastUpdate);
+    this.updatedBy = updatedBy;
   }
   static update(
     object: UpdatedClinicDtoArgs
   ): [undefined | CustomErrors[], UpdateClinicDto?] {
-
     const updateClinicDto = new UpdateClinicDto(object);
 
     const [errors, validatedDto] =
@@ -94,7 +92,6 @@ export class UpdateClinicDto {
     const dto = Object.fromEntries(
       Object.entries(validatedDto!).filter(([_, value]) => value !== undefined)
     ) as UpdateClinicDto;
-
 
     return [undefined, dto];
   }

@@ -2,8 +2,9 @@ import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 import { Environment } from "../envs";
 import { OpenAPIV3 } from "openapi-types";
-import { FromDtoToSchema } from "./fromDtoToSchema";
 import * as paths from './api';
+import { GlobasSchemas } from "./fromDtoToSchema";
+
 
 const swaggerOptions: OpenAPIV3.Document = {
   openapi: "3.1.1",
@@ -52,8 +53,10 @@ const swaggerOptions: OpenAPIV3.Document = {
     // !Clinic Assignment Paths
     "/clinic-assignment/create": paths.clinicAssignment.create,
     "/clinic-assignment/update": paths.clinicAssignment.update,
-    "/clinic-assignment/assigned-doctors/{id}": paths.clinicAssignment.assigned_doctors,
-    "/clinic-assignment/assignable-doctors": paths.clinicAssignment.assignable_doctors,
+    "/clinic-assignment/assigned-doctors/{id}":
+      paths.clinicAssignment.assigned_doctors,
+    "/clinic-assignment/assignable-doctors":
+      paths.clinicAssignment.assignable_doctors,
     "/clinic-assignment/delete": paths.clinicAssignment.delete,
   },
   components: {
@@ -64,7 +67,7 @@ const swaggerOptions: OpenAPIV3.Document = {
         bearerFormat: "JWT",
       },
     },
-    schemas: FromDtoToSchema.getShemas() as any,
+    schemas: GlobasSchemas as any,
   },
 };
 

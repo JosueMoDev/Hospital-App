@@ -1,4 +1,4 @@
-import { LastUpdate } from '../dtos/utils/lastUpdate';
+import { LastUpdate } from "@prisma/client";
 
 interface RecordOptions {
     id: string,

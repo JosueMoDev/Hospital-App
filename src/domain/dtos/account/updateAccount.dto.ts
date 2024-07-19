@@ -1,5 +1,5 @@
 import { Gender, Role } from "../../entities";
-import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
+import { CustomErrors, CustomValidationErrors} from "../utils";
 import {
   IsBoolean,
   IsEmail,
@@ -25,7 +25,7 @@ interface UpdateAccountDtoArgs {
   phone?: string;
   isValidated?: boolean;
   role?: Role;
-  lastUpdate: LastUpdate
+  updatedBy: string;
 }
 
 
@@ -68,6 +68,10 @@ export class UpdateAccountDto {
   @IsEnum(Role, { message: "Role is not valid" })
   public role!: Role;
 
+    @IsMongoId()
+  @IsNotEmpty({ message: "Id is required" })
+  public updatedBy!: string;
+
   constructor(args: UpdateAccountDtoArgs) {
     this.id = args.id;
     if(args.duiNumber) this.duiNumber = args.duiNumber;
@@ -78,7 +82,8 @@ export class UpdateAccountDto {
     if(args.gender) this.gender = args.gender;
     if(args.phone) this.phone = args.phone;
     if(args.isValidated) this.isValidated = args.isValidated;
-    if(args.role) this.role = args.role;
+    if (args.role) this.role = args.role;
+    this.updatedBy = args.updatedBy;
   }
   static update(
     object: UpdateAccountDtoArgs

@@ -29,11 +29,11 @@ export class RecordDataSourceImpl implements RecordDataSource {
             pdfId: fileId,
             pdfUrl: fileUrl,
             lastUpdate: [
-              ...record.lastUpdate,
+            
               {
-                account: dto.lastUpdate.account,
+                updatedBy: dto.updatedBy,
                 date: DateFnsAdapter.formatDate(),
-                action: "UPDATE RECORD",
+                action: "UPDATE",
               },
             ],
           },
@@ -52,10 +52,11 @@ export class RecordDataSourceImpl implements RecordDataSource {
             data: {
                 pdfId: '',
                 pdfUrl: '',
-                lastUpdate: [...record.lastUpdate, {
-                    account: dto.lastUpdate.account,
+                lastUpdate: [
+                    {
+                    updatedBy: dto.updatedBy,
                     date: DateFnsAdapter.formatDate(),
-                    action: "UPDATE RECORD",
+                    action: "DELETE_FILE",
                 },]
             }
         });
@@ -118,7 +119,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
         }
     }
     async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
-        const { id, lastUpdate, ...rest } = dto;
+        const { id, updatedBy, ...rest } = dto;
         if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
         const record = await this.findOneById(id);
 
@@ -128,11 +129,10 @@ export class RecordDataSourceImpl implements RecordDataSource {
                 data: {
                     ...rest,
                     lastUpdate: [
-                        ...record.lastUpdate,
                         {
-                            account: lastUpdate.account,
+                            updatedBy: updatedBy,
                             date: DateFnsAdapter.formatDate(),
-                            action: "UPDATE RECORD",
+                            action: "UPDATE",
                         },
                     ],
                 },
@@ -152,11 +152,11 @@ export class RecordDataSourceImpl implements RecordDataSource {
                 data: {
                     status: !record.status,
                     lastUpdate: [
-                        ...record.lastUpdate,
+                        
                         {
-                            ...dto.lastUpdate,
+                            updatedBy: "",
                             date: DateFnsAdapter.formatDate(),
-                            action: "CHANGE RECORD VISIBILITY",
+                            action: "STATUS_CHANGED",
                         },
                     ],
                 },

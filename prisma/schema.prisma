@@ -22,10 +22,23 @@ enum Role {
 }
 
 type LastUpdate {
-  account String
+  updatedBy String
   date DateTime
-  action String?
+  action Actions?
 }
+
+enum Actions {
+  UPDATE_PASSWORD
+  RECOVER_PASSWORD
+  UPDATE
+  SOFT_DELETE
+  UPLOAD_FILE
+  DELETE_FILE
+  STATUS_CHANGED
+  RECORD_CREATED
+}
+
+
 
 type Address {
   city String?

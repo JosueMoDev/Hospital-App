@@ -11,7 +11,6 @@ import {
   Length,
   MinLength,
 } from "class-validator";
-import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 
 interface CreateAccountDtoArgs {
   duiNumber: string;

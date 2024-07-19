@@ -15,6 +15,7 @@ import {
   ConfirmPasswordDto,
   ChangePasswordDto,
   PaginationEntity,
+  UploadDto,
 } from "../../domain";
 import { UploadedFile } from "express-fileupload";
 import { FileDataSourceImpl } from "./file.datasource.impl";
@@ -40,8 +41,8 @@ export class AccountDataSourceImpl implements AccountDataSource {
   private readonly repository = new FileRepositoryImpl(this.datasource);
   private readonly fileservice = new FileService(this.repository);
 
-  async uploadPhoto(id: string, file: UploadedFile): Promise<boolean> {
-    const account = await this.findOneById(id);
+  async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    const account = await this.findOneById(dto.id);
     if (!file) throw CustomError.badRequest("File no enviado");
     const { fileUrl, fileId } = await this.fileservice.uploadingFile({
       file: {
@@ -61,9 +62,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
         lastUpdate: [
           ...account.lastUpdate,
           {
-            account: account.id,
+            updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "UPDATE ACCOUNT",
+            action: "UPLOAD_FILE",
           },
         ],
       },
@@ -71,9 +72,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
     if (updateAccountPhoto) return true;
     return false;
   }
-  async deletePhoto(id: string): Promise<boolean> {
+  async deletePhoto(dto: UploadDto): Promise<boolean> {
     
-    const account = await this.findOneById(id);
+    const account = await this.findOneById(dto.id);
     if (!account.photoUrl.length && !account.photoId.length)
       throw CustomError.notFound("that account not have any photo associeted");
 
@@ -88,9 +89,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
         lastUpdate: [
           ...account.lastUpdate,
           {
-            account: account.id,
+            updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "UPDATE ACCOUNT",
+            action: "DELETE_FILE",
           },
         ],
       },
@@ -230,9 +231,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
           lastUpdate: [
             ...account.lastUpdate,
             {
-              account: account.id,
+              updatedBy: account.id,
               date: DateFnsAdapter.formatDate(),
-              action: "ACCOUNT VALIDATION",
+              action: "STATUS_CHANGED",
             },
           ],
         },
@@ -264,9 +265,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
           lastUpdate: [
             ...account.lastUpdate,
             {
-              account: account.id,
+              updatedBy: account.id,
               date: new Date(),
-              action: "CHANGE PASSWORD",
+              action: "UPDATE_PASSWORD",
             },
           ],
         },

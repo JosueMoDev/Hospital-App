@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from "openapi-types";
-import { FromDtoToSchema } from "../fromDtoToSchema";
+import { GlobasSchemas } from "../fromDtoToSchema";
 
 type AccountPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -28,7 +28,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().CreateAccountDto as Object,
+            schema: GlobasSchemas.CreateAccountDto,
           },
         },
       },
@@ -116,7 +116,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().UpdateAccountDto as Object,
+            schema: GlobasSchemas.UpdateAccountDto,
           },
         },
       },
@@ -143,7 +143,7 @@ export const account: AccountPaths = {
         {
           in: "query",
           name: "PaginationDto",
-          schema: FromDtoToSchema.getShemas().PaginationDto as Object,
+          schema: GlobasSchemas.PaginationDto,
         },
       ],
       responses: {
@@ -201,7 +201,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().ChangePasswordDto as Object,
+            schema: GlobasSchemas.ChangePasswordDto,
           },
         },
       },
@@ -229,7 +229,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().ConfirmPasswordDto as Object,
+            schema: GlobasSchemas.ConfirmPasswordDto,
           },
         },
       },
@@ -252,16 +252,14 @@ export const account: AccountPaths = {
         },
       ],
       summary: "This endpoint delete your account photo",
-      parameters: [
-        {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: {
-            type: "string",
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: GlobasSchemas.DeleteFileDto,
           },
         },
-      ],
+      },
       responses: {
         200: {
           description: "User found",
@@ -285,21 +283,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           "multipart/form-data": {
-            schema: {
-              title:"photo",
-              type: "object",
-              properties: {
-                id: {
-                  type: "string",
-                },
-                file: {
-                  type: "string",
-                  format:"binary"
-
-                },
-              },
-              required: ['id', 'file']
-            },
+            schema: GlobasSchemas.UploadFileDto,
           },
         },
       },

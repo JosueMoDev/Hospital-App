@@ -83,7 +83,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
             {
               account: lastUpdate.account,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE ACCOUNT",
+              action: "UPDATE",
             },
           ],
         },

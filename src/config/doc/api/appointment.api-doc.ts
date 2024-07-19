@@ -1,6 +1,6 @@
 
 import { OpenAPIV3 } from "openapi-types";
-import { FromDtoToSchema } from "../fromDtoToSchema";
+import { GlobasSchemas } from "../fromDtoToSchema";
 
 type AppointmentPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -24,7 +24,7 @@ export const appointment: AppointmentPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().CreateAppointmentDto as Object,
+            schema: GlobasSchemas.CreateAppointmentDto,
           },
         },
       },
@@ -80,7 +80,7 @@ export const appointment: AppointmentPaths = {
         required: true,
         content: {
           "application/json": {
-            schema: FromDtoToSchema.getShemas().UpdateAppointmentDto as Object,
+            schema: GlobasSchemas.UpdateAppointmentDto,
           },
         },
       },
@@ -107,7 +107,7 @@ export const appointment: AppointmentPaths = {
         {
           in: "query",
           name: "PaginationDto",
-          schema: FromDtoToSchema.getShemas().PaginationDto as Object,
+          schema: GlobasSchemas.PaginationDto,
         },
       ],
       responses: {

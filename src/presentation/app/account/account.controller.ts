@@ -135,11 +135,11 @@ export class AccountController {
   };
 
   deleteFile = (request: Request, response: Response) => {
-    // const [error, fileDto] = UploadDto.update(request.body);
-    // if (error) return response.status(400).json({ error });
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
 
     new DeletePhoto(this.accountRepository)
-      .execute(request.params.id!)
+      .execute(fileDto!)
       .then(() => response.json({ message: "Photo has been deleted" }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
