@@ -1,9 +1,14 @@
-import { CloudinaryUploadFileArgs } from "../../config";
+import { UploadedFile } from "express-fileupload";
+import { AllowedFolder } from "../../config";
+import { UploadDto } from "../dtos";
 import { FileEntity } from "../entities";
 
 export abstract class FileRepository {
+  abstract uploadFile(
+    dto: UploadDto,
+    file: UploadedFile,
+    folder: AllowedFolder
+  ): Promise<FileEntity>;
 
-    abstract uploadFile(uploadArgs: CloudinaryUploadFileArgs): Promise<FileEntity>;
-
-    abstract deleteFile(id: string): Promise<{ [key: string]: string }>;
+  abstract deleteFile(id: string): Promise<{ [key: string]: string }>;
 }

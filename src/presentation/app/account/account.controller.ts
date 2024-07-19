@@ -20,6 +20,7 @@ import {
   DeletePhoto
 } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
+import { AllowedFolder } from "../../../config";
 
 export class AccountController {
   constructor(private readonly accountRepository: AccountRepository) {}
@@ -134,7 +135,6 @@ export class AccountController {
   };
 
   deleteFile = (request: Request, response: Response) => {
-    console.log(request.body)
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
     new DeletePhoto(this.accountRepository)

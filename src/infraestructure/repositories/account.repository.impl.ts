@@ -17,11 +17,11 @@ export class AccountRepositoryImpl implements AccountRepository {
   findOneByDocument(document: string): Promise<AccountEntity> {
     return this.datasource.findOneByDocument(document);
   }
-  uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    return this.datasource.uploadPhoto(dto, file);
+  uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+    return this.datasource.uploadFile(dto, file);
   }
-  deletePhoto(dto: UploadDto): Promise<boolean> {
-    return this.datasource.deletePhoto(dto);
+  deleteFile(dto: UploadDto): Promise<boolean> {
+    return this.datasource.deleteFile(dto);
   }
 
   findOneById(id: string): Promise<AccountEntity> {

@@ -3,26 +3,18 @@ import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
 import { CreateRecordDto, CustomError, PaginationDto, PaginationEntity, RecordDataSource, RecordEntity, UpdateRecordDto, UploadDto } from "../../domain";
 import { FileDataSourceImpl } from "./file.datasource.impl";
 import { FileRepositoryImpl } from "../repositories";
-import { FileService } from "../../presentation";
 
 export class RecordDataSourceImpl implements RecordDataSource {
     private readonly datasource = new FileDataSourceImpl();
     private readonly repository = new FileRepositoryImpl(this.datasource);
-    private readonly fileservice = new FileService(this.repository);
 
     async uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
         const record = await this.findOneById(dto.id);
+        if (!record.pdfUrl.length && !record.pdfId.length)
+          throw CustomError.notFound("Record Not Exist");
+
         if (!file) throw CustomError.badRequest("File no enviado");
-        const { fileUrl, fileId } = await this.fileservice.uploadingFile({
-            file: {
-                ...file,
-                name: record.id
-            },
-            args: {
-                folder: AllowedFolder.record,
-                public_id: record.id
-            }
-        });
+        const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, AllowedFolder.record);
         const updateRecordPdf = await prisma.record.update({
           where: { id: dto.id },
           data: {
@@ -45,7 +37,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
         const record = await this.findOneById(dto.id);
         if (!record.pdfUrl.length && !record.pdfId.length) throw CustomError.notFound('that record not have any pdf associeted');
 
-        const { result } = await this.fileservice.deletingFile(record.pdfId);
+        const { result } = await this.repository.deleteFile(record.pdfId);
         if (result === 'not found') throw CustomError.internalServer('we couldnt delete pfd');
         const recordUpdated = await prisma.record.update({
             where: { id: dto.id },

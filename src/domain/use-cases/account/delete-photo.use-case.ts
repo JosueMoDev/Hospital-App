@@ -8,6 +8,6 @@ export class DeletePhoto implements DeletePhotoUseCase {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(dto: UploadDto): Promise<boolean> {
-    return await this.accountRepository.deletePhoto(dto);
+    return await this.accountRepository.deleteFile(dto);
   }
 }

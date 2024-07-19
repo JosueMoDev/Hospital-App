@@ -1,6 +1,5 @@
 import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
 import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError, PaginationEntity, UploadDto } from "../../domain";
-import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
 import { UploadedFile } from "express-fileupload";
 
@@ -8,23 +7,13 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
 
   private readonly datasource = new FileDataSourceImpl();
   private readonly repository = new FileRepositoryImpl(this.datasource);
-  private readonly fileservice = new FileService(this.repository);
 
 
   async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     const { id } = dto;
     const clinic = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
-    const { fileUrl, fileId } = await this.fileservice.uploadingFile({
-      file: {
-        ...file,
-        name: clinic.id
-      },
-      args: {
-        folder: AllowedFolder.clinic,
-        public_id: clinic.id
-      }
-    });
+    const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, AllowedFolder.clinic);
     const updateClinicPhoto = await prisma.clinic.update({
       where: { id: id },
       data: {
@@ -48,7 +37,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     const clinic = await this.findOneById(dto.id);
     if (!clinic.photoUrl.length && !clinic.photoId.length) throw CustomError.notFound('that clinic not have any photo associeted');
 
-    const { result } = await this.fileservice.deletingFile(clinic.photoId);
+    const { result } = await this.repository.deleteFile(clinic.photoId);
     if (result === 'not found') throw CustomError.internalServer('we couldnt delete photo');
     const clinicUpdated = await prisma.clinic.update({
       where: { id: dto.id },

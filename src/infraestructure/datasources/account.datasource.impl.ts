@@ -20,7 +20,6 @@ import {
 import { UploadedFile } from "express-fileupload";
 import { FileDataSourceImpl } from "./file.datasource.impl";
 import { FileRepositoryImpl } from "../repositories";
-import { FileService } from "../../presentation";
 const genderT = {
   male: Gender.MALE,
   female: Gender.FEMALE,
@@ -39,21 +38,11 @@ const Folder: any = {
 export class AccountDataSourceImpl implements AccountDataSource {
   private readonly datasource = new FileDataSourceImpl();
   private readonly repository = new FileRepositoryImpl(this.datasource);
-  private readonly fileservice = new FileService(this.repository);
 
-  async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
+  async uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     const account = await this.findOneById(dto.id);
     if (!file) throw CustomError.badRequest("File no enviado");
-    const { fileUrl, fileId } = await this.fileservice.uploadingFile({
-      file: {
-        ...file,
-        name: account.id,
-      },
-      args: {
-        folder: Folder[account.role],
-        public_id: account.id,
-      },
-    });
+    const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, Folder[account.role]);
     const updateAccountPhoto = await prisma.account.update({
       where: { id: account.id },
       data: {
@@ -72,12 +61,12 @@ export class AccountDataSourceImpl implements AccountDataSource {
     if (updateAccountPhoto) return true;
     return false;
   }
-  async deletePhoto(dto: UploadDto): Promise<boolean> {
+  async deleteFile(dto: UploadDto): Promise<boolean> {
     const account = await this.findOneById(dto.id);
     if (!account.photoUrl.length && !account.photoId.length)
       throw CustomError.notFound("that account not have any photo associeted");
 
-    const { result } = await this.fileservice.deletingFile(account.photoId);
+    const { result } = await this.repository.deleteFile(account.photoId);
     if (result === "not found")
       throw CustomError.internalServer("we couldnt delete photo");
     const accountUpdated = await prisma.account.update({

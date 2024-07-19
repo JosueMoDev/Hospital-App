@@ -9,6 +9,6 @@ export class UploadPhoto implements UploadPhotoUseCase {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    return await this.accountRepository.uploadPhoto(dto, file);
+    return await this.accountRepository.uploadFile(dto, file);
   }
 }

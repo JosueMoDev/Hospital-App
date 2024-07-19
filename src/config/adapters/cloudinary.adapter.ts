@@ -23,6 +23,10 @@ export interface CloudinaryUploadFileArgs {
 
 export class CloudinaryAdapter {
 
+    private static PrepareFile() {
+        
+    }
+
     static async uploadFile(options: CloudinaryUploadFileArgs): Promise<UploadApiResponse> {
         const { filePath, public_id, folder } = options;
         return await cloudinary.uploader.upload(filePath, { folder, public_id });

@@ -10,7 +10,7 @@ import {
 import { AccountEntity } from "../entities";
 import { PaginationEntity } from "../entities/pagination.entity";
 
-export abstract class AccountDataSource {
+export abstract class AccountDataSource  {
   abstract findOneById(id: string): Promise<AccountEntity>;
 
   abstract findOneByDocument(document: string): Promise<AccountEntity>;
@@ -27,7 +27,7 @@ export abstract class AccountDataSource {
 
   abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
 
-  abstract uploadPhoto(dto:UploadDto, file: UploadedFile): Promise<boolean>;
+  abstract uploadFile(dto:UploadDto, file: UploadedFile): Promise<boolean>;
 
-  abstract deletePhoto(dto: UploadDto): Promise<boolean>;
+  abstract deleteFile(dto: UploadDto): Promise<boolean>;
 }

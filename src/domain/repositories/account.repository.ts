@@ -20,7 +20,7 @@ export abstract class AccountRepository {
 
     abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
 
-    abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
+    abstract uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
-    abstract deletePhoto(dto: UploadDto): Promise<boolean>;
+    abstract deleteFile(dto: UploadDto): Promise<boolean>;
 }
