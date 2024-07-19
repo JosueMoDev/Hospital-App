@@ -121,12 +121,11 @@ export class AccountController {
   };
 
   uploadFile = (request: Request, response: Response) => {
-    // const [error, fileDto] = UploadDto.update(request.body);
-    // if (error) return response.status(400).json({ error });
+    const [error, fileDto] = UploadDto.update(request.body);
+    if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
-    const id = request.body.id;
     new UploadPhoto(this.accountRepository)
-      .execute(id!, file)
+      .execute(fileDto!, file)
       .then(() => response.json({message: "Photo has been uploaded"}))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -135,9 +134,9 @@ export class AccountController {
   };
 
   deleteFile = (request: Request, response: Response) => {
+    console.log(request.body)
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
-
     new DeletePhoto(this.accountRepository)
       .execute(fileDto!)
       .then(() => response.json({ message: "Photo has been deleted" }))

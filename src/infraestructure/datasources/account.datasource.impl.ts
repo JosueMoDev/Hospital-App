@@ -73,7 +73,6 @@ export class AccountDataSourceImpl implements AccountDataSource {
     return false;
   }
   async deletePhoto(dto: UploadDto): Promise<boolean> {
-    
     const account = await this.findOneById(dto.id);
     if (!account.photoUrl.length && !account.photoId.length)
       throw CustomError.notFound("that account not have any photo associeted");

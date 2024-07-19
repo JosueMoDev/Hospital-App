@@ -21,7 +21,7 @@ export class AccountRoutes {
         router.patch('/change-password', controller.changePasswordAccount);
         router.post('/confirm-password', controller.confirmPassword);
 
-        router.delete('/delete-photo/:id', controller.deleteFile);
+        router.patch('/delete-photo', controller.deleteFile);
         router.use(FileUploadMiddleware.containFiles);
         router.patch('/upload-photo', controller.uploadFile);
 

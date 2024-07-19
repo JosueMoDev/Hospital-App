@@ -244,7 +244,7 @@ export const account: AccountPaths = {
     },
   },
   delete_photo: {
-    delete: {
+    patch: {
       tags: ["Account"],
       security: [
         {

@@ -3,7 +3,6 @@ import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateC
 import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
 import { UploadedFile } from "express-fileupload";
-import { account } from '../../config/doc/api/account.api-doc';
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
 

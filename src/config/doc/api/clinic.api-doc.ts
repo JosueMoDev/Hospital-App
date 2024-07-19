@@ -149,7 +149,7 @@ export const clinic: ClinicPaths = {
     },
   },
   delete_photo: {
-    delete: {
+    patch: {
       tags: ["Clinic"],
       security: [
         {
