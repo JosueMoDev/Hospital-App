@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
-import { RecordService } from "../../services";
-import { CreateRecordDto, HandlerError, PaginationDto, UpdateRecordDto, UploadDto } from "../../../domain";
+import { ChangeRecordStatus, CreaateRecord, CreateRecordDto, DeleteRecordPDF, FindManyRecords, FindOneRecordById, HandlerError, PaginationDto, RecordRepository, UpdateRecord, UpdateRecordDto, UploadDto, UploadRecordPDF } from "../../../domain";
 import { UploadedFile } from "express-fileupload";
 
 export class RecordController {
-  constructor(private readonly recordService: RecordService) { }
+  constructor(private readonly recordRepository: RecordRepository) { }
 
   createRecord = (request: Request, response: Response) => {
     const [error, createRecordDto] = CreateRecordDto.create(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.recordService
-      .creatingRecord(createRecordDto!)
+    new CreaateRecord(this.recordRepository)
+      .excute(createRecordDto!)
       .then((record) => response.json(record))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -23,8 +22,8 @@ export class RecordController {
     const [error, updateRecordDto] = UpdateRecordDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.recordService
-      .updatingRecord(updateRecordDto!)
+    new UpdateRecord(this.recordRepository)
+      .execute(updateRecordDto!)
       .then((updatedRecord) => response.json(updatedRecord))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -33,8 +32,8 @@ export class RecordController {
   };
 
   findOneById = (request: Request, response: Response) => {
-    this.recordService
-      .findingOneById(request.params.id!)
+    new FindOneRecordById(this.recordRepository)
+      .execute(request.params.id!)
       .then((record) => response.json(record))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -46,8 +45,8 @@ export class RecordController {
     const [error, pagDto] = PaginationDto.create(request.query);
     if (error) return response.status(400).json({ error });
 
-    this.recordService
-      .findingMany(pagDto!)
+    new FindManyRecords(this.recordRepository)
+      .execute(pagDto!)
       .then((records) => response.json(records))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -59,8 +58,8 @@ export class RecordController {
   changeStatus = (request: Request, response: Response) => {
     const [error, recordDto] = UpdateRecordDto.update(request.body);
     if (error) return response.status(400).json({ error });
-    this.recordService
-      .changingRecordStatus(recordDto!)
+    new ChangeRecordStatus(this.recordRepository)
+      .execute(recordDto!)
       .then((result) => response.json(result))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -73,8 +72,8 @@ export class RecordController {
     if (error) return response.status(400).json({ error });
     const file = request.body.files.at(0) as UploadedFile;
 
-    this.recordService
-      .uploadingPdf(fileDto!, file)
+    new UploadRecordPDF(this.recordRepository)
+      .execute(fileDto!, file)
       .then((record) => response.json(record))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -86,8 +85,8 @@ export class RecordController {
     const [error, fileDto] = UploadDto.update(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.recordService
-      .deletingPdf(fileDto!)
+    new DeleteRecordPDF(this.recordRepository)
+      .execute(fileDto!)
       .then((record) => response.json(record))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

@@ -10,8 +10,8 @@ export class RecordDataSourceImpl implements RecordDataSource {
 
     async uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
         const record = await this.findOneById(dto.id);
-        if (!record.pdfUrl.length && !record.pdfId.length)
-          throw CustomError.notFound("Record Not Exist");
+    
+        if (!record) throw CustomError.notFound("Record Not Exist");
 
         if (!file) throw CustomError.badRequest("File no enviado");
         const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, AllowedFolder.record);
