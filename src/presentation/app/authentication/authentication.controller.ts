@@ -1,16 +1,25 @@
 import { Response, Request } from "express";
-import { HandlerError, LoginDto } from "../../../domain";
-import { AuthenticationService } from "../../services";
+import {
+  AuthenticationRepository,
+  HandlerError,
+  LoginDto,
+  LoginWithEmailAndPassword,
+  LoginWithGoogle,
+  RefreshToken,
+  
+} from "../../../domain";
 
 export class AuthenticationController {
-  constructor(public readonly authService: AuthenticationService) { }
+  constructor(
+    private readonly authenticationRepository: AuthenticationRepository
+  ) {}
 
   loginWithEmailAndPassword = (request: Request, response: Response) => {
     const [error, loginDto] = LoginDto.create(request.body);
     if (error) return response.status(400).json({ error });
 
-    this.authService
-      .athenticatingWithEmailAndPassord(loginDto!)
+    new LoginWithEmailAndPassword(this.authenticationRepository)
+      .execute(loginDto!)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -20,9 +29,10 @@ export class AuthenticationController {
 
   googleSignIn = (request: Request, response: Response) => {
     const token = request.body.token;
-    if (!token) return response.status(400).json({ error: " NO token provided" });
-    this.authService
-      .authenticationWithGoogle(token)
+    if (!token)
+      return response.status(400).json({ error: " NO token provided" });
+      new LoginWithGoogle(this.authenticationRepository)
+      .execute(token)
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -31,11 +41,12 @@ export class AuthenticationController {
   };
 
   refreshToken = (request: Request, response: Response) => {
-    const bearerToken = request.headers['authorization'];
-    if (!bearerToken) return response.status(400).json({ error: " NO token provided" });
-    const accessToken = bearerToken.split(' ');
-    this.authService
-      .refreshToken(accessToken[1])
+    const bearerToken = request.headers["authorization"];
+    if (!bearerToken)
+      return response.status(400).json({ error: " NO token provided" });
+    const accessToken = bearerToken.split(" ");
+    new RefreshToken(this.authenticationRepository)
+      .execute(accessToken[1])
       .then((account) => response.json(account))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);

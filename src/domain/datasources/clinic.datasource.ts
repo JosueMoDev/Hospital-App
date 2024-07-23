@@ -12,7 +12,7 @@ export abstract class ClinicDataSource {
 
    abstract update(dto: UpdateClinicDto): Promise<ClinicEntity>;
 
-   abstract changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity>;
+   abstract changeStatus(dto: UpdateClinicDto): Promise<boolean>;
 
    abstract uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 

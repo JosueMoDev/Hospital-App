@@ -24,7 +24,7 @@ export class RecordRepositoryImpl implements RecordRepository {
     uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
         return this.datasource.uptate(dto);
     }
-    changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity> {
+    changeRecordStatus(dto: UpdateRecordDto): Promise<boolean> {
         return this.datasource.changeRecordStatus(dto);
     }
 

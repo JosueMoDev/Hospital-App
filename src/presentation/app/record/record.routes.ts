@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { RecordDataSourceImpl, RecordRepositoryImpl } from "../../../infraestructure";
-import { RecordService } from "../../services";
 import { RecordController } from "./record.controller";
 import { FileUploadMiddleware } from "../../middlewares";
 
@@ -10,8 +9,7 @@ export class RecordRoutes {
 
         const datasource = new RecordDataSourceImpl();
         const repository = new RecordRepositoryImpl(datasource);
-        const recordService = new RecordService(repository);
-        const controller = new RecordController(recordService);
+        const controller = new RecordController(repository);
 
 
         router.post('/create', controller.createRecord);
@@ -19,9 +17,9 @@ export class RecordRoutes {
         router.get('/find-one/:id', controller.findOneById);
         router.get('/find-many', controller.findMany);
         router.patch('/change-status', controller.changeStatus);
-        router.post('/delete-pdf', controller.deleteFile)
+        router.patch('/delete-pdf', controller.deleteFile)
         router.use(FileUploadMiddleware.containFiles);
-        router.post('/upload-pdf', controller.uploadFile);
+        router.patch('/upload-pdf', controller.uploadFile);
 
         return router;
     }

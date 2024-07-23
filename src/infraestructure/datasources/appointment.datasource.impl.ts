@@ -13,6 +13,11 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {
     const appointment = await prisma.appointment.findFirst({
       where: { id: id },
+      include: {
+        appointment_clinic: true,
+        appointment_doctor: true,
+        appointment_patient: true,
+      },
     });
     if (!appointment) throw CustomError.badRequest("Any appointment found");
 
@@ -25,9 +30,13 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
       prisma.appointment.findMany({
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
-        where: {}
+        include: {
+          appointment_clinic: true,
+          appointment_doctor: true,
+          appointment_patient: true,
+        }
       }),
-      prisma.appointment.count({ where: {} })
+      prisma.appointment.count()
     ]);
     const totalPages = Math.ceil(total / pageSize);
 
@@ -70,8 +79,8 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
     const appointment = await this.findOneById(id);
 
-    if (rest.startDate) rest.startDate = DateFnsAdapter.formatDates(dto.startDate!);
-    if (rest.endDate) rest.endDate = DateFnsAdapter.formatDates(dto.endDate!);
+    if (rest.startDate) rest.startDate = new Date(dto.startDate!);
+    if (rest.endDate) rest.endDate = new Date(dto.endDate!);
 
     try {
       const appointmentUpdated = await prisma.appointment.update({
@@ -83,7 +92,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
             {
               account: lastUpdate.account,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE ACCOUNT",
+              action: "UPDATE",
             },
           ],
         },

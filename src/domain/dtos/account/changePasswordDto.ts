@@ -1,20 +1,18 @@
-import { Type } from "class-transformer";
-import { CustomErrors, CustomValidationErrors, LastUpdate } from "../utils";
+import { CustomErrors, CustomValidationErrors } from "../utils";
 import {
   IsMongoId,
   IsNotEmpty,
-  IsObject,
   MinLength,
-  ValidateNested,
 } from "class-validator";
 
-interface UpdatePasswordDtoArgs {
+interface ChangePasswordDtoArgs {
   account: string;
   newPassword: string;
   oldPassword: string;
+  updatedBy: string;
 }
 
-export class UpdatePasswordDto {
+export class ChangePasswordDto {
   @IsMongoId()
   @IsNotEmpty({ message: "account is required" })
   public account!: string;
@@ -27,18 +25,24 @@ export class UpdatePasswordDto {
   @MinLength(8, { message: "Password should be at least 8 characters long" })
   public oldPassword!: string;
 
-  constructor(args: UpdatePasswordDto) {
+  @IsMongoId()
+  @IsNotEmpty({ message: "account is required" })
+  public updatedBy!: string;
+
+  constructor(args: ChangePasswordDto) {
     this.account = args.account;
     this.newPassword = args.newPassword;
     this.oldPassword = args.oldPassword;
+    this.updatedBy = args.updatedBy;
+
   }
   static update(
-    object: UpdatePasswordDtoArgs
-  ): [undefined | CustomErrors[], UpdatePasswordDto?] {
-    const updateAccountDto = new UpdatePasswordDto(object);
+    object: ChangePasswordDtoArgs
+  ): [undefined | CustomErrors[], ChangePasswordDto?] {
+    const updateAccountDto = new ChangePasswordDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<UpdatePasswordDto>(updateAccountDto);
+      CustomValidationErrors.validateDto<ChangePasswordDto>(updateAccountDto);
 
     if (errors) return [errors];
 

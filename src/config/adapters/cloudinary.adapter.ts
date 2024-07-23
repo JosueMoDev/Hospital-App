@@ -12,7 +12,7 @@ export enum AllowedFolder {
     clinic = "clinics",
     admin = "admins",
     patient = "patients",
-    doctor = "doctots",
+    doctor = "doctors",
     record = "records"
 }
 export interface CloudinaryUploadFileArgs {
@@ -22,6 +22,10 @@ export interface CloudinaryUploadFileArgs {
 }
 
 export class CloudinaryAdapter {
+
+    private static PrepareFile() {
+        
+    }
 
     static async uploadFile(options: CloudinaryUploadFileArgs): Promise<UploadApiResponse> {
         const { filePath, public_id, folder } = options;

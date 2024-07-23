@@ -36,7 +36,7 @@ export class ClinicRepositoyImpl implements ClinicRepository {
     return this.datasource.update(dto);
   }
 
-  changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+  changeStatus(dto: UpdateClinicDto): Promise<boolean> {
     return this.datasource.changeStatus(dto);
   }
 }

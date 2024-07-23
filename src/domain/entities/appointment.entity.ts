@@ -1,68 +1,90 @@
 import { LastUpdate } from "@prisma/client";
+import { AccountEntity } from "./account.entity";
+import { ClinicEntity } from "./clinic.entity";
 
+type Account = Partial<Pick<AccountEntity, "id" | "duiNumber" | "name" | "lastname" | "email" | "photoUrl" | "phone">>;
+type Clinic = Partial<Pick<ClinicEntity, 'id' | 'name' | 'address' | 'phone' | 'photoUrl'>>;
 export interface AppointmentEntityOptions {
   id: string;
   startDate: Date;
   endDate: Date;
-  doctorId: string;
-  patientId: string;
-  clinicId: string;
+  doctor: Account;
+  patient: Account;
+  clinic: Clinic;
   createdAt: Date;
   createdBy: string;
-  lastUpdate: LastUpdate[]
+  lastUpdate: LastUpdate[];
 }
+
 
 export class AppointmentEntity {
   public id: string;
   public startDate: Date;
   public endDate: Date;
-  public doctorId: string;
-  public patientId: string;
-  public clinicId: string;
+  public doctor: Account;
+  public patient: Account;
+  public clinic: Clinic;
   public createdAt: Date;
   public createdBy: string;
-  public lastUpdate: LastUpdate[]
+  public lastUpdate: LastUpdate[];
 
   constructor(options: AppointmentEntityOptions) {
     const {
       id,
       startDate,
       endDate,
-      doctorId,
-      patientId,
-      clinicId,
+      doctor,
+      patient,
+      clinic,
       createdAt,
       createdBy,
       lastUpdate,
-
     } = options;
 
     this.id = id;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.doctorId = doctorId;
-    this.patientId = patientId;
-    this.clinicId = clinicId;
+    this.doctor = doctor;
+    this.patient = patient;
+    this.clinic = clinic;
     this.createdAt = createdAt;
     this.createdBy = createdBy;
     this.lastUpdate = lastUpdate;
-
   }
 
-  static fromObject(object: AppointmentEntity ): AppointmentEntity {
-    const { id, startDate, endDate, doctorId, patientId, clinicId, createdAt, createdBy, lastUpdate } = object;
+  static accountMapper(object: { [key: string]: any }): Account {
+    const { id, duiNumber, name, lastname, phone, photoUrl, email } = object;
+    return { id, duiNumber, name, lastname, phone, photoUrl, email };
+  }
+
+  static clinicMapper(object: { [key: string]: any }): Clinic {
+    const { id, name, address, phone, photoUrl } = object;
+    return { id, name, address, phone, photoUrl };
+  }
+
+  static fromObject(object: { [key: string]: any }): AppointmentEntity {
+    const {
+      id,
+      startDate,
+      endDate,
+      appointment_doctor,
+      appointment_patient,
+      appointment_clinic,
+      createdAt,
+      createdBy,
+      lastUpdate,
+    } = object;
     const appointment = new AppointmentEntity({
       id,
       startDate,
       endDate,
-      doctorId,
-      patientId,
-      clinicId,
+      doctor: AppointmentEntity.accountMapper(appointment_doctor),
+      patient: AppointmentEntity.accountMapper(appointment_patient),
+      clinic: AppointmentEntity.clinicMapper(appointment_clinic),
       createdAt,
       createdBy,
-      lastUpdate
+      lastUpdate,
     });
     return appointment;
   }
-
 }

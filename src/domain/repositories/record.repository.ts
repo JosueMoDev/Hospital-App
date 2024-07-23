@@ -12,7 +12,7 @@ export abstract class RecordRepository {
 
   abstract uptate(dto: UpdateRecordDto): Promise<RecordEntity>;
 
-  abstract changeRecordStatus(dto: UpdateRecordDto): Promise<RecordEntity>;
+  abstract changeRecordStatus(dto: UpdateRecordDto): Promise<boolean>;
 
   abstract uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 

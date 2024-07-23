@@ -1,6 +1,5 @@
 import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
 import { ClinicDataSource, ClinicEntity, UpdateClinicDto, PaginationDto, CreateClinicDto, CustomError, PaginationEntity, UploadDto } from "../../domain";
-import { FileService } from "../../presentation";
 import { FileRepositoryImpl, FileDataSourceImpl } from "../../infraestructure";
 import { UploadedFile } from "express-fileupload";
 
@@ -8,40 +7,37 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
 
   private readonly datasource = new FileDataSourceImpl();
   private readonly repository = new FileRepositoryImpl(this.datasource);
-  private readonly fileservice = new FileService(this.repository);
 
 
   async uploadPhoto(dto: UploadDto, file: UploadedFile): Promise<boolean> {
-    const { id, lastUpdate } = dto;
+    const { id } = dto;
     const clinic = await this.findOneById(id);
     if (!file) throw CustomError.badRequest("File no enviado");
-    const { fileUrl, fileId } = await this.fileservice.uploadingFile({
-      file: {
-        ...file,
-        name: clinic.id
-      },
-      args: {
-        folder: AllowedFolder.clinic,
-        public_id: clinic.id
-      }
-    });
+    const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, AllowedFolder.clinic);
     const updateClinicPhoto = await prisma.clinic.update({
       where: { id: id },
       data: {
         photoId: fileId,
         photoUrl: fileUrl,
-        lastUpdate: [...clinic.lastUpdate],
+        lastUpdate: [
+          ...clinic.lastUpdate,
+          {
+            updatedBy: dto.updatedBy,
+            date: DateFnsAdapter.formatDate(),
+            action: "UPLOAD_FILE"
+          },
+        ],
       },
     });
     if (updateClinicPhoto) return true;
     return false;
   }
 
-  async deletePhoto(dto: any): Promise<any> {
+  async deletePhoto(dto: UploadDto): Promise<boolean> {
     const clinic = await this.findOneById(dto.id);
     if (!clinic.photoUrl.length && !clinic.photoId.length) throw CustomError.notFound('that clinic not have any photo associeted');
 
-    const { result } = await this.fileservice.deletingFile(clinic.photoId);
+    const { result } = await this.repository.deleteFile(clinic.photoId);
     if (result === 'not found') throw CustomError.internalServer('we couldnt delete photo');
     const clinicUpdated = await prisma.clinic.update({
       where: { id: dto.id },
@@ -49,9 +45,9 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
         photoId: '',
         photoUrl: '',
         lastUpdate: [...clinic.lastUpdate, {
-          account: dto.lastUpdate.account,
+          updatedBy: dto.updatedBy,
           date: DateFnsAdapter.formatDate(),
-          action: "UPDATE ACCOUNT",
+          action: "DELETE_FILE",
         },]
       }
     });
@@ -124,7 +120,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     }
   }
   async update(dto: UpdateClinicDto): Promise<ClinicEntity> {
-    const { id, lastUpdate, ...rest } = dto;
+    const { id, updatedBy, ...rest } = dto;
 
     if (Object.keys(rest).length === 0)
       throw CustomError.badRequest("Nothing to update");
@@ -145,9 +141,9 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           lastUpdate: [
             ...clinic.lastUpdate,
             {
-              account: lastUpdate.account,
+              updatedBy,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE CLINIC",
+              action: "UPDATE",
             },
           ],
         },
@@ -157,7 +153,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
       throw CustomError.internalServer(`${error}`);
     }
   }
-  async changeStatus(dto: UpdateClinicDto): Promise<ClinicEntity> {
+  async changeStatus(dto: UpdateClinicDto): Promise<boolean> {
     const clinic = await this.findOneById(dto.id);
     try {
       const clinicInvalidated = await prisma.clinic.update({
@@ -169,14 +165,14 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
           lastUpdate: [
             ...clinic.lastUpdate,
             {
-              ...dto.lastUpdate,
+              updatedBy: dto.updatedBy,
               date: DateFnsAdapter.formatDate(),
-              action: "CHANGE CLINIC STATUS",
-            },
+               action:"STATUS_CHANGED"
+            }
           ],
         },
       });
-      return ClinicEntity.fromObject(clinicInvalidated);
+      return clinicInvalidated ? true : false ;
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
