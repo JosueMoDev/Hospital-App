@@ -42,7 +42,7 @@ export class RecordController {
   };
 
   findMany = (request: Request, response: Response) => {
-    const [error, pagDto] = PaginationDto.create(request.query);
+    const [error, pagDto] = PaginationDto.create(request.query, request.originalUrl);
     if (error) return response.status(400).json({ error });
 
     new FindManyRecords(this.recordRepository)

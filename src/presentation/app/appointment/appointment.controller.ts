@@ -54,8 +54,9 @@ export class AppointmentController {
   };
 
   findMany = (request: Request, response: Response) => {
-    const [error, appointmentDto] = PaginationDto.create(request.query);
+    const [error, appointmentDto] = PaginationDto.create(request.query, request.originalUrl);
     if (error) return response.status(400).json({ error });
+
     new FindManyAppointments(this.appointmentRepository)
       .execute(appointmentDto!)
       .then((appointments) => response.json(appointments))
