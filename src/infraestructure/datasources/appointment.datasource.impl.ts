@@ -13,6 +13,11 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {
     const appointment = await prisma.appointment.findFirst({
       where: { id: id },
+      include: {
+        appointment_clinic: true,
+        appointment_doctor: true,
+        appointment_patient: true,
+      },
     });
     if (!appointment) throw CustomError.badRequest("Any appointment found");
 
@@ -25,9 +30,13 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
       prisma.appointment.findMany({
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
-        where: {}
+        include: {
+          appointment_clinic: true,
+          appointment_doctor: true,
+          appointment_patient: true,
+        }
       }),
-      prisma.appointment.count({ where: {} })
+      prisma.appointment.count()
     ]);
     const totalPages = Math.ceil(total / pageSize);
 

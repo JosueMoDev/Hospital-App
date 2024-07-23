@@ -5,7 +5,7 @@ import {
   MinLength,
 } from "class-validator";
 
-interface UpdatePasswordDtoArgs {
+interface ChangePasswordDtoArgs {
   account: string;
   newPassword: string;
   oldPassword: string;
@@ -37,7 +37,7 @@ export class ChangePasswordDto {
 
   }
   static update(
-    object: UpdatePasswordDtoArgs
+    object: ChangePasswordDtoArgs
   ): [undefined | CustomErrors[], ChangePasswordDto?] {
     const updateAccountDto = new ChangePasswordDto(object);
 
