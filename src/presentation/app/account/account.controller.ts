@@ -72,7 +72,7 @@ export class AccountController {
   };
 
   findManyAccounts = (request: Request, response: Response) => {
-    const [error, pagDto] = PaginationDto.create(request.query);
+    const [error, pagDto] = PaginationDto.create(request.query, request.originalUrl);
     if (error) return response.status(400).json({ error });
 
     new FindManyAccounts(this.accountRepository)

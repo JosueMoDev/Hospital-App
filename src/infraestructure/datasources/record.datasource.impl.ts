@@ -12,6 +12,7 @@ import {
 } from "../../domain";
 import { FileDataSourceImpl } from "./file.datasource.impl";
 import { FileRepositoryImpl } from "../repositories";
+import { Router } from "express";
 
 export class RecordDataSourceImpl implements RecordDataSource {
   private readonly datasource = new FileDataSourceImpl();
@@ -87,12 +88,10 @@ export class RecordDataSourceImpl implements RecordDataSource {
   }
 
   async findMany( dto: PaginationDto): Promise<{ pagination: PaginationEntity; records: RecordEntity[] }> {
-    const { page: currentPage, pageSize } = dto;
-   
-      
+    const { page, pageSize } = dto;   
     const [records, total] = await Promise.all([
       prisma.record.findMany({
-        skip: (currentPage - 1) * pageSize,
+        skip: PaginationEntity.dinamycOffset(page, pageSize),
         take: pageSize,
         include: {
           patient_record: true,
@@ -101,27 +100,9 @@ export class RecordDataSourceImpl implements RecordDataSource {
       }),
       prisma.record.count(),
     ]);
-    const totalPages = Math.ceil(total / pageSize);
-
-    const nextPage =
-      currentPage < totalPages
-        ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
-        : null;
-
-    const previousPage =
-      currentPage > 1
-        ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
-        : null;
-
-    const pagination = PaginationEntity.pagination({
-      currentPage,
-      total,
-      pageSize,
-      nextPage,
-      previousPage,
-    });
- 
+   
     const recordsMapped = records.map(RecordEntity.fromObject);
+    const pagination = PaginationEntity.setPagination({ ...dto, total });
     return { pagination, records: recordsMapped };
   }
   async create(dto: CreateRecordDto): Promise<RecordEntity> {

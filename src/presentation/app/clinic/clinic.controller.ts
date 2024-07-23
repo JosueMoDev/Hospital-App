@@ -54,7 +54,7 @@ export class ClinicController {
   }
 
   findMany = (request: Request, response: Response) => {
-    const [error, paginationDto] = PaginationDto.create(request.query);
+    const [error, paginationDto] = PaginationDto.create(request.query, request.originalUrl);
     if (error) return response.status(400).json({ error });
   
     new FindManyClinics(this.clinicRepository)

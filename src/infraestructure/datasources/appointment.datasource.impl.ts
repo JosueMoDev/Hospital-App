@@ -38,24 +38,9 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
       }),
       prisma.appointment.count()
     ]);
-    const totalPages = Math.ceil(total / pageSize);
-
-    const nextPage = (currentPage < totalPages)
-      ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
-      : null;
-
-    const previousPage = (currentPage > 1)
-      ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
-      : null;
-
-    const pagination = PaginationEntity.pagination({
-      currentPage,
-      total,
-      pageSize,
-      nextPage,
-      previousPage
-    });
+ 
     const appointmentsMapped = appointments.map(AppointmentEntity.fromObject);
+    const pagination = PaginationEntity.setPagination({ ...dto, total })
     return { pagination, appointments: appointmentsMapped }
   }
 

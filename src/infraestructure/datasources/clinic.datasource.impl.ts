@@ -83,25 +83,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
       }),
       prisma.clinic.count({ where: { status: sortting } }),
     ]);
-    const totalPages = Math.ceil(total / pageSize);
-
-    const nextPage =
-      currentPage < totalPages
-        ? `/api/record/find-many?page=${currentPage + 1}&pageSize=${pageSize}`
-        : null;
-
-    const previousPage =
-      currentPage > 1
-        ? `/api/record/find-many?page=${currentPage - 1}&pageSize=${pageSize}`
-        : null;
-
-    const pagination = PaginationEntity.pagination({
-      currentPage,
-      total,
-      pageSize,
-      nextPage,
-      previousPage,
-    });
+    const pagination = PaginationEntity.setPagination({ ...dto, total });
     const clinicsMapped = clinics.map(ClinicEntity.fromObject);
     return { pagination, clinics: clinicsMapped };
   }
