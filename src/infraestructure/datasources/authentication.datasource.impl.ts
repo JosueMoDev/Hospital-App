@@ -1,87 +1,99 @@
-import { BcryptAdapter, JWTAdapter, prisma } from "../../config";
-import { AuthenticationDataSource, AuthenticatedUserEntity, LoginDto, CustomError, AccountEntity } from "../../domain";
+import { BcryptAdapter, JWTAdapter, prisma } from '../../config';
+import {
+  AuthenticationDataSource,
+  AuthenticatedUserEntity,
+  LoginDto,
+  CustomError,
+  AccountEntity,
+} from '../../domain';
 import { GoogleOAuth2ClientAdapter } from '../../config/adapters/googleauth.adapter';
 
 export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
+  private async findAccountByEmail(email: string): Promise<AccountEntity> {
+    const account = await prisma.account.findFirst({
+      where: {
+        email: email,
+      },
+    });
 
-    private async findAccountByEmail(email: string): Promise<AccountEntity> {
-        const account = await prisma.account.findFirst({
-            where: {
-                email: email
-            }
-        });
+    if (!account) throw CustomError.badRequest('Any user found');
 
-        if (!account) throw CustomError.badRequest('Any user found');
+    return AccountEntity.fromObject(account);
+  }
 
-        return AccountEntity.fromObject(account);
-    }
+  private async findAccountById(id: string): Promise<AccountEntity> {
+    const account = await prisma.account.findFirst({
+      where: {
+        id: id,
+      },
+    });
 
-     private async findAccountById(id: string): Promise<AccountEntity> {
-        const account = await prisma.account.findFirst({
-            where: {
-                id: id
-            }
-        });
+    if (!account) throw CustomError.badRequest('Any user found');
 
-        if (!account) throw CustomError.badRequest('Any user found');
+    return AccountEntity.fromObject(account);
+  }
 
-        return AccountEntity.fromObject(account);
-    }
+  async loginWithEmailAndPassword(
+    loginDto: LoginDto,
+  ): Promise<AuthenticatedUserEntity> {
+    const account = await this.findAccountByEmail(loginDto.email);
 
-    async loginWithEmailAndPassword(loginDto: LoginDto): Promise<AuthenticatedUserEntity> {
+    const isPasswordMatching = BcryptAdapter.comparePassword(
+      loginDto.password,
+      account.password,
+    );
+    if (!isPasswordMatching) throw CustomError.badRequest('Wrong credentials');
 
-        const account = await this.findAccountByEmail(loginDto.email);
+    const { password, ...authenticatedAccount } =
+      AccountEntity.fromObject(account);
+    const token = await JWTAdapter.generateToken({ id: account.id });
 
-        const isPasswordMatching = BcryptAdapter.comparePassword(loginDto.password, account.password);
-        if (!isPasswordMatching) throw CustomError.badRequest('Wrong credentials');
+    if (!token) throw CustomError.internalServer('Error while creating token');
 
-        const { password, ...authenticatedAccount } = AccountEntity.fromObject(account);
-        const token = await JWTAdapter.generateToken({ id: account.id });
+    return {
+      account: authenticatedAccount,
+      accessToken: token,
+      refreshToken: '',
+    };
+  }
 
-        if (!token) throw CustomError.internalServer('Error while creating token');
+  async loginWithGoogle(token: string): Promise<AuthenticatedUserEntity> {
+    const result = await GoogleOAuth2ClientAdapter.verify(token);
+    const { email }: any = result;
+    if (!email) throw CustomError.internalServer('no email');
+    const account = await this.findAccountByEmail(email);
 
-        return {
-            account: authenticatedAccount,
-            accessToken: token,
-            refreshToken: ''
-        }
-    }
+    const accesstoken = await JWTAdapter.generateToken({ id: account.id });
 
-    async loginWithGoogle(token: string): Promise<AuthenticatedUserEntity> {
-        const result = await GoogleOAuth2ClientAdapter.verify(token);
-        const { email }: any = result;
-        if (!email) throw CustomError.internalServer('no email')
-        const account = await this.findAccountByEmail(email);
+    if (!accesstoken)
+      throw CustomError.internalServer('Error while creating token');
 
-        const accesstoken = await JWTAdapter.generateToken({ id: account.id });
+    return {
+      account: account,
+      accessToken: accesstoken,
+      refreshToken: '',
+    };
+  }
 
-        if (!accesstoken) throw CustomError.internalServer('Error while creating token');
+  async refreshToken(token: string): Promise<AuthenticatedUserEntity> {
+    const isValidToken: any = await JWTAdapter.validateToken(token);
 
-        return {
-            account: account,
-            accessToken: accesstoken,
-            refreshToken: ''
-        }
-    }
+    if (!isValidToken) throw CustomError.badRequest('Token not valid');
 
-    async refreshToken(token: string): Promise<AuthenticatedUserEntity> {
-        const isValidToken: any = await JWTAdapter.validateToken(token);
+    const account = await this.findAccountById(isValidToken.id);
 
-        if (!isValidToken) throw CustomError.badRequest('Token not valid');
+    const { password, ...authenticatedAccount } =
+      AccountEntity.fromObject(account);
 
-        const account = await this.findAccountById(isValidToken.id);
+    const accesstoken = await JWTAdapter.generateToken({ id: account.id });
 
-        const { password, ...authenticatedAccount } = AccountEntity.fromObject(account);
+    if (!accesstoken)
+      throw CustomError.internalServer('Error while creating token');
 
-        const accesstoken = await JWTAdapter.generateToken({ id: account.id });
-        
-        if (!accesstoken) throw CustomError.internalServer('Error while creating token');
-        
-        return {
-            account: authenticatedAccount,
-            accessToken: accesstoken,
-            refreshToken: ''
-        }
-    }
-
+    return {
+      account: authenticatedAccount,
+      accessToken: accesstoken,
+      refreshToken: '',
+    };
+  }
 }

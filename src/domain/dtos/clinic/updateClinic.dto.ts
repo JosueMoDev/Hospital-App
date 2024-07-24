@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer';
 import {
   IsMongoId,
   IsNotEmpty,
@@ -8,20 +8,18 @@ import {
   IsString,
   Length,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UpdatedClinicDtoArgs {
   id: string;
-  registerNumber?: string,
-  name?: string,
-  phone?: string,
-  address?: Address,
-  createdBy?: string,
-  updatedBy: string
-
-
+  registerNumber?: string;
+  name?: string;
+  phone?: string;
+  address?: Address;
+  createdBy?: string;
+  updatedBy: string;
 }
 
 class Address {
@@ -45,18 +43,18 @@ class Address {
 }
 export class UpdateClinicDto {
   @IsMongoId()
-  @IsNotEmpty({ message: "Clinic ID is required" })
+  @IsNotEmpty({ message: 'Clinic ID is required' })
   public id: string;
 
   @IsOptional()
-  @Length(12, 12, { message: "Register Number  Format not valid" })
+  @Length(12, 12, { message: 'Register Number  Format not valid' })
   public registerNumber?: string;
 
   @IsOptional()
-  @IsString({ message: "Name should contain only letters" })
+  @IsString({ message: 'Name should contain only letters' })
   public name?: string;
 
-  @IsPhoneNumber("SV", { message: "Phone Number not valid" })
+  @IsPhoneNumber('SV', { message: 'Phone Number not valid' })
   @IsOptional()
   public phone?: string;
 
@@ -67,7 +65,7 @@ export class UpdateClinicDto {
   public address?: Address | undefined;
 
   @IsMongoId()
-  @IsNotEmpty({ message: "Account ID is required to Update" })
+  @IsNotEmpty({ message: 'Account ID is required to Update' })
   public updatedBy: string;
 
   constructor(args: UpdatedClinicDtoArgs) {
@@ -80,7 +78,7 @@ export class UpdateClinicDto {
     this.updatedBy = updatedBy;
   }
   static update(
-    object: UpdatedClinicDtoArgs
+    object: UpdatedClinicDtoArgs,
   ): [undefined | CustomErrors[], UpdateClinicDto?] {
     const updateClinicDto = new UpdateClinicDto(object);
 
@@ -90,7 +88,7 @@ export class UpdateClinicDto {
     if (errors) return [errors];
 
     const dto = Object.fromEntries(
-      Object.entries(validatedDto!).filter(([_, value]) => value !== undefined)
+      Object.entries(validatedDto!).filter(([_, value]) => value !== undefined),
     ) as UpdateClinicDto;
 
     return [undefined, dto];

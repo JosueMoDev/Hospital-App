@@ -1,9 +1,9 @@
-import express, { Router } from "express";
-import compression from "compression";
-import cors from "cors";
-import { ExpressFileUploadAdapter } from "../config/adapters/expressFileUploadAdapter";
-import { setupSwagger } from "../config";
-
+import express, { Router } from 'express';
+import compression from 'compression';
+import cors from 'cors';
+import { ExpressFileUploadAdapter } from '../config/adapters/expressFileUploadAdapter';
+import { setupSwagger } from '../config';
+import logger from '../config/adapters/winstonLogger.adapter';
 
 interface serverConfig {
   port: number;
@@ -11,12 +11,12 @@ interface serverConfig {
 }
 
 const corsOptions = {
-  origin: "http://localhost:4200",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  origin: 'http://localhost:4200',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
   credentials: true, // Habilita las cookies a través de las solicitudes CORS
-  exposedHeaders: ["Authorization"], // Añade 'Authorization' a los encabezados expuestos
+  exposedHeaders: ['Authorization'], // Añade 'Authorization' a los encabezados expuestos
 };
 
 export class Server {
@@ -43,7 +43,7 @@ export class Server {
     // * Swagger Documentation API
     setupSwagger(this.app);
     this.serverListener = this.app.listen(this.port, () =>
-      console.log(`Server running on port ${this.port}`)
+      logger.info(`Server running on port ${this.port}`),
     );
   }
 

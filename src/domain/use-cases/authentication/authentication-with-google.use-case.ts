@@ -1,7 +1,7 @@
 import {
   AuthenticatedUserEntity,
   AuthenticationRepository,
-} from "../../../domain";
+} from '../../../domain';
 
 interface LoginWithGoogleUseCase {
   execute(token: string): Promise<AuthenticatedUserEntity>;
@@ -9,7 +9,7 @@ interface LoginWithGoogleUseCase {
 
 export class LoginWithGoogle implements LoginWithGoogleUseCase {
   constructor(
-    private readonly authenticationResository: AuthenticationRepository
+    private readonly authenticationResository: AuthenticationRepository,
   ) {}
 
   async execute(token: string): Promise<AuthenticatedUserEntity> {

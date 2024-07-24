@@ -1,4 +1,4 @@
-import { Role } from "./account.entity";
+import { Role } from './account.entity';
 
 interface AccountData {
   id: string;

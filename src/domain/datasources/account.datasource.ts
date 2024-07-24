@@ -1,4 +1,4 @@
-import { UploadedFile } from "express-fileupload";
+import { UploadedFile } from 'express-fileupload';
 import {
   CreateAccountDto,
   PaginationDto,
@@ -6,16 +6,18 @@ import {
   ConfirmPasswordDto,
   ChangePasswordDto,
   UploadDto,
-} from "../dtos";
-import { AccountEntity } from "../entities";
-import { PaginationEntity } from "../entities/pagination.entity";
+} from '../dtos';
+import { AccountEntity } from '../entities';
+import { PaginationEntity } from '../entities/pagination.entity';
 
-export abstract class AccountDataSource  {
+export abstract class AccountDataSource {
   abstract findOneById(id: string): Promise<AccountEntity>;
 
   abstract findOneByDocument(document: string): Promise<AccountEntity>;
 
-  abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }>;
+  abstract findMany(
+    dto: PaginationDto,
+  ): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }>;
 
   abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
 
@@ -27,7 +29,7 @@ export abstract class AccountDataSource  {
 
   abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
 
-  abstract uploadFile(dto:UploadDto, file: UploadedFile): Promise<boolean>;
+  abstract uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
   abstract deleteFile(dto: UploadDto): Promise<boolean>;
 }

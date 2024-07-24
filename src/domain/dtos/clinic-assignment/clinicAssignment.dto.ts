@@ -1,11 +1,6 @@
-import { Type } from "class-transformer";
-import {
-  ArrayMinSize,
-  IsArray,
-  IsMongoId,
-  IsNotEmpty,
-} from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
+import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface AssignmentDtoArgs {
   clinic: string;
@@ -24,29 +19,30 @@ class Doctors {
 
 export class ClinicAssignmentDto {
   @IsMongoId()
-  @IsNotEmpty({ message: "Clinic ID is required" })
+  @IsNotEmpty({ message: 'Clinic ID is required' })
   public readonly clinic: string;
 
-  @IsNotEmpty({ message: "You should provide some doctors to assign" })
-  @IsArray({message:"incorrect type"})
-  @ArrayMinSize(1, { message: "An Assignment should have at least one doctor" })
+  @IsNotEmpty({ message: 'You should provide some doctors to assign' })
+  @IsArray({ message: 'incorrect type' })
+  @ArrayMinSize(1, { message: 'An Assignment should have at least one doctor' })
   @Type(() => Doctors)
   public doctors: Doctors[];
 
   constructor(args: AssignmentDtoArgs) {
     const { clinic, doctors } = args;
     this.clinic = clinic;
-    this.doctors = (typeof doctors !== 'object') ? [] : doctors.map((doctor: string) => new Doctors(doctor));
+    this.doctors =
+      typeof doctors !== 'object'
+        ? []
+        : doctors.map((doctor: string) => new Doctors(doctor));
   }
 
   static create(
-    object: AssignmentDtoArgs
+    object: AssignmentDtoArgs,
   ): [undefined | CustomErrors[], ClinicAssignmentDto?] {
     const assignmentDto = new ClinicAssignmentDto(object);
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<ClinicAssignmentDto>(
-        assignmentDto
-      );
+      CustomValidationErrors.validateDto<ClinicAssignmentDto>(assignmentDto);
 
     if (errors) return [errors];
 

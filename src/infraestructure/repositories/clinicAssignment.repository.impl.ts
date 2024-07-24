@@ -2,8 +2,8 @@ import {
   AccountEntity,
   CLinicAssignmentDataSource,
   ClinicAssignmentDto,
-} from "../../domain";
-import { ClinicAssignmentRepository } from "../../domain/repositories/clinicAssignment.repository";
+} from '../../domain';
+import { ClinicAssignmentRepository } from '../../domain/repositories/clinicAssignment.repository';
 
 export class ClinicAssignmentRepositoryImpl
   implements ClinicAssignmentRepository

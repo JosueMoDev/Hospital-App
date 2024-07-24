@@ -1,9 +1,23 @@
-import { Request, Response } from "express";
-import { ChangeRecordStatus, CreaateRecord, CreateRecordDto, DeleteRecordPDF, FindManyRecords, FindOneRecordById, HandlerError, PaginationDto, RecordRepository, UpdateRecord, UpdateRecordDto, UploadDto, UploadRecordPDF } from "../../../domain";
-import { UploadedFile } from "express-fileupload";
+import { Request, Response } from 'express';
+import {
+  ChangeRecordStatus,
+  CreaateRecord,
+  CreateRecordDto,
+  DeleteRecordPDF,
+  FindManyRecords,
+  FindOneRecordById,
+  HandlerError,
+  PaginationDto,
+  RecordRepository,
+  UpdateRecord,
+  UpdateRecordDto,
+  UploadDto,
+  UploadRecordPDF,
+} from '../../../domain';
+import { UploadedFile } from 'express-fileupload';
 
 export class RecordController {
-  constructor(private readonly recordRepository: RecordRepository) { }
+  constructor(private readonly recordRepository: RecordRepository) {}
 
   createRecord = (request: Request, response: Response) => {
     const [error, createRecordDto] = CreateRecordDto.create(request.body);
@@ -42,7 +56,10 @@ export class RecordController {
   };
 
   findMany = (request: Request, response: Response) => {
-    const [error, pagDto] = PaginationDto.create(request.query, request.originalUrl);
+    const [error, pagDto] = PaginationDto.create(
+      request.query,
+      request.originalUrl,
+    );
     if (error) return response.status(400).json({ error });
 
     new FindManyRecords(this.recordRepository)
@@ -53,7 +70,6 @@ export class RecordController {
         return response.status(statusCode).json({ error: errorMessage });
       });
   };
-
 
   changeStatus = (request: Request, response: Response) => {
     const [error, recordDto] = UpdateRecordDto.update(request.body);
@@ -79,7 +95,7 @@ export class RecordController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   deleteFile = (request: Request, response: Response) => {
     const [error, fileDto] = UploadDto.update(request.body);
@@ -92,8 +108,5 @@ export class RecordController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
-
-
-
+  };
 }

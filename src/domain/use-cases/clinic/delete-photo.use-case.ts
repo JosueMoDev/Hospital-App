@@ -1,4 +1,4 @@
-import { ClinicRepository, UploadDto } from "../../../domain";
+import { ClinicRepository, UploadDto } from '../../../domain';
 
 interface DeletePhotoUseCase {
   excute(uploadDto: UploadDto): Promise<Boolean>;

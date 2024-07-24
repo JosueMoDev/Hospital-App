@@ -1,10 +1,5 @@
-import {
-  IsMongoId,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UpdateRecordDtoArgs {
   id: string;
@@ -14,9 +9,8 @@ interface UpdateRecordDtoArgs {
   updatedBy: string;
 }
 
-
 export class UpdateRecordDto {
-  @IsNotEmpty({ message: "Record Id is required" })
+  @IsNotEmpty({ message: 'Record Id is required' })
   @IsMongoId()
   public readonly id!: string;
 
@@ -29,10 +23,10 @@ export class UpdateRecordDto {
   public readonly patientId!: string;
 
   @IsOptional()
-  @IsString({ message: "Title should be a string" })
+  @IsString({ message: 'Title should be a string' })
   public title!: string;
 
-  @IsNotEmpty({ message: "Record Id is required" })
+  @IsNotEmpty({ message: 'Record Id is required' })
   @IsMongoId()
   public readonly updatedBy!: string;
 
@@ -45,7 +39,7 @@ export class UpdateRecordDto {
   }
 
   static update(
-    object: UpdateRecordDtoArgs
+    object: UpdateRecordDtoArgs,
   ): [undefined | CustomErrors[], UpdateRecordDto?] {
     const recordDto = new UpdateRecordDto(object);
     const [errors, updatedDto] =

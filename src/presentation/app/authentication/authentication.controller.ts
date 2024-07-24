@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request } from 'express';
 import {
   AuthenticationRepository,
   HandlerError,
@@ -6,12 +6,11 @@ import {
   LoginWithEmailAndPassword,
   LoginWithGoogle,
   RefreshToken,
-  
-} from "../../../domain";
+} from '../../../domain';
 
 export class AuthenticationController {
   constructor(
-    private readonly authenticationRepository: AuthenticationRepository
+    private readonly authenticationRepository: AuthenticationRepository,
   ) {}
 
   loginWithEmailAndPassword = (request: Request, response: Response) => {
@@ -30,8 +29,8 @@ export class AuthenticationController {
   googleSignIn = (request: Request, response: Response) => {
     const token = request.body.token;
     if (!token)
-      return response.status(400).json({ error: " NO token provided" });
-      new LoginWithGoogle(this.authenticationRepository)
+      return response.status(400).json({ error: ' NO token provided' });
+    new LoginWithGoogle(this.authenticationRepository)
       .execute(token)
       .then((account) => response.json(account))
       .catch((error) => {
@@ -41,10 +40,10 @@ export class AuthenticationController {
   };
 
   refreshToken = (request: Request, response: Response) => {
-    const bearerToken = request.headers["authorization"];
+    const bearerToken = request.headers['authorization'];
     if (!bearerToken)
-      return response.status(400).json({ error: " NO token provided" });
-    const accessToken = bearerToken.split(" ");
+      return response.status(400).json({ error: ' NO token provided' });
+    const accessToken = bearerToken.split(' ');
     new RefreshToken(this.authenticationRepository)
       .execute(accessToken[1])
       .then((account) => response.json(account))

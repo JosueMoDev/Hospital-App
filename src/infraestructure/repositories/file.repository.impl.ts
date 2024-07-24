@@ -1,6 +1,11 @@
-import { UploadedFile } from "express-fileupload";
-import { AllowedFolder} from "../../config";
-import { FileDataSource, FileEntity, FileRepository, UploadDto } from "../../domain";
+import { UploadedFile } from 'express-fileupload';
+import { AllowedFolder } from '../../config';
+import {
+  FileDataSource,
+  FileEntity,
+  FileRepository,
+  UploadDto,
+} from '../../domain';
 
 export class FileRepositoryImpl implements FileRepository {
   constructor(private readonly datasource: FileDataSource) {}
@@ -8,7 +13,7 @@ export class FileRepositoryImpl implements FileRepository {
   async uploadFile(
     dto: UploadDto,
     file: UploadedFile,
-    folder: AllowedFolder
+    folder: AllowedFolder,
   ): Promise<FileEntity> {
     return this.datasource.uploadFile(dto, file, folder);
   }

@@ -1,4 +1,4 @@
-import { UploadedFile } from "express-fileupload";
+import { UploadedFile } from 'express-fileupload';
 import {
   AccountDataSource,
   AccountEntity,
@@ -10,10 +10,10 @@ import {
   ChangePasswordDto,
   PaginationEntity,
   UploadDto,
-} from "../../domain";
+} from '../../domain';
 
 export class AccountRepositoryImpl implements AccountRepository {
-  constructor(private readonly datasource: AccountDataSource) { }
+  constructor(private readonly datasource: AccountDataSource) {}
   findOneByDocument(document: string): Promise<AccountEntity> {
     return this.datasource.findOneByDocument(document);
   }
@@ -28,7 +28,9 @@ export class AccountRepositoryImpl implements AccountRepository {
     return this.datasource.findOneById(id);
   }
 
-  findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }> {
+  findMany(
+    dto: PaginationDto,
+  ): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }> {
     return this.datasource.findMany(dto);
   }
 

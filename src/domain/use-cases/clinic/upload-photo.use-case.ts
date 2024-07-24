@@ -1,5 +1,5 @@
-import { UploadedFile } from "express-fileupload";
-import { ClinicRepository, UploadDto } from "../../../domain";
+import { UploadedFile } from 'express-fileupload';
+import { ClinicRepository, UploadDto } from '../../../domain';
 
 interface UploadPhotoUseCase {
   excute(uploadDto: UploadDto, uploadedFile: UploadedFile): Promise<Boolean>;
@@ -7,7 +7,10 @@ interface UploadPhotoUseCase {
 
 export class UploadClinicPhoto implements UploadPhotoUseCase {
   constructor(private readonly clinicRepository: ClinicRepository) {}
-  async excute(uploadDto: UploadDto, uploadedFile: UploadedFile): Promise<Boolean> {
+  async excute(
+    uploadDto: UploadDto,
+    uploadedFile: UploadedFile,
+  ): Promise<Boolean> {
     return await this.clinicRepository.uploadPhoto(uploadDto, uploadedFile);
   }
 }

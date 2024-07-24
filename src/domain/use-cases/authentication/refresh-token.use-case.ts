@@ -1,7 +1,7 @@
 import {
   AuthenticatedUserEntity,
   AuthenticationRepository,
-} from "../../../domain";
+} from '../../../domain';
 
 interface RefreshTokenUseCase {
   execute(accessToken: string): Promise<AuthenticatedUserEntity>;
@@ -9,7 +9,7 @@ interface RefreshTokenUseCase {
 
 export class RefreshToken implements RefreshTokenUseCase {
   constructor(
-    private readonly authenticationResository: AuthenticationRepository
+    private readonly authenticationResository: AuthenticationRepository,
   ) {}
 
   async execute(accessToken: string): Promise<AuthenticatedUserEntity> {

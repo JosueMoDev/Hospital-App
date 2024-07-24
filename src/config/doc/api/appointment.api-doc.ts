@@ -1,6 +1,5 @@
-
-import { OpenAPIV3 } from "openapi-types";
-import { GlobasSchemas } from "../fromDtoToSchema";
+import { OpenAPIV3 } from 'openapi-types';
+import { GlobasSchemas } from '../fromDtoToSchema';
 
 type AppointmentPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -13,35 +12,35 @@ type AppointmentPaths = {
 export const appointment: AppointmentPaths = {
   create: {
     post: {
-      tags: ["Appointment"],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Create a new appointment",
+      summary: 'Create a new appointment',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.CreateAppointmentDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   find_one: {
     get: {
-      tags: ["Appointment"],
-      summary: "Find appointment by id",
+      tags: ['Appointment'],
+      summary: 'Find appointment by id',
       security: [
         {
           bearerAuth: [],
@@ -49,107 +48,105 @@ export const appointment: AppointmentPaths = {
       ],
       parameters: [
         {
-          in: "path",
-          name: "id",
+          in: 'path',
+          name: 'id',
           required: true,
           schema: {
-            type: "string",
+            type: 'string',
           },
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   update: {
     patch: {
-      tags: ["Appointment"],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Update an appointment",
+      summary: 'Update an appointment',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.UpdateAppointmentDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   find_many: {
     get: {
-      tags: ["Appointment"],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Find many appointments Paginated ",
+      summary: 'Find many appointments Paginated ',
       parameters: [
         {
-          in: "query",
-          name: "PaginationDto",
+          in: 'query',
+          name: 'PaginationDto',
           schema: GlobasSchemas.PaginationDto,
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   delete: {
     delete: {
-      tags: ["Appointment"],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary:
-        "Delete an Appointment by id",
+      summary: 'Delete an Appointment by id',
       parameters: [
         {
-          in: "path",
-          name: "id",
-          example: "e21754E65Dff2ee9B2245b90",
+          in: 'path',
+          name: 'id',
+          example: 'e21754E65Dff2ee9B2245b90',
           required: true,
           schema: {
-            type: "string",
+            type: 'string',
           },
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
 };
-

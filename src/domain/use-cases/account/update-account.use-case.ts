@@ -2,7 +2,7 @@ import {
   AccountEntity,
   AccountRepository,
   UpdateAccountDto,
-} from "../../../domain";
+} from '../../../domain';
 
 interface UpdateAccountUseCase {
   execute(updateAccountDto: UpdateAccountDto): Promise<AccountEntity>;

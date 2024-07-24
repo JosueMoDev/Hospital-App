@@ -1,26 +1,34 @@
-import { UploadedFile } from "express-fileupload";
-import { CreateAccountDto, PaginationDto, UpdateAccountDto, ConfirmPasswordDto, ChangePasswordDto, UploadDto } from "../dtos";
-import { AccountEntity, PaginationEntity } from "../entities";
+import { UploadedFile } from 'express-fileupload';
+import {
+  CreateAccountDto,
+  PaginationDto,
+  UpdateAccountDto,
+  ConfirmPasswordDto,
+  ChangePasswordDto,
+  UploadDto,
+} from '../dtos';
+import { AccountEntity, PaginationEntity } from '../entities';
 
 export abstract class AccountRepository {
+  abstract findOneById(id: string): Promise<AccountEntity>;
 
-    abstract findOneById(id: string): Promise<AccountEntity>;
+  abstract findOneByDocument(document: string): Promise<AccountEntity>;
 
-    abstract findOneByDocument(document: string): Promise<AccountEntity>;
+  abstract findMany(
+    dto: PaginationDto,
+  ): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }>;
 
-    abstract findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, accounts: AccountEntity[] }>;
+  abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
 
-    abstract createAccount(dto: CreateAccountDto): Promise<AccountEntity>;
+  abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
 
-    abstract updateAccount(dto: UpdateAccountDto): Promise<AccountEntity>;
+  abstract changeStatusAccount(id: string): Promise<boolean>;
 
-    abstract changeStatusAccount(id: string): Promise<boolean>;
+  abstract changePasswordAccount(dto: ChangePasswordDto): Promise<boolean>;
 
-    abstract changePasswordAccount(dto: ChangePasswordDto): Promise<boolean>;
+  abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
 
-    abstract confirmPassword(dto: ConfirmPasswordDto): Promise<boolean>;
+  abstract uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean>;
 
-    abstract uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean>;
-
-    abstract deleteFile(dto: UploadDto): Promise<boolean>;
+  abstract deleteFile(dto: UploadDto): Promise<boolean>;
 }

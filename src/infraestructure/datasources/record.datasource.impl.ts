@@ -1,5 +1,5 @@
-import { UploadedFile } from "express-fileupload";
-import { AllowedFolder, DateFnsAdapter, prisma } from "../../config";
+import { UploadedFile } from 'express-fileupload';
+import { AllowedFolder, DateFnsAdapter, prisma } from '../../config';
 import {
   CreateRecordDto,
   CustomError,
@@ -9,10 +9,10 @@ import {
   RecordEntity,
   UpdateRecordDto,
   UploadDto,
-} from "../../domain";
-import { FileDataSourceImpl } from "./file.datasource.impl";
-import { FileRepositoryImpl } from "../repositories";
-import { Router } from "express";
+} from '../../domain';
+import { FileDataSourceImpl } from './file.datasource.impl';
+import { FileRepositoryImpl } from '../repositories';
+import { Router } from 'express';
 
 export class RecordDataSourceImpl implements RecordDataSource {
   private readonly datasource = new FileDataSourceImpl();
@@ -21,13 +21,13 @@ export class RecordDataSourceImpl implements RecordDataSource {
   async uploadPDF(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     const record = await this.findOneById(dto.id);
 
-    if (!record) throw CustomError.notFound("Record Not Exist");
+    if (!record) throw CustomError.notFound('Record Not Exist');
 
-    if (!file) throw CustomError.badRequest("File no enviado");
+    if (!file) throw CustomError.badRequest('File no enviado');
     const { fileUrl, fileId } = await this.repository.uploadFile(
       dto,
       file,
-      AllowedFolder.record
+      AllowedFolder.record,
     );
     const updateRecordPdf = await prisma.record.update({
       where: { id: dto.id },
@@ -38,7 +38,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
           {
             updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "UPDATE",
+            action: 'UPDATE',
           },
         ],
       },
@@ -49,21 +49,21 @@ export class RecordDataSourceImpl implements RecordDataSource {
   async deletePDF(dto: UploadDto): Promise<boolean> {
     const record = await this.findOneById(dto.id);
     if (!record.pdfUrl.length && !record.pdfId.length)
-      throw CustomError.notFound("that record not have any pdf associeted");
+      throw CustomError.notFound('that record not have any pdf associeted');
 
     const { result } = await this.repository.deleteFile(record.pdfId);
-    if (result === "not found")
-      throw CustomError.internalServer("we couldnt delete pfd");
+    if (result === 'not found')
+      throw CustomError.internalServer('we couldnt delete pfd');
     const recordUpdated = await prisma.record.update({
       where: { id: dto.id },
       data: {
-        pdfId: "",
-        pdfUrl: "",
+        pdfId: '',
+        pdfUrl: '',
         lastUpdate: [
           {
             updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "DELETE_FILE",
+            action: 'DELETE_FILE',
           },
         ],
       },
@@ -78,17 +78,19 @@ export class RecordDataSourceImpl implements RecordDataSource {
       where: { id: id },
       include: {
         patient_record: true,
-        doctor_record: true
+        doctor_record: true,
       },
     });
 
-    if (!record) throw CustomError.badRequest("Any record found");
+    if (!record) throw CustomError.badRequest('Any record found');
 
     return RecordEntity.fromObject(record);
   }
 
-  async findMany( dto: PaginationDto): Promise<{ pagination: PaginationEntity; records: RecordEntity[] }> {
-    const { page, pageSize } = dto;   
+  async findMany(
+    dto: PaginationDto,
+  ): Promise<{ pagination: PaginationEntity; records: RecordEntity[] }> {
+    const { page, pageSize } = dto;
     const [records, total] = await Promise.all([
       prisma.record.findMany({
         skip: PaginationEntity.dinamycOffset(page, pageSize),
@@ -100,7 +102,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
       }),
       prisma.record.count(),
     ]);
-   
+
     const recordsMapped = records.map(RecordEntity.fromObject);
     const pagination = PaginationEntity.setPagination({ ...dto, total });
     return { pagination, records: recordsMapped };
@@ -125,7 +127,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
   async uptate(dto: UpdateRecordDto): Promise<RecordEntity> {
     const { id, updatedBy, ...rest } = dto;
     if (Object.keys(rest).length === 0)
-      throw CustomError.badRequest("Nothing to update");
+      throw CustomError.badRequest('Nothing to update');
     const record = await this.findOneById(id);
 
     try {
@@ -137,7 +139,7 @@ export class RecordDataSourceImpl implements RecordDataSource {
             {
               updatedBy: updatedBy,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE",
+              action: 'UPDATE',
             },
           ],
         },
@@ -162,9 +164,9 @@ export class RecordDataSourceImpl implements RecordDataSource {
           status: !record.status,
           lastUpdate: [
             {
-              updatedBy: "",
+              updatedBy: '',
               date: DateFnsAdapter.formatDate(),
-              action: "STATUS_CHANGED",
+              action: 'STATUS_CHANGED',
             },
           ],
         },

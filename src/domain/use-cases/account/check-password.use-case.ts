@@ -1,4 +1,4 @@
-import { AccountRepository, ConfirmPasswordDto } from "../../../domain";
+import { AccountRepository, ConfirmPasswordDto } from '../../../domain';
 
 interface CheckPasswordUseCase {
   execute(confirmPasswordDto: ConfirmPasswordDto): Promise<boolean>;
