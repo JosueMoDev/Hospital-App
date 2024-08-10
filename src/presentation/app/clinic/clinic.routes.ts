@@ -1,10 +1,8 @@
+import { ClinicDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { ClinicRepositoyImpl } from '@infraestructure/repositoriesimpl';
+import { FileUploadMiddleware } from '@middlewares';
 import { Router } from 'express';
-import {
-  ClinicDataSourceImpl,
-  ClinicRepositoyImpl,
-} from '../../../infraestructure';
 import { ClinicController } from './clinic.controller';
-import { FileUploadMiddleware } from '../../middlewares';
 
 export class ClinicRoutes {
   static get routes(): Router {

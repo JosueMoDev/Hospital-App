@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { AppRoutes, Server } from './presentation';
-import { Environment } from './config';
+import 'module-alias';
+import { AppRoutes, Server } from '@presentation';
+import { Environment } from '@config';
 
 (async () => {
   main();

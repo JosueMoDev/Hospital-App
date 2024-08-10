@@ -1,5 +1,6 @@
-import { LoginDto } from '../dtos';
-import { AuthenticatedUserEntity } from '../entities';
+import { LoginDto } from "@domain/dtos";
+import { AuthenticatedUserEntity } from "@domain/entities";
+
 export abstract class AuthenticationDataSource {
   abstract loginWithEmailAndPassword(
     loginDto: LoginDto,

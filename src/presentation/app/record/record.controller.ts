@@ -1,20 +1,10 @@
+import { CreateRecordDto, UpdateRecordDto, PaginationDto, UploadDto } from '@domain/dtos';
+import { RecordRepository } from '@domain/repositories';
+import { HandlerError } from '@handler-errors';
 import { Request, Response } from 'express';
-import {
-  ChangeRecordStatus,
-  CreaateRecord,
-  CreateRecordDto,
-  DeleteRecordPDF,
-  FindManyRecords,
-  FindOneRecordById,
-  HandlerError,
-  PaginationDto,
-  RecordRepository,
-  UpdateRecord,
-  UpdateRecordDto,
-  UploadDto,
-  UploadRecordPDF,
-} from '../../../domain';
+
 import { UploadedFile } from 'express-fileupload';
+import { CreaateRecord, UpdateRecord, FindOneRecordById, FindManyRecords, ChangeRecordStatus, UploadRecordPDF, DeleteRecordPDF } from 'src/domain';
 
 export class RecordController {
   constructor(private readonly recordRepository: RecordRepository) {}

@@ -1,8 +1,6 @@
+import { ClinicAssignmentDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { ClinicAssignmentRepositoryImpl } from '@infraestructure/repositoriesimpl';
 import { Router } from 'express';
-import {
-  ClinicAssignmentDataSourceImpl,
-  ClinicAssignmentRepositoryImpl,
-} from '../../../infraestructure';
 import { ClinicAssignmentController } from './clinicAssignment.controller';
 
 export class ClinicAssignmentRoutes {

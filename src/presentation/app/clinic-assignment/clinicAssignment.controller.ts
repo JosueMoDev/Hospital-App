@@ -1,15 +1,14 @@
+import { GetDoctorsAssignedDto, ClinicAssignmentDto } from '@domain/dtos';
+import { ClinicAssignmentRepository } from '@domain/repositories';
+import { HandlerError } from '@handler-errors';
 import { Request, Response } from 'express';
 import {
-  ClinicAssignmentDto,
-  ClinicAssignmentRepository,
-  CreateClinicAssignment,
-  DeleteClinicAssignment,
   GetAssignableDoctors,
   GetAssignedDoctors,
-  GetDoctorsAssignedDto,
-  HandlerError,
+  CreateClinicAssignment,
   UpdateClinicAssignment,
-} from '../../../domain';
+  DeleteClinicAssignment,
+} from '@domain/use-cases';
 
 export class ClinicAssignmentController {
   constructor(

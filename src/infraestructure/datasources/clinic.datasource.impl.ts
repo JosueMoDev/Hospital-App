@@ -1,16 +1,11 @@
-import { AllowedFolder, DateFnsAdapter, prisma } from '../../config';
-import {
-  ClinicDataSource,
-  ClinicEntity,
-  UpdateClinicDto,
-  PaginationDto,
-  CreateClinicDto,
-  CustomError,
-  PaginationEntity,
-  UploadDto,
-} from '../../domain';
-import { FileRepositoryImpl, FileDataSourceImpl } from '../../infraestructure';
+import { AllowedFolder, DateFnsAdapter, prisma } from '@config';
 import { UploadedFile } from 'express-fileupload';
+import { ClinicEntity, PaginationEntity } from '@domain/entities';
+import { ClinicDataSource } from '@domain/datasources';
+import { FileDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { UploadDto, PaginationDto, CreateClinicDto, UpdateClinicDto } from '@domain/dtos';
+import { FileRepositoryImpl } from '@infraestructure/repositoriesimpl';
+import { CustomError } from '@handler-errors';
 
 export class ClinicDataSourceImpl implements ClinicDataSource {
   private readonly datasource = new FileDataSourceImpl();

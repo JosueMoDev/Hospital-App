@@ -1,24 +1,14 @@
 import express, { Router } from 'express';
 import compression from 'compression';
 import cors from 'cors';
-import { ExpressFileUploadAdapter } from '../config/adapters/expressFileUploadAdapter';
-import { setupSwagger } from '../config';
-import logger from '../config/adapters/winstonLogger.adapter';
+import { ExpressFileUploadAdapter, setupSwagger } from '@config';
 import { Server as HttpServer } from 'http';
+import logger from 'src/config/adapters/winstonLogger.adapter';
 
 interface serverConfig {
   port: number;
   routes: Router;
 }
-
-const corsOptions = {
-  origin: 'http://localhost:4200',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  credentials: true,
-  exposedHeaders: ['Authorization'],
-};
 
 export class Server {
   public readonly app = express();
@@ -49,7 +39,6 @@ export class Server {
         link: logger.info(`http://localhost:${this.port}/api-docs`),
       }));
     } catch (error) {
-      console.log(error)
       logger.error(error);
     }
   }

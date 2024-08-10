@@ -1,25 +1,12 @@
 import { Gender, Role } from '@prisma/client';
-import {
-  AllowedFolder,
-  BcryptAdapter,
-  DateFnsAdapter,
-  prisma,
-} from '../../config';
-import {
-  AccountDataSource,
-  AccountEntity,
-  CreateAccountDto,
-  CustomError,
-  PaginationDto,
-  UpdateAccountDto,
-  ConfirmPasswordDto,
-  ChangePasswordDto,
-  PaginationEntity,
-  UploadDto,
-} from '../../domain';
 import { UploadedFile } from 'express-fileupload';
-import { FileDataSourceImpl } from './file.datasource.impl';
-import { FileRepositoryImpl } from '../repositories';
+import { FileDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { FileRepositoryImpl } from '@infraestructure/repositoriesimpl';
+import { AllowedFolder, prisma, DateFnsAdapter, BcryptAdapter } from '@config';
+import { AccountDataSource } from '@domain/datasources';
+import { UploadDto, PaginationDto, CreateAccountDto, UpdateAccountDto, ChangePasswordDto, ConfirmPasswordDto } from '@domain/dtos';
+import { AccountEntity, PaginationEntity } from '@domain/entities';
+import { CustomError } from '@handler-errors';
 const genderT = {
   male: Gender.MALE,
   female: Gender.FEMALE,

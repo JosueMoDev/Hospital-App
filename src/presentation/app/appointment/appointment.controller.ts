@@ -1,16 +1,9 @@
+import { CreateAppointmentDto, UpdateAppointmentDto, PaginationDto } from '@domain/dtos';
+import { AppointmentRepository } from '@domain/repositories';
+import { HandlerError } from '@handler-errors';
 import { Request, Response } from 'express';
-import {
-  AppointmentRepository,
-  CreateAppointment,
-  CreateAppointmentDto,
-  DeleteAppointmentById,
-  FindAppointmentById,
-  FindManyAppointments,
-  HandlerError,
-  PaginationDto,
-  UpdateAppoinment,
-  UpdateAppointmentDto,
-} from '../../../domain';
+import { CreateAppointment, UpdateAppoinment, FindAppointmentById, FindManyAppointments, DeleteAppointmentById } from 'src/domain';
+
 
 export class AppointmentController {
   constructor(private readonly appointmentRepository: AppointmentRepository) {}

@@ -1,16 +1,15 @@
-import { UploadedFile } from 'express-fileupload';
+import { AccountDataSource } from '@domain/datasources';
 import {
-  AccountDataSource,
-  AccountEntity,
-  AccountRepository,
-  CreateAccountDto,
-  PaginationDto,
-  UpdateAccountDto,
-  ConfirmPasswordDto,
-  ChangePasswordDto,
-  PaginationEntity,
   UploadDto,
-} from '../../domain';
+  PaginationDto,
+  CreateAccountDto,
+  UpdateAccountDto,
+  ChangePasswordDto,
+  ConfirmPasswordDto,
+} from '@domain/dtos';
+import { AccountEntity, PaginationEntity } from '@domain/entities';
+import { AccountRepository } from '@domain/repositories';
+import { UploadedFile } from 'express-fileupload';
 
 export class AccountRepositoryImpl implements AccountRepository {
   constructor(private readonly datasource: AccountDataSource) {}

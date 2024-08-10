@@ -1,9 +1,7 @@
-import {
-  AuthenticatedUserEntity,
-  AuthenticationDataSource,
-  AuthenticationRepository,
-  LoginDto,
-} from '../../domain';
+import { AuthenticationDataSource } from "@domain/datasources";
+import { LoginDto } from "@domain/dtos";
+import { AuthenticatedUserEntity } from "@domain/entities";
+import { AuthenticationRepository } from "@domain/repositories";
 
 export class AuthenticationRepositoryImpl implements AuthenticationRepository {
   constructor(private readonly datasource: AuthenticationDataSource) {}

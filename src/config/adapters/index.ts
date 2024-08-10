@@ -4,3 +4,4 @@ export * from './date-fns.adapter';
 export * from './expressFileUploadAdapter';
 export * from './googleauth.adapter';
 export * from './jwt.adapter';
+export * from './winstonLogger.adapter';

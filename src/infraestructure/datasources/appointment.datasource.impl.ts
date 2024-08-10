@@ -1,13 +1,9 @@
-import { DateFnsAdapter, prisma } from '../../config';
-import {
-  AppointmentDataSource,
-  AppointmentEntity,
-  CreateAppointmentDto,
-  CustomError,
-  PaginationDto,
-  PaginationEntity,
-  UpdateAppointmentDto,
-} from '../../domain';
+import { prisma, DateFnsAdapter } from "@config";
+import { AppointmentDataSource } from "@domain/datasources";
+import { PaginationDto, CreateAppointmentDto, UpdateAppointmentDto } from "@domain/dtos";
+import { AppointmentEntity, PaginationEntity } from "@domain/entities";
+import { CustomError } from "@handler-errors";
+
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {

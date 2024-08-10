@@ -1,12 +1,9 @@
-import { BcryptAdapter, JWTAdapter, prisma } from '../../config';
-import {
-  AuthenticationDataSource,
-  AuthenticatedUserEntity,
-  LoginDto,
-  CustomError,
-  AccountEntity,
-} from '../../domain';
-import { GoogleOAuth2ClientAdapter } from '../../config/adapters/googleauth.adapter';
+import { prisma, BcryptAdapter, JWTAdapter, GoogleOAuth2ClientAdapter } from "@config";
+import { AuthenticationDataSource } from "@domain/datasources";
+import { LoginDto } from "@domain/dtos";
+import { AccountEntity, AuthenticatedUserEntity } from "@domain/entities";
+import { CustomError } from "@handler-errors";
+
 
 export class AuthenticationDataSourceImpl implements AuthenticationDataSource {
   private async findAccountByEmail(email: string): Promise<AccountEntity> {

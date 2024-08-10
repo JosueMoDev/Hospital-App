@@ -1,12 +1,8 @@
-import {
-  AppointmentDataSource,
-  AppointmentEntity,
-  AppointmentRepository,
-  UpdateAppointmentDto,
-  PaginationDto,
-  CreateAppointmentDto,
-  PaginationEntity,
-} from '../../domain';
+import { AppointmentDataSource } from "@domain/datasources";
+import { PaginationDto, CreateAppointmentDto, UpdateAppointmentDto } from "@domain/dtos";
+import { AppointmentEntity, PaginationEntity } from "@domain/entities";
+import { AppointmentRepository } from "@domain/repositories";
+
 
 export class AppointmentRepositoryImpl implements AppointmentRepository {
   constructor(private readonly datasource: AppointmentDataSource) {}

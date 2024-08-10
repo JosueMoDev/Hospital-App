@@ -1,14 +1,9 @@
+import { RecordDataSource } from '@domain/datasources';
+import { UploadDto, PaginationDto, CreateRecordDto, UpdateRecordDto } from '@domain/dtos';
+import { RecordEntity, PaginationEntity } from '@domain/entities';
+import { RecordRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
-import {
-  CreateRecordDto,
-  PaginationDto,
-  PaginationEntity,
-  RecordDataSource,
-  RecordEntity,
-  RecordRepository,
-  UpdateRecordDto,
-  UploadDto,
-} from '../../domain';
+
 
 export class RecordRepositoryImpl implements RecordRepository {
   constructor(private readonly datasource: RecordDataSource) {}

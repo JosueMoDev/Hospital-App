@@ -1,10 +1,9 @@
+import { prisma } from '@config';
+import { CLinicAssignmentDataSource } from '@domain/datasources';
+import { ClinicAssignmentDto } from '@domain/dtos';
+import { AccountEntity } from '@domain/entities';
 import { Role } from '@prisma/client';
-import { prisma } from '../../config';
-import {
-  AccountEntity,
-  CLinicAssignmentDataSource,
-  ClinicAssignmentDto,
-} from '../../domain';
+
 export class ClinicAssignmentDataSourceImpl
   implements CLinicAssignmentDataSource
 {

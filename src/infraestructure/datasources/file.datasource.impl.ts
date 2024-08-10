@@ -1,11 +1,9 @@
+import { AllowedFolder, Environment, CloudinaryAdapter } from '@config';
+import { FileDataSource } from '@domain/datasources';
+import { UploadDto } from '@domain/dtos';
+import { FileEntity } from '@domain/entities';
+import { CustomError } from '@handler-errors';
 import { UploadedFile } from 'express-fileupload';
-import { AllowedFolder, CloudinaryAdapter, Environment } from '../../config';
-import {
-  CustomError,
-  FileDataSource,
-  FileEntity,
-  UploadDto,
-} from '../../domain';
 import fs from 'fs';
 
 export class FileDataSourceImpl implements FileDataSource {

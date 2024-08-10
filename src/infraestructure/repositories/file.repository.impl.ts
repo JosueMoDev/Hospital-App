@@ -1,11 +1,10 @@
+import { AllowedFolder } from '@config';
+import { FileDataSource } from '@domain/datasources';
+import { UploadDto } from '@domain/dtos';
+import { FileEntity } from '@domain/entities';
+import { FileRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
-import { AllowedFolder } from '../../config';
-import {
-  FileDataSource,
-  FileEntity,
-  FileRepository,
-  UploadDto,
-} from '../../domain';
+
 
 export class FileRepositoryImpl implements FileRepository {
   constructor(private readonly datasource: FileDataSource) {}

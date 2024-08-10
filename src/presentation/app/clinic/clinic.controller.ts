@@ -1,11 +1,15 @@
-import { Request, Response } from 'express';
 import {
-  UpdateClinicDto,
-  HandlerError,
   CreateClinicDto,
+  UpdateClinicDto,
   PaginationDto,
   UploadDto,
-  ClinicRepository,
+} from '@domain/dtos';
+import { ClinicRepository } from '@domain/repositories';
+import { HandlerError } from '@handler-errors';
+import { Request, Response } from 'express';
+
+import { UploadedFile } from 'express-fileupload';
+import {
   CreateClinic,
   UpdateClinic,
   FindClinicById,
@@ -13,8 +17,7 @@ import {
   ChangeClinicStatus,
   UploadClinicPhoto,
   DeleteClinicPhoto,
-} from '../../../domain';
-import { UploadedFile } from 'express-fileupload';
+} from '@domain/use-cases';
 
 export class ClinicController {
   constructor(private readonly clinicRepository: ClinicRepository) {}

@@ -1,14 +1,13 @@
-import { UploadedFile } from 'express-fileupload';
 import {
-  CreateAccountDto,
   PaginationDto,
+  CreateAccountDto,
   UpdateAccountDto,
-  ConfirmPasswordDto,
   ChangePasswordDto,
+  ConfirmPasswordDto,
   UploadDto,
-} from '../dtos';
-import { AccountEntity } from '../entities';
-import { PaginationEntity } from '../entities/pagination.entity';
+} from '@domain/dtos';
+import { AccountEntity, PaginationEntity } from '@domain/entities';
+import { UploadedFile } from 'express-fileupload';
 
 export abstract class AccountDataSource {
   abstract findOneById(id: string): Promise<AccountEntity>;

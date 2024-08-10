@@ -1,7 +1,8 @@
+import { AllowedFolder } from '@config';
+import { UploadDto } from '@domain/dtos';
+import { FileEntity } from '@domain/entities';
 import { UploadedFile } from 'express-fileupload';
-import { AllowedFolder } from '../../config';
-import { UploadDto } from '../dtos';
-import { FileEntity } from '../entities';
+
 
 export abstract class FileRepository {
   abstract uploadFile(

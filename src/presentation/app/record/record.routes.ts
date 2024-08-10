@@ -1,10 +1,9 @@
+import { RecordDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { RecordRepositoryImpl } from '@infraestructure/repositoriesimpl';
+import { FileUploadMiddleware } from '@middlewares';
 import { Router } from 'express';
-import {
-  RecordDataSourceImpl,
-  RecordRepositoryImpl,
-} from '../../../infraestructure';
 import { RecordController } from './record.controller';
-import { FileUploadMiddleware } from '../../middlewares';
+
 
 export class RecordRoutes {
   static get routes(): Router {

@@ -1,9 +1,5 @@
-import {
-  UpdateAppointmentDto,
-  PaginationDto,
-  CreateAppointmentDto,
-} from '../dtos';
-import { AppointmentEntity, PaginationEntity } from '../entities';
+import { PaginationDto, CreateAppointmentDto, UpdateAppointmentDto } from "@domain/dtos";
+import { AppointmentEntity, PaginationEntity } from "@domain/entities";
 
 export abstract class AppointmentDataSource {
   abstract findOneById(id: string): Promise<AppointmentEntity>;

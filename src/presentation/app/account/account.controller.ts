@@ -1,33 +1,33 @@
 import { Request, Response } from 'express';
+import { UploadedFile } from 'express-fileupload';
+import { AccountRepository } from '@domain/repositories';
 import {
+  ChangePasswordDto,
+  ConfirmPasswordDto,
   CreateAccountDto,
-  HandlerError,
   PaginationDto,
   UpdateAccountDto,
-  ConfirmPasswordDto,
-  ChangePasswordDto,
   UploadDto,
-  CreateAccount,
-  AccountRepository,
-  UpdateAccount,
-  FindAccountById,
-  FindAccountByDocument,
-  FindManyAccounts,
+} from '@domain/dtos';
+import {
   ChangeAccountPassword,
   ChangeAccountStatus,
   CheckPassword,
-  UploadPhoto,
+  CreateAccount,
   DeletePhoto,
-} from '../../../domain';
-import { UploadedFile } from 'express-fileupload';
+  FindAccountByDocument,
+  FindAccountById,
+  FindManyAccounts,
+  UpdateAccount,
+  UploadPhoto,
+} from '@domain/use-cases';
+import { HandlerError } from '@handler-errors';
 
 export class AccountController {
   constructor(private readonly accountRepository: AccountRepository) {}
-
   createAccount = (request: Request, response: Response) => {
     const [error, createAccountDto] = CreateAccountDto.create(request.body);
     if (error) return response.status(400).json({ error });
-
     new CreateAccount(this.accountRepository)
       .execute(createAccountDto!)
       .then((account) => response.json(account))

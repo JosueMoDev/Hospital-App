@@ -1,2 +1,2 @@
-export * from './JWTStrategy.middleware';
+export * from './authentication.middleware';
 export * from './file.middleware';

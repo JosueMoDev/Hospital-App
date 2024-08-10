@@ -1,9 +1,8 @@
+import { AppointmentDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { AppointmentRepositoryImpl } from '@infraestructure/repositoriesimpl';
 import { Router } from 'express';
-import {
-  AppointmentDataSourceImpl,
-  AppointmentRepositoryImpl,
-} from '../../../infraestructure';
 import { AppointmentController } from './appointment.controller';
+
 
 export class AppointmentRoutes {
   static get routes(): Router {

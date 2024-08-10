@@ -1,9 +1,8 @@
+import { AuthenticationDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { AuthenticationRepositoryImpl } from '@infraestructure/repositoriesimpl';
 import { Router } from 'express';
 import { AuthenticationController } from './authentication.controller';
-import {
-  AuthenticationDataSourceImpl,
-  AuthenticationRepositoryImpl,
-} from '../../../infraestructure';
+
 
 export class AuthenticationRoutes {
   static get routes(): Router {

@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import {
-  AccountDataSourceImpl,
-  AccountRepositoryImpl,
-} from '../../../infraestructure';
+
 import { AccountController } from './account.controller';
-import { FileUploadMiddleware } from '../../middlewares';
+import { FileUploadMiddleware } from '@middlewares';
+import { AccountDataSourceImpl } from '@infraestructure/datasourcesimpl';
+import { AccountRepositoryImpl } from '@infraestructure/repositoriesimpl';
 
 export class AccountRoutes {
   static get routes(): Router {
