@@ -1,6 +1,6 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UploadDtoArgs {
   id: string;

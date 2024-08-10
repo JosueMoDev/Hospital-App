@@ -1,5 +1,5 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 export class GetDoctorsAssignedDto {
   @IsMongoId()

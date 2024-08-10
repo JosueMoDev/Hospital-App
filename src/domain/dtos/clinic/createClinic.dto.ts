@@ -1,3 +1,4 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { Type } from 'class-transformer';
 import {
   IsMongoId,
@@ -9,7 +10,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface CreateClinicDtoArgs {
   registerNumber: string;

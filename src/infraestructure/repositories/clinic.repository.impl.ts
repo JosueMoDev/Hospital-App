@@ -1,9 +1,13 @@
 import { ClinicDataSource } from '@domain/datasources';
-import { UploadDto, PaginationDto, CreateClinicDto, UpdateClinicDto } from '@domain/dtos';
+import {
+  UploadDto,
+  PaginationDto,
+  CreateClinicDto,
+  UpdateClinicDto,
+} from '@domain/dtos';
 import { ClinicEntity, PaginationEntity } from '@domain/entities';
 import { ClinicRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
-
 
 export class ClinicRepositoyImpl implements ClinicRepository {
   constructor(private readonly datasource: ClinicDataSource) {}

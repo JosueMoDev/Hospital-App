@@ -1,9 +1,12 @@
-import { prisma, DateFnsAdapter } from "@config";
-import { AppointmentDataSource } from "@domain/datasources";
-import { PaginationDto, CreateAppointmentDto, UpdateAppointmentDto } from "@domain/dtos";
-import { AppointmentEntity, PaginationEntity } from "@domain/entities";
-import { CustomError } from "@handler-errors";
-
+import { prisma, DateFnsAdapter } from '@config';
+import { AppointmentDataSource } from '@domain/datasources';
+import {
+  PaginationDto,
+  CreateAppointmentDto,
+  UpdateAppointmentDto,
+} from '@domain/dtos';
+import { AppointmentEntity, PaginationEntity } from '@domain/entities';
+import { CustomError } from '@handler-errors';
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {
@@ -20,9 +23,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     return AppointmentEntity.fromObject(appointment);
   }
 
-  async findMany(
-    dto: PaginationDto,
-  ): Promise<{
+  async findMany(dto: PaginationDto): Promise<{
     pagination: PaginationEntity;
     appointments: AppointmentEntity[];
   }> {

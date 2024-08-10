@@ -1,6 +1,6 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { Type } from 'class-transformer';
 import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface AssignmentDtoArgs {
   clinic: string;

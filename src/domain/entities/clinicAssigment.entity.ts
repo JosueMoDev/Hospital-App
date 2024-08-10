@@ -1,5 +1,5 @@
-import { AccountEntity } from './account.entity';
-import { ClinicEntity } from './clinic.entity';
+import { AccountEntity, ClinicEntity } from "@domain/entities";
+
 
 export interface ClinicAssignmentOptions {
   id: string;

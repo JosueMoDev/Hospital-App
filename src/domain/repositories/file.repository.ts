@@ -3,7 +3,6 @@ import { UploadDto } from '@domain/dtos';
 import { FileEntity } from '@domain/entities';
 import { UploadedFile } from 'express-fileupload';
 
-
 export abstract class FileRepository {
   abstract uploadFile(
     dto: UploadDto,

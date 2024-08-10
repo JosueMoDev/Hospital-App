@@ -6,4 +6,3 @@ export * from './clinic';
 export * from './file/file.dto';
 export * from './pagination';
 export * from './record';
-export * from './utils';

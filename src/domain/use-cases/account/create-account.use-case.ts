@@ -1,6 +1,6 @@
-import { CreateAccountDto } from "@domain/dtos";
-import { AccountEntity } from "@domain/entities";
-import { AccountRepository } from "@domain/repositories";
+import { CreateAccountDto } from '@domain/dtos';
+import { AccountEntity } from '@domain/entities';
+import { AccountRepository } from '@domain/repositories';
 
 interface CreateAccountUseCase {
   execute(createAccountDto: CreateAccountDto): Promise<AccountEntity>;

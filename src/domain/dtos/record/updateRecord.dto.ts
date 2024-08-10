@@ -1,5 +1,5 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UpdateRecordDtoArgs {
   id: string;

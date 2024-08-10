@@ -1,5 +1,5 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 interface LoginDtoOptions {
   email: string;
   password: string;

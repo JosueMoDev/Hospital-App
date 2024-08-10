@@ -6,9 +6,7 @@ import {
 } from '../../../domain';
 
 interface FindManyAppointmentsUseCase {
-  execute(
-    dto: PaginationDto,
-  ): Promise<{
+  execute(dto: PaginationDto): Promise<{
     pagination: PaginationEntity;
     appointments: AppointmentEntity[];
   }>;

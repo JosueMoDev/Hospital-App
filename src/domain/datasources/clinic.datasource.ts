@@ -1,7 +1,11 @@
-import { PaginationDto, CreateClinicDto, UpdateClinicDto, UploadDto } from '@domain/dtos';
+import {
+  PaginationDto,
+  CreateClinicDto,
+  UpdateClinicDto,
+  UploadDto,
+} from '@domain/dtos';
 import { ClinicEntity, PaginationEntity } from '@domain/entities';
 import { UploadedFile } from 'express-fileupload';
-
 
 export abstract class ClinicDataSource {
   abstract findOneById(id: string): Promise<ClinicEntity>;

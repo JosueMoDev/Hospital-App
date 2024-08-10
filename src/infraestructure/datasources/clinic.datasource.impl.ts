@@ -3,7 +3,12 @@ import { UploadedFile } from 'express-fileupload';
 import { ClinicEntity, PaginationEntity } from '@domain/entities';
 import { ClinicDataSource } from '@domain/datasources';
 import { FileDataSourceImpl } from '@infraestructure/datasourcesimpl';
-import { UploadDto, PaginationDto, CreateClinicDto, UpdateClinicDto } from '@domain/dtos';
+import {
+  UploadDto,
+  PaginationDto,
+  CreateClinicDto,
+  UpdateClinicDto,
+} from '@domain/dtos';
 import { FileRepositoryImpl } from '@infraestructure/repositoriesimpl';
 import { CustomError } from '@handler-errors';
 

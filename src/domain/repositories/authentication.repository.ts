@@ -1,5 +1,5 @@
-import { LoginDto } from "@domain/dtos";
-import { AuthenticatedUserEntity } from "@domain/entities";
+import { LoginDto } from '@domain/dtos';
+import { AuthenticatedUserEntity } from '@domain/entities';
 
 export abstract class AuthenticationRepository {
   abstract loginWithEmailAndPassword(

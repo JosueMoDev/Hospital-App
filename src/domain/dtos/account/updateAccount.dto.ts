@@ -1,5 +1,5 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { Gender, Role } from '../../entities';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 import {
   IsBoolean,
   IsEmail,

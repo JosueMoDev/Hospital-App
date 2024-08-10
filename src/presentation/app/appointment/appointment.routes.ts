@@ -3,7 +3,6 @@ import { AppointmentRepositoryImpl } from '@infraestructure/repositoriesimpl';
 import { Router } from 'express';
 import { AppointmentController } from './appointment.controller';
 
-
 export class AppointmentRoutes {
   static get routes(): Router {
     const router = Router();

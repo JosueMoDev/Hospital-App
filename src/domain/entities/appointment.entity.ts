@@ -1,6 +1,6 @@
 import { LastUpdate } from '@prisma/client';
-import { AccountEntity } from './account.entity';
-import { ClinicEntity } from './clinic.entity';
+import { AccountEntity, ClinicEntity } from '@domain/entities';
+
 
 type Account = Partial<
   Pick<

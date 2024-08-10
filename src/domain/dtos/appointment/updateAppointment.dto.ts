@@ -1,5 +1,5 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601 } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UpdateAppointmentDtArgs {
   id: string;

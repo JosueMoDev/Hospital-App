@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import { Gender, Role } from '../../entities';
-import { CustomErrors, CustomValidationErrors } from '../utils';
 import {
   IsBoolean,
   IsEmail,
@@ -11,6 +10,7 @@ import {
   Length,
   MinLength,
 } from 'class-validator';
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 
 interface CreateAccountDtoArgs {
   duiNumber: string;

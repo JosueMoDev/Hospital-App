@@ -5,7 +5,6 @@ import { FileEntity } from '@domain/entities';
 import { FileRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
 
-
 export class FileRepositoryImpl implements FileRepository {
   constructor(private readonly datasource: FileDataSource) {}
 

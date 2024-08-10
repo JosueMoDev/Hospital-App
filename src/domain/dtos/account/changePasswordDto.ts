@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '../utils';
+import { CustomErrors, CustomValidationErrors  } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, MinLength } from 'class-validator';
 
 interface ChangePasswordDtoArgs {

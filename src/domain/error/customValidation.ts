@@ -1,6 +1,8 @@
 import { ValidationError, validateSync } from 'class-validator';
-import { CustomErrors } from './customErrors.interface';
-
+export interface CustomErrors {
+  errorOnProperty: string;
+  errorMessages: { [key: string]: string };
+}
 export class CustomValidationErrors {
   static setErroMessages(error: ValidationError): any {
     if (error.constraints!) return error.constraints!;

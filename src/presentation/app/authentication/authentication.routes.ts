@@ -3,7 +3,6 @@ import { AuthenticationRepositoryImpl } from '@infraestructure/repositoriesimpl'
 import { Router } from 'express';
 import { AuthenticationController } from './authentication.controller';
 
-
 export class AuthenticationRoutes {
   static get routes(): Router {
     const router = Router();

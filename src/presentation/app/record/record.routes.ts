@@ -4,7 +4,6 @@ import { FileUploadMiddleware } from '@middlewares';
 import { Router } from 'express';
 import { RecordController } from './record.controller';
 
-
 export class RecordRoutes {
   static get routes(): Router {
     const router = Router();

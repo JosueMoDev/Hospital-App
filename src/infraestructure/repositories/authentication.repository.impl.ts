@@ -1,7 +1,7 @@
-import { AuthenticationDataSource } from "@domain/datasources";
-import { LoginDto } from "@domain/dtos";
-import { AuthenticatedUserEntity } from "@domain/entities";
-import { AuthenticationRepository } from "@domain/repositories";
+import { AuthenticationDataSource } from '@domain/datasources';
+import { LoginDto } from '@domain/dtos';
+import { AuthenticatedUserEntity } from '@domain/entities';
+import { AuthenticationRepository } from '@domain/repositories';
 
 export class AuthenticationRepositoryImpl implements AuthenticationRepository {
   constructor(private readonly datasource: AuthenticationDataSource) {}

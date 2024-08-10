@@ -28,11 +28,9 @@ export class FileUploadMiddleware {
       fileExtension as AllowedExtensions,
     );
     if (!isExtensionAllow)
-      return response
-        .status(400)
-        .json({
-          error: `Extension File must be included in ${Object.values(AllowedExtensions)}`,
-        });
+      return response.status(400).json({
+        error: `Extension File must be included in ${Object.values(AllowedExtensions)}`,
+      });
     next();
   }
 }

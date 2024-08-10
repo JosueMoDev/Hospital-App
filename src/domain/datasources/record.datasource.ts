@@ -1,7 +1,11 @@
-import { PaginationDto, CreateRecordDto, UpdateRecordDto, UploadDto } from '@domain/dtos';
+import {
+  PaginationDto,
+  CreateRecordDto,
+  UpdateRecordDto,
+  UploadDto,
+} from '@domain/dtos';
 import { RecordEntity, PaginationEntity } from '@domain/entities';
 import { UploadedFile } from 'express-fileupload';
-
 
 export abstract class RecordDataSource {
   abstract findOneById(id: string): Promise<RecordEntity>;

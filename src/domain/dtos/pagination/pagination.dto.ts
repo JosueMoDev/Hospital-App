@@ -1,3 +1,4 @@
+import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import {
   IsInt,
   IsNotEmpty,
@@ -6,8 +7,6 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '../utils';
-import path from 'path';
 interface PaginationDtoArgs {
   pageSize?: number;
   page?: number;
