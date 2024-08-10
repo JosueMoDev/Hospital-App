@@ -23,7 +23,7 @@
 //   api_key: '437826766744641'
 // }
 
-import { UploadApiResponse } from "cloudinary";
+import { UploadApiResponse } from 'cloudinary';
 
 export class FileEntity {
   public fileId!: string;
@@ -33,10 +33,10 @@ export class FileEntity {
 
   constructor(args: UploadApiResponse) {
     const { secure_url, bytes, format, public_id } = args;
-    this.fileId = public_id ?? "";
-    this.fileUrl = secure_url ?? "";
+    this.fileId = public_id ?? '';
+    this.fileUrl = secure_url ?? '';
     this.sizeFile = bytes ?? 0;
-    this.format = format ?? "";
+    this.format = format ?? '';
   }
 
   static mapper(object: UploadApiResponse): FileEntity {

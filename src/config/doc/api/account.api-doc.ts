@@ -1,5 +1,5 @@
-import { OpenAPIV3 } from "openapi-types";
-import { GlobasSchemas } from "../fromDtoToSchema";
+import { OpenAPIV3 } from 'openapi-types';
+import { GlobasSchemas } from '../fromDtoToSchema';
 
 type AccountPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -17,35 +17,35 @@ type AccountPaths = {
 export const account: AccountPaths = {
   create: {
     post: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Register a new user account",
+      summary: 'Register a new user account',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.CreateAccountDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   find_one: {
     get: {
-      tags: ["Account"],
-      summary: "Find an existent account by id",
+      tags: ['Account'],
+      summary: 'Find an existent account by id',
       security: [
         {
           bearerAuth: [],
@@ -53,29 +53,29 @@ export const account: AccountPaths = {
       ],
       parameters: [
         {
-          in: "path",
-          name: "id",
+          in: 'path',
+          name: 'id',
           required: true,
           schema: {
-            type: "string",
+            type: 'string',
           },
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   find_by_document: {
     get: {
-      tags: ["Account"],
+      tags: ['Account'],
       summary:
-        "Find an existent account by Document Number(DUI) - ONLY WORKS For accounts to belogs a patitient",
+        'Find an existent account by Document Number(DUI) - ONLY WORKS For accounts to belogs a patitient',
       security: [
         {
           bearerAuth: [],
@@ -83,219 +83,218 @@ export const account: AccountPaths = {
       ],
       parameters: [
         {
-          in: "path",
-          name: "document",
-          example: "000000000",
+          in: 'path',
+          name: 'document',
+          example: '000000000',
           required: true,
           schema: {
-            type: "string",
-            pattern: "^d{9}$",
+            type: 'string',
+            pattern: '^d{9}$',
           },
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   update: {
     patch: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Update a existent user account",
+      summary: 'Update a existent user account',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.UpdateAccountDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   find_many: {
     get: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "Find many accounts Paginated ",
+      summary: 'Find many accounts Paginated ',
       parameters: [
         {
-          in: "query",
-          name: "PaginationDto",
+          in: 'query',
+          name: 'PaginationDto',
           schema: GlobasSchemas.PaginationDto,
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   change_status: {
     patch: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
       summary:
-        "This endpoint has de functionallity to change an account status",
+        'This endpoint has de functionallity to change an account status',
       parameters: [
         {
-          in: "path",
-          name: "id",
-          example: "e21754E65Dff2ee9B2245b90",
+          in: 'path',
+          name: 'id',
+          example: 'e21754E65Dff2ee9B2245b90',
           required: true,
           schema: {
-            type: "string",
+            type: 'string',
           },
         },
       ],
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   change_password: {
     patch: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
       summary:
-        "This endpoint has de functionallity to change an account password",
+        'This endpoint has de functionallity to change an account password',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.ChangePasswordDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   confirm_password: {
     post: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
       summary:
-        "This endpoint has de functionallity to confirm your account password",
+        'This endpoint has de functionallity to confirm your account password',
       requestBody: {
         required: true,
         content: {
-          "application/json": {
+          'application/json': {
             schema: GlobasSchemas.ConfirmPasswordDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   delete_photo: {
     patch: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "This endpoint delete your account photo",
+      summary: 'This endpoint delete your account photo',
       requestBody: {
         required: true,
         content: {
-          "multipart/form-data": {
+          'multipart/form-data': {
             schema: GlobasSchemas.DeleteFileDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
   upload_photo: {
     patch: {
-      tags: ["Account"],
+      tags: ['Account'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: "This endpoint upload your account photo",
+      summary: 'This endpoint upload your account photo',
       requestBody: {
         required: true,
         content: {
-          "multipart/form-data": {
+          'multipart/form-data': {
             schema: GlobasSchemas.UploadFileDto,
           },
         },
       },
       responses: {
         200: {
-          description: "User found",
+          description: 'User found',
         },
         404: {
-          description: "User not found",
+          description: 'User not found',
         },
       },
     },
   },
 };
-

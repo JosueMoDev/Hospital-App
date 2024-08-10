@@ -1,4 +1,4 @@
-import { UploadedFile } from "express-fileupload";
+import { UploadedFile } from 'express-fileupload';
 import {
   ClinicDataSource,
   ClinicEntity,
@@ -8,7 +8,7 @@ import {
   CreateClinicDto,
   PaginationEntity,
   UploadDto,
-} from "../../domain";
+} from '../../domain';
 
 export class ClinicRepositoyImpl implements ClinicRepository {
   constructor(private readonly datasource: ClinicDataSource) {}
@@ -25,7 +25,7 @@ export class ClinicRepositoyImpl implements ClinicRepository {
   }
   findMany(
     dto: PaginationDto,
-    sort?: string | undefined
+    sort?: string | undefined,
   ): Promise<{ pagination: PaginationEntity; clinics: ClinicEntity[] }> {
     return this.datasource.findMany(dto, sort);
   }

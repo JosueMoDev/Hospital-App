@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   AppointmentRepository,
   CreateAppointment,
@@ -10,7 +10,7 @@ import {
   PaginationDto,
   UpdateAppoinment,
   UpdateAppointmentDto,
-} from "../../../domain";
+} from '../../../domain';
 
 export class AppointmentController {
   constructor(private readonly appointmentRepository: AppointmentRepository) {}
@@ -30,7 +30,7 @@ export class AppointmentController {
 
   updateAppointment = (request: Request, response: Response) => {
     const [error, updateAppointmentDto] = UpdateAppointmentDto.update(
-      request.body
+      request.body,
     );
     if (error) return response.status(400).json({ error });
 
@@ -54,7 +54,10 @@ export class AppointmentController {
   };
 
   findMany = (request: Request, response: Response) => {
-    const [error, appointmentDto] = PaginationDto.create(request.query, request.originalUrl);
+    const [error, appointmentDto] = PaginationDto.create(
+      request.query,
+      request.originalUrl,
+    );
     if (error) return response.status(400).json({ error });
 
     new FindManyAppointments(this.appointmentRepository)

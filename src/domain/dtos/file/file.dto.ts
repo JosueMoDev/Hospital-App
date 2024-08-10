@@ -1,6 +1,6 @@
-import { IsMongoId, IsNotEmpty } from "class-validator";
+import { IsMongoId, IsNotEmpty } from 'class-validator';
 
-import { CustomErrors, CustomValidationErrors } from "../utils";
+import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UploadDtoArgs {
   id: string;
@@ -9,11 +9,11 @@ interface UploadDtoArgs {
 
 export class UploadDto {
   @IsMongoId()
-  @IsNotEmpty({ message: "ID is required" })
+  @IsNotEmpty({ message: 'ID is required' })
   public id: string;
 
   @IsMongoId()
-  @IsNotEmpty({ message: "Account ID is required for update" })
+  @IsNotEmpty({ message: 'Account ID is required for update' })
   public updatedBy: string;
 
   constructor(args: UploadDtoArgs) {
@@ -22,7 +22,7 @@ export class UploadDto {
     this.updatedBy = updatedBy;
   }
   static update(
-    object: UploadDtoArgs
+    object: UploadDtoArgs,
   ): [undefined | CustomErrors[], UploadDto?] {
     const uploadDto = new UploadDto(object);
 
@@ -32,7 +32,7 @@ export class UploadDto {
     if (errors) return [errors];
 
     const dto = Object.fromEntries(
-      Object.entries(validatedDto!).filter(([_, value]) => value !== undefined)
+      Object.entries(validatedDto!).filter(([_, value]) => value !== undefined),
     ) as UploadDto;
 
     return [undefined, dto];

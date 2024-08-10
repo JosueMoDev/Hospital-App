@@ -1,7 +1,7 @@
 import {
   ClinicAssignmentDto,
   ClinicAssignmentRepository,
-} from "../../../domain";
+} from '../../../domain';
 
 interface CreateClinicAssignmentUseCase {
   execute(assignmentDto: ClinicAssignmentDto): Promise<Boolean>;
@@ -9,12 +9,12 @@ interface CreateClinicAssignmentUseCase {
 
 export class CreateClinicAssignment implements CreateClinicAssignmentUseCase {
   constructor(
-    private readonly clinicAssignmentRepository: ClinicAssignmentRepository
+    private readonly clinicAssignmentRepository: ClinicAssignmentRepository,
   ) {}
 
   async execute(assignmentDto: ClinicAssignmentDto): Promise<Boolean> {
     return await this.clinicAssignmentRepository.createAssignment(
-      assignmentDto
+      assignmentDto,
     );
   }
 }

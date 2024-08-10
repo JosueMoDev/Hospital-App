@@ -1,6 +1,13 @@
-import { IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Min } from "class-validator";
-import { CustomErrors, CustomValidationErrors } from "../utils";
-import path from "path";
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+} from 'class-validator';
+import { CustomErrors, CustomValidationErrors } from '../utils';
+import path from 'path';
 interface PaginationDtoArgs {
   pageSize?: number;
   page?: number;
@@ -10,28 +17,29 @@ export class PaginationDto {
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @Min(1, { message: "Page should be greater than 0" })
+  @Min(1, { message: 'Page should be greater than 0' })
   public readonly page!: number;
 
   @IsOptional()
   @IsInt()
   @IsPositive()
-  @Min(5, { message: "Limit should be greater than 5" })
+  @Min(5, { message: 'Limit should be greater than 5' })
   public readonly pageSize!: number;
 
-
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   public readonly path!: string;
 
   private constructor(args: PaginationDtoArgs, path: string) {
     this.page = args.page ? +args.page : 1;
     this.pageSize = args.pageSize ? +args.pageSize : 5;
-    this.path = path.split("?")[0].replace(/^\/api/, "");
-   
+    this.path = path.split('?')[0].replace(/^\/api/, '');
   }
 
-  static create(object: PaginationDtoArgs, path: string): [CustomErrors[]?, PaginationDto?] {
+  static create(
+    object: PaginationDtoArgs,
+    path: string,
+  ): [CustomErrors[]?, PaginationDto?] {
     const paginationDto = new PaginationDto(object, path);
 
     const [errors, updatedDto] =

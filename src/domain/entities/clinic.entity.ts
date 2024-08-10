@@ -1,9 +1,9 @@
-import { LastUpdate } from "@prisma/client";
+import { LastUpdate } from '@prisma/client';
 
 export interface Address {
-  city: string,
-  state: string,
-  street: string
+  city: string;
+  state: string;
+  street: string;
 }
 export interface ClinicOptions {
   id: string;
@@ -16,7 +16,7 @@ export interface ClinicOptions {
   createdAt: Date;
   createdBy: string;
   status: boolean;
-  lastUpdate: LastUpdate[]
+  lastUpdate: LastUpdate[];
 }
 
 export class ClinicEntity {
@@ -30,7 +30,7 @@ export class ClinicEntity {
   public createdAt: Date;
   public createdBy: string;
   public status: boolean;
-  public lastUpdate: LastUpdate[]
+  public lastUpdate: LastUpdate[];
 
   constructor(options: ClinicOptions) {
     const {
@@ -44,20 +44,20 @@ export class ClinicEntity {
       createdAt,
       createdBy,
       status,
-      lastUpdate
+      lastUpdate,
     } = options;
 
-    this.id = id,
-      this.registerNumber = registerNumber,
-      this.name = name,
-      this.phone = phone,
-      this.address = address,
-      this.photoUrl = photoUrl,
-      this.photoId = photoId,
-      this.createdAt = createdAt,
-      this.createdBy = createdBy,
-      this.status = status,
-      this.lastUpdate = lastUpdate
+    (this.id = id),
+      (this.registerNumber = registerNumber),
+      (this.name = name),
+      (this.phone = phone),
+      (this.address = address),
+      (this.photoUrl = photoUrl),
+      (this.photoId = photoId),
+      (this.createdAt = createdAt),
+      (this.createdBy = createdBy),
+      (this.status = status),
+      (this.lastUpdate = lastUpdate);
   }
 
   static fromObject(object: { [key: string]: any }): ClinicEntity {
@@ -72,7 +72,7 @@ export class ClinicEntity {
       createdAt,
       createdBy,
       status,
-      lastUpdate
+      lastUpdate,
     } = object;
 
     const clinic = new ClinicEntity({
@@ -86,7 +86,7 @@ export class ClinicEntity {
       createdAt,
       createdBy,
       status,
-      lastUpdate: lastUpdate ?? []
+      lastUpdate: lastUpdate ?? [],
     });
     return clinic;
   }

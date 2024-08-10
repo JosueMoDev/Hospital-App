@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   CreateAccountDto,
   HandlerError,
@@ -17,10 +17,9 @@ import {
   ChangeAccountStatus,
   CheckPassword,
   UploadPhoto,
-  DeletePhoto
-} from "../../../domain";
-import { UploadedFile } from "express-fileupload";
-import { AllowedFolder } from "../../../config";
+  DeletePhoto,
+} from '../../../domain';
+import { UploadedFile } from 'express-fileupload';
 
 export class AccountController {
   constructor(private readonly accountRepository: AccountRepository) {}
@@ -52,7 +51,7 @@ export class AccountController {
   };
 
   findAccountById = (request: Request, response: Response) => {
-      new FindAccountById(this.accountRepository)
+    new FindAccountById(this.accountRepository)
       .execute(request.params.id)
       .then((account) => response.json(account))
       .catch((error) => {
@@ -72,7 +71,10 @@ export class AccountController {
   };
 
   findManyAccounts = (request: Request, response: Response) => {
-    const [error, pagDto] = PaginationDto.create(request.query, request.originalUrl);
+    const [error, pagDto] = PaginationDto.create(
+      request.query,
+      request.originalUrl,
+    );
     if (error) return response.status(400).json({ error });
 
     new FindManyAccounts(this.accountRepository)
@@ -90,7 +92,7 @@ export class AccountController {
 
     new ChangeAccountPassword(this.accountRepository)
       .execute(passwordDto!)
-      .then(() => response.json({message: "Password has been changed"}))
+      .then(() => response.json({ message: 'Password has been changed' }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -98,10 +100,9 @@ export class AccountController {
   };
 
   changeAccountStatus = (request: Request, response: Response) => {
-
     new ChangeAccountStatus(this.accountRepository)
       .execute(request.params.id!)
-      .then(() => response.json({message: "Account status has been changed"}))
+      .then(() => response.json({ message: 'Account status has been changed' }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -127,7 +128,7 @@ export class AccountController {
     const file = request.body.files.at(0) as UploadedFile;
     new UploadPhoto(this.accountRepository)
       .execute(fileDto!, file)
-      .then(() => response.json({message: "Photo has been uploaded"}))
+      .then(() => response.json({ message: 'Photo has been uploaded' }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
@@ -139,7 +140,7 @@ export class AccountController {
     if (error) return response.status(400).json({ error });
     new DeletePhoto(this.accountRepository)
       .execute(fileDto!)
-      .then(() => response.json({ message: "Photo has been deleted" }))
+      .then(() => response.json({ message: 'Photo has been deleted' }))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });

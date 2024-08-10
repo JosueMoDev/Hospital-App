@@ -2,7 +2,7 @@ import {
   ClinicEntity,
   ClinicRepository,
   UpdateClinicDto,
-} from "../../../domain";
+} from '../../../domain';
 
 interface UpdateClinicUseCase {
   excute(updateClinicDto: UpdateClinicDto): Promise<ClinicEntity>;

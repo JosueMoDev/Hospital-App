@@ -1,5 +1,5 @@
-import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601 } from "class-validator";
-import { CustomErrors, CustomValidationErrors,} from "../utils";
+import { IsMongoId, IsOptional, IsNotEmpty, IsISO8601 } from 'class-validator';
+import { CustomErrors, CustomValidationErrors } from '../utils';
 
 interface UpdateAppointmentDtArgs {
   id: string;
@@ -11,7 +11,7 @@ interface UpdateAppointmentDtArgs {
   updatedBy: string;
 }
 export class UpdateAppointmentDto {
-  @IsNotEmpty({ message: "Appointment ID is required" })
+  @IsNotEmpty({ message: 'Appointment ID is required' })
   @IsMongoId()
   public id!: string;
 
@@ -35,7 +35,7 @@ export class UpdateAppointmentDto {
   @IsMongoId()
   public readonly patientId?: string;
 
-  @IsNotEmpty({ message: "Appointment ID is required" })
+  @IsNotEmpty({ message: 'Appointment ID is required' })
   @IsMongoId()
   public updatedBy!: string;
 
@@ -43,10 +43,10 @@ export class UpdateAppointmentDto {
     this.id = args.id;
     if (args.startDate)
       this.startDate =
-        typeof args.startDate === "string" ? args.startDate : undefined;
+        typeof args.startDate === 'string' ? args.startDate : undefined;
     if (args.endDate)
       this.endDate =
-        typeof args.endDate === "string" ? args.endDate : undefined;
+        typeof args.endDate === 'string' ? args.endDate : undefined;
     if (args.doctorId) this.doctorId = args.doctorId;
     if (args.patientId) this.patientId = args.patientId;
     if (args.clinicId) this.clinicId = args.clinicId;
@@ -54,12 +54,12 @@ export class UpdateAppointmentDto {
   }
 
   static update(
-    object: UpdateAppointmentDto
+    object: UpdateAppointmentDto,
   ): [undefined | CustomErrors[], UpdateAppointmentDto?] {
     const updateAccountDto = new UpdateAppointmentDto(object);
     const [errors, validatedDto] =
       CustomValidationErrors.validateDto<UpdateAppointmentDto>(
-        updateAccountDto
+        updateAccountDto,
       );
 
     if (errors) return [errors];

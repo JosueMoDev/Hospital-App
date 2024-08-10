@@ -1,6 +1,4 @@
-import {
-  AccountRepository,
-} from "../../../domain";
+import { AccountRepository } from '../../../domain';
 
 interface ChangeAccountStatusUseCase {
   execute(id: string): Promise<boolean>;

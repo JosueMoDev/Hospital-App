@@ -1,4 +1,4 @@
-import { DateFnsAdapter, prisma } from "../../config";
+import { DateFnsAdapter, prisma } from '../../config';
 import {
   AppointmentDataSource,
   AppointmentEntity,
@@ -7,7 +7,7 @@ import {
   PaginationDto,
   PaginationEntity,
   UpdateAppointmentDto,
-} from "../../domain";
+} from '../../domain';
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {
@@ -19,12 +19,17 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
         appointment_patient: true,
       },
     });
-    if (!appointment) throw CustomError.badRequest("Any appointment found");
+    if (!appointment) throw CustomError.badRequest('Any appointment found');
 
     return AppointmentEntity.fromObject(appointment);
   }
 
-  async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity, appointments: AppointmentEntity[] }> {
+  async findMany(
+    dto: PaginationDto,
+  ): Promise<{
+    pagination: PaginationEntity;
+    appointments: AppointmentEntity[];
+  }> {
     const { page: currentPage, pageSize } = dto;
     const [appointments, total] = await Promise.all([
       prisma.appointment.findMany({
@@ -34,14 +39,14 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
           appointment_clinic: true,
           appointment_doctor: true,
           appointment_patient: true,
-        }
+        },
       }),
-      prisma.appointment.count()
+      prisma.appointment.count(),
     ]);
- 
+
     const appointmentsMapped = appointments.map(AppointmentEntity.fromObject);
-    const pagination = PaginationEntity.setPagination({ ...dto, total })
-    return { pagination, appointments: appointmentsMapped }
+    const pagination = PaginationEntity.setPagination({ ...dto, total });
+    return { pagination, appointments: appointmentsMapped };
   }
 
   async create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
@@ -61,7 +66,8 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
   }
   async update(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
     const { id, lastUpdate, ...rest }: any = dto;
-    if (Object.keys(rest).length === 0) throw CustomError.badRequest("Nothing to update");
+    if (Object.keys(rest).length === 0)
+      throw CustomError.badRequest('Nothing to update');
     const appointment = await this.findOneById(id);
 
     if (rest.startDate) rest.startDate = new Date(dto.startDate!);
@@ -77,7 +83,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
             {
               account: lastUpdate.account,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE",
+              action: 'UPDATE',
             },
           ],
         },

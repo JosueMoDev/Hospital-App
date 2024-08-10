@@ -1,14 +1,14 @@
-import { LastUpdate } from "@prisma/client";
+import { LastUpdate } from '@prisma/client';
 
 export enum Role {
-  admin = "admin",
-  patient = "patient",
-  doctor = "doctor",
+  admin = 'admin',
+  patient = 'patient',
+  doctor = 'doctor',
 }
 
 export enum Gender {
-  female = "female",
-  male = "male",
+  female = 'female',
+  male = 'male',
 }
 
 export interface AccountEntityOptions {
@@ -58,7 +58,7 @@ export class AccountEntity {
       role,
       photoUrl,
       photoId,
-      createdAt = new Date,
+      createdAt = new Date(),
       lastUpdate,
     } = options;
 
@@ -76,12 +76,9 @@ export class AccountEntity {
     this.photoId = photoId;
     this.createdAt = createdAt;
     this.lastUpdate = lastUpdate;
-
-
   }
 
   static fromObject(object: { [key: string]: any }): AccountEntity {
-
     const {
       id,
       duiNumber,
@@ -96,7 +93,7 @@ export class AccountEntity {
       photoUrl,
       photoId,
       createdAt,
-      lastUpdate
+      lastUpdate,
     } = object;
 
     const account = new AccountEntity({
@@ -113,10 +110,9 @@ export class AccountEntity {
       photoUrl,
       photoId,
       createdAt,
-      lastUpdate: lastUpdate ?? []
+      lastUpdate: lastUpdate ?? [],
     });
 
     return account;
-
   }
 }

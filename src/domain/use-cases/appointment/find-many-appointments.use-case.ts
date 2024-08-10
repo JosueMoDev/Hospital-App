@@ -1,14 +1,22 @@
-import { AppointmentEntity, AppointmentRepository, PaginationDto, PaginationEntity } from "../../../domain";
+import {
+  AppointmentEntity,
+  AppointmentRepository,
+  PaginationDto,
+  PaginationEntity,
+} from '../../../domain';
 
 interface FindManyAppointmentsUseCase {
-  execute(dto: PaginationDto): Promise<{pagination: PaginationEntity, appointments: AppointmentEntity[]}>;
+  execute(
+    dto: PaginationDto,
+  ): Promise<{
+    pagination: PaginationEntity;
+    appointments: AppointmentEntity[];
+  }>;
 }
 
 export class FindManyAppointments implements FindManyAppointmentsUseCase {
   constructor(private readonly appointmentRepository: AppointmentRepository) {}
-  async execute(
-    paginationDto: PaginationDto
-  ): Promise<{
+  async execute(paginationDto: PaginationDto): Promise<{
     pagination: PaginationEntity;
     appointments: AppointmentEntity[];
   }> {

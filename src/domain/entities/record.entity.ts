@@ -1,7 +1,12 @@
-import { LastUpdate } from "@prisma/client";
-import { AccountEntity } from "./account.entity";
+import { LastUpdate } from '@prisma/client';
+import { AccountEntity } from './account.entity';
 
-type Account = Partial<Pick<AccountEntity, "id" | "duiNumber" | "name" | "lastname" | "email" | "photoUrl" | "phone">>;
+type Account = Partial<
+  Pick<
+    AccountEntity,
+    'id' | 'duiNumber' | 'name' | 'lastname' | 'email' | 'photoUrl' | 'phone'
+  >
+>;
 
 interface RecordOptions {
   id: string;

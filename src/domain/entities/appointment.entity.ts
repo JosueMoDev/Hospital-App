@@ -1,9 +1,16 @@
-import { LastUpdate } from "@prisma/client";
-import { AccountEntity } from "./account.entity";
-import { ClinicEntity } from "./clinic.entity";
+import { LastUpdate } from '@prisma/client';
+import { AccountEntity } from './account.entity';
+import { ClinicEntity } from './clinic.entity';
 
-type Account = Partial<Pick<AccountEntity, "id" | "duiNumber" | "name" | "lastname" | "email" | "photoUrl" | "phone">>;
-type Clinic = Partial<Pick<ClinicEntity, 'id' | 'name' | 'address' | 'phone' | 'photoUrl'>>;
+type Account = Partial<
+  Pick<
+    AccountEntity,
+    'id' | 'duiNumber' | 'name' | 'lastname' | 'email' | 'photoUrl' | 'phone'
+  >
+>;
+type Clinic = Partial<
+  Pick<ClinicEntity, 'id' | 'name' | 'address' | 'phone' | 'photoUrl'>
+>;
 export interface AppointmentEntityOptions {
   id: string;
   startDate: Date;
@@ -15,7 +22,6 @@ export interface AppointmentEntityOptions {
   createdBy: string;
   lastUpdate: LastUpdate[];
 }
-
 
 export class AppointmentEntity {
   public id: string;

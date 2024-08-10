@@ -1,6 +1,11 @@
-import { UploadedFile } from "express-fileupload";
-import { AllowedFolder, CloudinaryAdapter, Environment } from "../../config";
-import { CustomError, FileDataSource, FileEntity, UploadDto } from "../../domain";
+import { UploadedFile } from 'express-fileupload';
+import { AllowedFolder, CloudinaryAdapter, Environment } from '../../config';
+import {
+  CustomError,
+  FileDataSource,
+  FileEntity,
+  UploadDto,
+} from '../../domain';
 import fs from 'fs';
 
 export class FileDataSourceImpl implements FileDataSource {
@@ -12,11 +17,11 @@ export class FileDataSourceImpl implements FileDataSource {
   async uploadFile(
     dto: UploadDto,
     file: UploadedFile,
-    folder: AllowedFolder
+    folder: AllowedFolder,
   ): Promise<any> {
     try {
       // ? Get File Extension
-      const fileExtension = file.mimetype.split("/").at(1)!;
+      const fileExtension = file.mimetype.split('/').at(1)!;
 
       this.checkIfFolderExist(Environment.TEMP_UPLOAD_PATH);
 
@@ -35,8 +40,7 @@ export class FileDataSourceImpl implements FileDataSource {
       // ? delete file from temp dir
       if (fs.existsSync(temporaryDestination))
         fs.unlinkSync(temporaryDestination);
-        return FileEntity.mapper(result);
-   
+      return FileEntity.mapper(result);
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
@@ -44,5 +48,4 @@ export class FileDataSourceImpl implements FileDataSource {
   async deleteFile(id: string): Promise<{ [key: string]: string }> {
     return await CloudinaryAdapter.deleteFile(id);
   }
-
 }

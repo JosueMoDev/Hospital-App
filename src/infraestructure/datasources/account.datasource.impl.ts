@@ -1,10 +1,10 @@
-import { Gender, Role } from "@prisma/client";
+import { Gender, Role } from '@prisma/client';
 import {
   AllowedFolder,
   BcryptAdapter,
   DateFnsAdapter,
   prisma,
-} from "../../config";
+} from '../../config';
 import {
   AccountDataSource,
   AccountEntity,
@@ -16,10 +16,10 @@ import {
   ChangePasswordDto,
   PaginationEntity,
   UploadDto,
-} from "../../domain";
-import { UploadedFile } from "express-fileupload";
-import { FileDataSourceImpl } from "./file.datasource.impl";
-import { FileRepositoryImpl } from "../repositories";
+} from '../../domain';
+import { UploadedFile } from 'express-fileupload';
+import { FileDataSourceImpl } from './file.datasource.impl';
+import { FileRepositoryImpl } from '../repositories';
 const genderT = {
   male: Gender.MALE,
   female: Gender.FEMALE,
@@ -32,8 +32,8 @@ const roleT = {
 
 const Folder: any = {
   ADMIN: AllowedFolder.admin,
-  DOCTOR: "doctors",
-  PATIENT: "patients",
+  DOCTOR: 'doctors',
+  PATIENT: 'patients',
 };
 export class AccountDataSourceImpl implements AccountDataSource {
   private readonly datasource = new FileDataSourceImpl();
@@ -41,8 +41,12 @@ export class AccountDataSourceImpl implements AccountDataSource {
 
   async uploadFile(dto: UploadDto, file: UploadedFile): Promise<boolean> {
     const account = await this.findOneById(dto.id);
-    if (!file) throw CustomError.badRequest("File no enviado");
-    const { fileUrl, fileId } = await this.repository.uploadFile(dto, file, Folder[account.role]);
+    if (!file) throw CustomError.badRequest('File no enviado');
+    const { fileUrl, fileId } = await this.repository.uploadFile(
+      dto,
+      file,
+      Folder[account.role],
+    );
     const updateAccountPhoto = await prisma.account.update({
       where: { id: account.id },
       data: {
@@ -53,7 +57,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
           {
             updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "UPLOAD_FILE",
+            action: 'UPLOAD_FILE',
           },
         ],
       },
@@ -64,22 +68,23 @@ export class AccountDataSourceImpl implements AccountDataSource {
   async deleteFile(dto: UploadDto): Promise<boolean> {
     const account = await this.findOneById(dto.id);
     if (!account.photoUrl.length && !account.photoId.length)
-      throw CustomError.notFound("that account not have any photo associeted");
+      throw CustomError.notFound('that account not have any photo associeted');
 
     const { result } = await this.repository.deleteFile(account.photoId);
-    if (result === "not found")
-      throw CustomError.internalServer("we couldnt delete photo");
+    if (result === 'not found')
+      throw CustomError.internalServer('we couldnt delete photo');
+
     const accountUpdated = await prisma.account.update({
       where: { id: account.id },
       data: {
-        photoId: "",
-        photoUrl: "",
+        photoId: '',
+        photoUrl: '',
         lastUpdate: [
           ...account.lastUpdate,
           {
             updatedBy: dto.updatedBy,
             date: DateFnsAdapter.formatDate(),
-            action: "DELETE_FILE",
+            action: 'DELETE_FILE',
           },
         ],
       },
@@ -94,7 +99,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
         email: email,
       },
     });
-    if (emailExist) throw CustomError.badRequest("Email already exist");
+    if (emailExist) throw CustomError.badRequest('Email already exist');
   }
 
   async findOneByDocument(documentNumber: string): Promise<AccountEntity> {
@@ -104,9 +109,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
       },
     });
     if (!patientExist)
-      throw CustomError.badRequest("Any Patient found with document provided");
+      throw CustomError.badRequest('Any Patient found with document provided');
     if (Role[patientExist.role] !== Role.PATIENT)
-      throw CustomError.badRequest("Account found dont belog to Patient");
+      throw CustomError.badRequest('Account found dont belog to Patient');
     return AccountEntity.fromObject(patientExist);
   }
 
@@ -116,11 +121,13 @@ export class AccountDataSourceImpl implements AccountDataSource {
         id: id,
       },
     });
-    if (!existAccount) throw CustomError.badRequest("Any account was found");
+    if (!existAccount) throw CustomError.badRequest('Any account was found');
     return AccountEntity.fromObject(existAccount);
   }
 
-  async findMany(dto: PaginationDto): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }> {
+  async findMany(
+    dto: PaginationDto,
+  ): Promise<{ pagination: PaginationEntity; accounts: AccountEntity[] }> {
     const { page, pageSize } = dto;
     const [accounts, total] = await Promise.all([
       prisma.account.findMany({
@@ -130,7 +137,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
       }),
       prisma.account.count(),
     ]);
-   
+
     const pagination = PaginationEntity.setPagination({ ...dto, total });
     const accountsMapped = accounts.map(AccountEntity.fromObject);
     return { pagination, accounts: accountsMapped };
@@ -149,7 +156,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
           role: roleT[dto.role],
           createdAt: DateFnsAdapter.formatDate(),
           lastUpdate: [],
-          isAssignable: roleT[dto.role] === "DOCTOR" ? true : false,
+          isAssignable: roleT[dto.role] === 'DOCTOR' ? true : false,
         },
       });
       return AccountEntity.fromObject(saveAccount);
@@ -161,7 +168,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
   async updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
     const { id, lastUpdate, isValidated, ...rest }: any = dto;
     if (Object.keys(rest).length === 0)
-      throw CustomError.badRequest("Nothing to update");
+      throw CustomError.badRequest('Nothing to update');
     if (rest.role) rest.role = roleT[dto.role];
     if (rest.gender) rest.gender = genderT[dto.gender];
 
@@ -177,7 +184,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
             {
               account: account.id,
               date: DateFnsAdapter.formatDate(),
-              action: "UPDATE ACCOUNT",
+              action: 'UPDATE ACCOUNT',
             },
           ],
         },
@@ -202,14 +209,13 @@ export class AccountDataSourceImpl implements AccountDataSource {
             {
               updatedBy: account.id,
               date: DateFnsAdapter.formatDate(),
-              action: "STATUS_CHANGED",
+              action: 'STATUS_CHANGED',
             },
           ],
         },
       });
 
-      return true
-     
+      return true;
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
@@ -221,9 +227,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
       const { newPassword, oldPassword } = dto;
       const hasMatch = BcryptAdapter.comparePassword(
         oldPassword,
-        account.password
+        account.password,
       );
-      if (!hasMatch) throw CustomError.unauthorized("old password is wrong");
+      if (!hasMatch) throw CustomError.unauthorized('old password is wrong');
       const hashPassword = BcryptAdapter.hashPassword(newPassword);
       const accountInvalidated = await prisma.account.update({
         where: {
@@ -236,7 +242,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
             {
               updatedBy: account.id,
               date: new Date(),
-              action: "UPDATE_PASSWORD",
+              action: 'UPDATE_PASSWORD',
             },
           ],
         },
@@ -249,7 +255,7 @@ export class AccountDataSourceImpl implements AccountDataSource {
 
   async confirmPassword(dto: ConfirmPasswordDto): Promise<boolean> {
     const account = await prisma.account.findFirst({ where: { id: dto.id } });
-    if (!account) throw CustomError.badRequest("Any Account was found");
+    if (!account) throw CustomError.badRequest('Any Account was found');
     return BcryptAdapter.comparePassword(dto.password, account.password);
   }
 }

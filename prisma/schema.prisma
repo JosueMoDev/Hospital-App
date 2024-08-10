@@ -23,7 +23,7 @@ enum Role {
 
 type LastUpdate {
   updatedBy String
-  date DateTime
+  date DateTime @default(now())
   action Actions?
 }
 

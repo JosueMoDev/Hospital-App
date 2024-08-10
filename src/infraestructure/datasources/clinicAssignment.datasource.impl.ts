@@ -1,10 +1,10 @@
-import { Role } from "@prisma/client";
-import { prisma } from "../../config";
+import { Role } from '@prisma/client';
+import { prisma } from '../../config';
 import {
   AccountEntity,
   CLinicAssignmentDataSource,
   ClinicAssignmentDto,
-} from "../../domain";
+} from '../../domain';
 export class ClinicAssignmentDataSourceImpl
   implements CLinicAssignmentDataSource
 {
@@ -19,7 +19,7 @@ export class ClinicAssignmentDataSourceImpl
     });
 
     return doctorsAssigned.map(({ clinicAssignment_account_doctor }) =>
-      AccountEntity.fromObject(clinicAssignment_account_doctor)
+      AccountEntity.fromObject(clinicAssignment_account_doctor),
     );
   }
 
@@ -49,7 +49,7 @@ export class ClinicAssignmentDataSourceImpl
   async createAssignment(dto: ClinicAssignmentDto): Promise<boolean> {
     const { doctors, clinic } = dto;
     const doctorsAvaibleToAssign = await this.checkIfDoctorsExicist(
-      doctors as []
+      doctors as [],
     );
 
     const prismaTx = await prisma.$transaction(async (transaction) => {

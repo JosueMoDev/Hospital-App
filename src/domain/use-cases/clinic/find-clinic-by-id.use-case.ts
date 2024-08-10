@@ -1,4 +1,4 @@
-import { ClinicEntity, ClinicRepository } from "../../../domain";
+import { ClinicEntity, ClinicRepository } from '../../../domain';
 
 interface FindClinicByIdUseCase {
   execute(id: string): Promise<ClinicEntity>;

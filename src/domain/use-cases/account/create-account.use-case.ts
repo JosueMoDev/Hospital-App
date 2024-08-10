@@ -2,7 +2,7 @@ import {
   AccountEntity,
   AccountRepository,
   CreateAccountDto,
-} from "../../../domain";
+} from '../../../domain';
 
 interface CreateAccountUseCase {
   execute(createAccountDto: CreateAccountDto): Promise<AccountEntity>;

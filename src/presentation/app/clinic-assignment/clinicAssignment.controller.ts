@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   ClinicAssignmentDto,
   ClinicAssignmentRepository,
@@ -9,15 +9,15 @@ import {
   GetDoctorsAssignedDto,
   HandlerError,
   UpdateClinicAssignment,
-} from "../../../domain";
+} from '../../../domain';
 
 export class ClinicAssignmentController {
   constructor(
-    private readonly clinicAssignmentRepository: ClinicAssignmentRepository
+    private readonly clinicAssignmentRepository: ClinicAssignmentRepository,
   ) {}
 
   getAssignableDoctors = (request: Request, response: Response) => {
-      new GetAssignableDoctors(this.clinicAssignmentRepository)
+    new GetAssignableDoctors(this.clinicAssignmentRepository)
       .excute()
       .then((doctorList) => response.json(doctorList))
       .catch((error) => {
@@ -28,11 +28,11 @@ export class ClinicAssignmentController {
 
   getAssignedDoctors = (request: Request, response: Response) => {
     const [error, getDoctorsAssigned] = GetDoctorsAssignedDto.create(
-      request.params.clinic
+      request.params.clinic,
     );
     if (error) return response.status(400).json({ error });
     new GetAssignedDoctors(this.clinicAssignmentRepository)
-    .excute(getDoctorsAssigned?.clinic!)
+      .excute(getDoctorsAssigned?.clinic!)
       .then((doctorList) => response.json(doctorList))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -42,7 +42,7 @@ export class ClinicAssignmentController {
 
   createClinicAssignment = (request: Request, response: Response) => {
     const [error, createClinicAssignmentDto] = ClinicAssignmentDto.create(
-      request.body
+      request.body,
     );
     if (error) return response.status(400).json({ error });
     new CreateClinicAssignment(this.clinicAssignmentRepository)
@@ -56,12 +56,12 @@ export class ClinicAssignmentController {
 
   updateClinicAssignment = (request: Request, response: Response) => {
     const [error, updateClinicAssignmentDto] = ClinicAssignmentDto.create(
-      request.body
+      request.body,
     );
     if (error) return response.status(400).json({ error });
 
     new UpdateClinicAssignment(this.clinicAssignmentRepository)
-    .execute(updateClinicAssignmentDto!)
+      .execute(updateClinicAssignmentDto!)
       .then((clinicAssignment) => response.json(clinicAssignment))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
@@ -71,7 +71,7 @@ export class ClinicAssignmentController {
 
   deleteClinicAssignment = (request: Request, response: Response) => {
     const [error, deleteClinicAssignmentDto] = ClinicAssignmentDto.create(
-      request.body
+      request.body,
     );
     if (error) return response.status(400).json({ error });
     new DeleteClinicAssignment(this.clinicAssignmentRepository)

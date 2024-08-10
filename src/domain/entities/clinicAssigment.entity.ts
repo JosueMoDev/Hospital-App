@@ -1,5 +1,5 @@
-import { AccountEntity } from "./account.entity";
-import { ClinicEntity } from "./clinic.entity";
+import { AccountEntity } from './account.entity';
+import { ClinicEntity } from './clinic.entity';
 
 export interface ClinicAssignmentOptions {
   id: string;
@@ -18,5 +18,4 @@ export class ClinicAssignmentEntity {
     this.clinic = clinic;
     this.doctors = doctors;
   }
-
 }

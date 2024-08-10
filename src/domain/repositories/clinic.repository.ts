@@ -1,13 +1,18 @@
-import { UploadedFile } from "express-fileupload";
-import { UpdateClinicDto, PaginationDto, CreateClinicDto, UploadDto } from "../dtos";
-import { ClinicEntity, PaginationEntity } from "../entities";
+import { UploadedFile } from 'express-fileupload';
+import {
+  UpdateClinicDto,
+  PaginationDto,
+  CreateClinicDto,
+  UploadDto,
+} from '../dtos';
+import { ClinicEntity, PaginationEntity } from '../entities';
 
 export abstract class ClinicRepository {
   abstract findOneById(id: string): Promise<ClinicEntity>;
 
   abstract findMany(
     dto: PaginationDto,
-    sort?: string | undefined
+    sort?: string | undefined,
   ): Promise<{ pagination: PaginationEntity; clinics: ClinicEntity[] }>;
 
   abstract create(dto: CreateClinicDto): Promise<ClinicEntity>;

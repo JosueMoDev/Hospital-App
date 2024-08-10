@@ -1,4 +1,4 @@
-import { AppointmentEntity, AppointmentRepository } from "../../../domain";
+import { AppointmentEntity, AppointmentRepository } from '../../../domain';
 
 interface DeleteAppointmentByIdUseCase {
   execute(id: string): Promise<AppointmentEntity>;

@@ -1,5 +1,5 @@
-import { AccountEntity } from "../../entities";
-import { ClinicAssignmentRepository } from "../../repositories";
+import { AccountEntity } from '../../entities';
+import { ClinicAssignmentRepository } from '../../repositories';
 
 interface GetAssignableDoctorsUseCase {
   excute(): Promise<AccountEntity[]>;
@@ -7,7 +7,7 @@ interface GetAssignableDoctorsUseCase {
 
 export class GetAssignableDoctors implements GetAssignableDoctorsUseCase {
   constructor(
-    private readonly clinicAssignmentRepository: ClinicAssignmentRepository
+    private readonly clinicAssignmentRepository: ClinicAssignmentRepository,
   ) {}
 
   async excute(): Promise<AccountEntity[]> {

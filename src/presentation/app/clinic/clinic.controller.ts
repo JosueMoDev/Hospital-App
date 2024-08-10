@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import {
   UpdateClinicDto,
   HandlerError,
@@ -13,11 +13,11 @@ import {
   ChangeClinicStatus,
   UploadClinicPhoto,
   DeleteClinicPhoto,
-} from "../../../domain";
-import { UploadedFile } from "express-fileupload";
+} from '../../../domain';
+import { UploadedFile } from 'express-fileupload';
 
 export class ClinicController {
-  constructor(private readonly clinicRepository: ClinicRepository) { }
+  constructor(private readonly clinicRepository: ClinicRepository) {}
 
   createClinic = (request: Request, response: Response) => {
     const [error, createClinicDto] = CreateClinicDto.create(request.body);
@@ -51,12 +51,15 @@ export class ClinicController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   findMany = (request: Request, response: Response) => {
-    const [error, paginationDto] = PaginationDto.create(request.query, request.originalUrl);
+    const [error, paginationDto] = PaginationDto.create(
+      request.query,
+      request.originalUrl,
+    );
     if (error) return response.status(400).json({ error });
-  
+
     new FindManyClinics(this.clinicRepository)
       .execute(paginationDto!, request.query.sort?.toString())
       .then((clinics) => response.json(clinics))
@@ -64,20 +67,19 @@ export class ClinicController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   changeStatus = (request: Request, response: Response) => {
     const [error, clinicDto] = UpdateClinicDto.update(request.body);
     if (error) return response.status(400).json({ error });
-      new ChangeClinicStatus(this.clinicRepository)
+    new ChangeClinicStatus(this.clinicRepository)
       .execute(clinicDto!)
       .then((clinic) => response.json(clinic))
       .catch((error) => {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
-
+  };
 
   uploadFile = (request: Request, response: Response) => {
     const [error, fileDto] = UploadDto.update(request.body);
@@ -91,7 +93,7 @@ export class ClinicController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
+  };
 
   deleteFile = (request: Request, response: Response) => {
     const [error, fileDto] = UploadDto.update(request.body);
@@ -104,7 +106,5 @@ export class ClinicController {
         const { statusCode, errorMessage } = HandlerError.hasError(error);
         return response.status(statusCode).json({ error: errorMessage });
       });
-  }
-
-
+  };
 }
