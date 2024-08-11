@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import {
   IsInt,
   IsNotEmpty,
@@ -38,11 +38,11 @@ export class PaginationDto {
   static create(
     object: PaginationDtoArgs,
     path: string,
-  ): [CustomErrors[]?, PaginationDto?] {
+  ): [string[]?, PaginationDto?] {
     const paginationDto = new PaginationDto(object, path);
 
     const [errors, updatedDto] =
-      CustomValidationErrors.validateDto<PaginationDto>(paginationDto);
+      CustomValidatorErrors.validateDto<PaginationDto>(paginationDto);
 
     if (errors) return [errors];
 

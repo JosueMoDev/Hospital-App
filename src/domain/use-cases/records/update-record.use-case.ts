@@ -1,6 +1,7 @@
-import { UpdateRecordDto } from '../../dtos';
-import { RecordEntity } from '../../entities';
-import { RecordRepository } from '../../repositories';
+import { UpdateRecordDto } from "@domain/dtos";
+import { RecordEntity } from "@domain/entities";
+import { RecordRepository } from "@domain/repositories";
+
 
 interface UpdateRecordUseCase {
   execute(dto: UpdateRecordDto): Promise<RecordEntity>;

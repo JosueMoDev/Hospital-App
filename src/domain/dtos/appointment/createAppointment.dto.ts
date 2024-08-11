@@ -1,5 +1,5 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
-import { IsISO8601, IsMongoId, IsNotEmpty, Matches } from 'class-validator';
+import { CustomValidatorErrors } from '@handler-errors';
+import { IsISO8601, IsMongoId, IsNotEmpty } from 'class-validator';
 
 interface CreateAppointmentDtoArgs {
   startDate: string;
@@ -40,11 +40,11 @@ export class CreateAppointmentDto {
 
   static create(
     object: CreateAppointmentDto,
-  ): [undefined | CustomErrors[], CreateAppointmentDto?] {
+  ): [undefined | string[], CreateAppointmentDto?] {
     const updateAccountDto = new CreateAppointmentDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<CreateAppointmentDto>(
+      CustomValidatorErrors.validateDto<CreateAppointmentDto>(
         updateAccountDto,
       );
 

@@ -1,9 +1,7 @@
-import {
-  AppointmentEntity,
-  AppointmentRepository,
-  PaginationDto,
-  PaginationEntity,
-} from '../../../domain';
+import { PaginationDto } from "@domain/dtos";
+import { PaginationEntity, AppointmentEntity } from "@domain/entities";
+import { AppointmentRepository } from "@domain/repositories";
+
 
 interface FindManyAppointmentsUseCase {
   execute(dto: PaginationDto): Promise<{

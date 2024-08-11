@@ -1,6 +1,6 @@
-import { PaginationDto } from '../../dtos';
-import { PaginationEntity, RecordEntity } from '../../entities';
-import { RecordRepository } from '../../repositories';
+import { PaginationDto } from "@domain/dtos";
+import { RecordEntity, PaginationEntity } from "@domain/entities";
+import { RecordRepository } from "@domain/repositories";
 
 interface FindManyRecordUseCase {
   execute(

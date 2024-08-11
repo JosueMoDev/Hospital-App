@@ -8,7 +8,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "dev": "tsnd --respawn --clear --env-file=.env -r tsconfig-paths/register src/app.ts",
     "build": "rimraf ./dist && tsc",
-    "start": "yarn run build && node dist/app.js",
+    "start": "yarn run build && node --env-file=.env -r module-alias/register dist/app.js",
     "test": " yarn run jest",
     "test:watch": " yarn run  jest --watch",
     "test:coverage": "yarn run jest --coverage"
@@ -24,7 +24,7 @@
     "@handler-errors": "dist/domain/errors",
     "@app": "dist/presentation/app",
     "@presentation": "dist/presentation",
-    "@middlewares": "dist/presentation/app/middlewares",
+    "@middlewares": "dist/presentation/middlewares",
     "@config": "dist/config",
     "@api-documentation": "dist/presentation/doc"
   },

@@ -1,31 +1,29 @@
+import { FromDtoToSchema } from '../fromDtoToSchema';
 import { OpenAPIV3 } from 'openapi-types';
-import { GlobasSchemas } from '../fromDtoToSchema';
 
-type ClinicPaths = {
+type AppointmentPaths = {
   create: OpenAPIV3.PathItemObject;
   update: OpenAPIV3.PathItemObject;
   find_one: OpenAPIV3.PathItemObject;
   find_many: OpenAPIV3.PathItemObject;
-  change_status: OpenAPIV3.PathItemObject;
-  upload_photo: OpenAPIV3.PathItemObject;
-  delete_photo: OpenAPIV3.PathItemObject;
+  delete: OpenAPIV3.PathItemObject;
 };
 
-export const clinic: ClinicPaths = {
+export const appointment: AppointmentPaths = {
   create: {
     post: {
-      tags: ['Clinic'],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: 'Create a new clinic',
+      summary: 'Create a new appointment',
       requestBody: {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.CreateClinicDto,
+            schema: FromDtoToSchema.getShemas().CreateAppointmentDto,
           },
         },
       },
@@ -41,8 +39,8 @@ export const clinic: ClinicPaths = {
   },
   find_one: {
     get: {
-      tags: ['Clinic'],
-      summary: 'Find clinic by id',
+      tags: ['Appointment'],
+      summary: 'Find appointment by id',
       security: [
         {
           bearerAuth: [],
@@ -70,18 +68,18 @@ export const clinic: ClinicPaths = {
   },
   update: {
     patch: {
-      tags: ['Clinic'],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: 'Update a clinic',
+      summary: 'Update an appointment',
       requestBody: {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.UpdateClinicDto,
+            schema: FromDtoToSchema.getShemas().UpdateAppointmentDto,
           },
         },
       },
@@ -97,18 +95,18 @@ export const clinic: ClinicPaths = {
   },
   find_many: {
     get: {
-      tags: ['Clinic'],
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: 'Find many clinics Paginated ',
+      summary: 'Find many appointments Paginated ',
       parameters: [
         {
           in: 'query',
           name: 'PaginationDto',
-          schema: GlobasSchemas.PaginationDto,
+          schema: FromDtoToSchema.getShemas().PaginationDto,
         },
       ],
       responses: {
@@ -121,77 +119,26 @@ export const clinic: ClinicPaths = {
       },
     },
   },
-  change_status: {
-    patch: {
-      tags: ['Clinic'],
+  delete: {
+    delete: {
+      tags: ['Appointment'],
       security: [
         {
           bearerAuth: [],
         },
       ],
-      summary: 'Change status for clinic',
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: GlobasSchemas.UpdateClinicDto,
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: 'User found',
-        },
-        404: {
-          description: 'User not found',
-        },
-      },
-    },
-  },
-  delete_photo: {
-    patch: {
-      tags: ['Clinic'],
-      security: [
+      summary: 'Delete an Appointment by id',
+      parameters: [
         {
-          bearerAuth: [],
+          in: 'path',
+          name: 'id',
+          example: 'e21754E65Dff2ee9B2245b90',
+          required: true,
+          schema: {
+            type: 'string',
+          },
         },
       ],
-      summary: 'This endpoint delete your clinic photo',
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: GlobasSchemas.DeleteFileDto,
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: 'User found',
-        },
-        404: {
-          description: 'User not found',
-        },
-      },
-    },
-  },
-  upload_photo: {
-    patch: {
-      tags: ['Clinic'],
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      summary: 'This endpoint upload your clinic photo',
-      requestBody: {
-        required: true,
-        content: {
-          'multipart/form-data': {
-            schema: GlobasSchemas.UploadFileDto,
-          },
-        },
-      },
       responses: {
         200: {
           description: 'User found',

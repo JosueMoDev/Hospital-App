@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { Type } from 'class-transformer';
 import {
   IsMongoId,
@@ -79,11 +79,11 @@ export class UpdateClinicDto {
   }
   static update(
     object: UpdatedClinicDtoArgs,
-  ): [undefined | CustomErrors[], UpdateClinicDto?] {
+  ): [undefined | string[], UpdateClinicDto?] {
     const updateClinicDto = new UpdateClinicDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<UpdateClinicDto>(updateClinicDto);
+      CustomValidatorErrors.validateDto<UpdateClinicDto>(updateClinicDto);
 
     if (errors) return [errors];
 

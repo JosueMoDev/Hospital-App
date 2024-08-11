@@ -1,5 +1,6 @@
-import { RecordEntity } from '../../entities';
-import { RecordRepository } from '../../repositories';
+import { RecordEntity } from "@domain/entities";
+import { RecordRepository } from "@domain/repositories";
+
 
 interface FindOneRecordByIdUseCase {
   execute(id: string): Promise<RecordEntity>;

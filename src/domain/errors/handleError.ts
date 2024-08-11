@@ -1,5 +1,5 @@
-import logger from '../../config/adapters/winstonLogger.adapter';
-import { CustomError } from './customErrors';
+import { WinstonLogger } from "@config";
+import { CustomError } from "./customErrors";
 
 export class HandlerError {
   static hasError(error: unknown) {
@@ -7,7 +7,7 @@ export class HandlerError {
       return { statusCode: error.statusCode, errorMessage: error.message };
     }
 
-    logger.error(`${error}`);
+    WinstonLogger.Logger.error(`${error}`);
 
     return { statusCode: 500, errorMessage: 'Internal Server Error' };
   }

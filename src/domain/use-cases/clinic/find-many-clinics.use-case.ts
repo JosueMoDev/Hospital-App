@@ -1,9 +1,7 @@
-import {
-  ClinicEntity,
-  ClinicRepository,
-  PaginationEntity,
-} from '../../../domain';
-import { PaginationDto } from '../../dtos/pagination/pagination.dto';
+import { PaginationDto } from "@domain/dtos";
+import { PaginationEntity, ClinicEntity } from "@domain/entities";
+import { ClinicRepository } from "@domain/repositories";
+
 
 interface FindManyClinicsUseCase {
   execute(

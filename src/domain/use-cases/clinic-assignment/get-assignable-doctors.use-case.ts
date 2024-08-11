@@ -1,5 +1,6 @@
-import { AccountEntity } from '../../entities';
-import { ClinicAssignmentRepository } from '../../repositories';
+import { AccountEntity } from "@domain/entities";
+import { ClinicAssignmentRepository } from "@domain/repositories";
+
 
 interface GetAssignableDoctorsUseCase {
   excute(): Promise<AccountEntity[]>;

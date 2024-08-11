@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { Type } from 'class-transformer';
 import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
 
@@ -39,10 +39,10 @@ export class ClinicAssignmentDto {
 
   static create(
     object: AssignmentDtoArgs,
-  ): [undefined | CustomErrors[], ClinicAssignmentDto?] {
+  ): [undefined | string[], ClinicAssignmentDto?] {
     const assignmentDto = new ClinicAssignmentDto(object);
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<ClinicAssignmentDto>(assignmentDto);
+      CustomValidatorErrors.validateDto<ClinicAssignmentDto>(assignmentDto);
 
     if (errors) return [errors];
 

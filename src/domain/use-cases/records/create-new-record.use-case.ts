@@ -1,6 +1,7 @@
-import { CreateRecordDto } from '../../dtos';
-import { RecordEntity } from '../../entities';
-import { RecordRepository } from '../../repositories';
+import { CreateRecordDto } from "@domain/dtos";
+import { RecordEntity } from "@domain/entities";
+import { RecordRepository } from "@domain/repositories";
+
 
 interface CreateRecordUseCase {
   excute(dto: CreateRecordDto): Promise<RecordEntity>;

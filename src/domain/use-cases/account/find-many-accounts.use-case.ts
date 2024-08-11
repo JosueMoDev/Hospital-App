@@ -1,9 +1,7 @@
-import {
-  AccountEntity,
-  AccountRepository,
-  PaginationDto,
-  PaginationEntity,
-} from '../../../domain';
+import { PaginationDto } from "@domain/dtos";
+import { PaginationEntity, AccountEntity } from "@domain/entities";
+import { AccountRepository } from "@domain/repositories";
+
 
 interface FindManyAccountsUseCase {
   execute(

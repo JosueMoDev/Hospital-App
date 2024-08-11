@@ -1,12 +1,9 @@
 import { LoginDto } from '@domain/dtos';
 import { AuthenticationRepository } from '@domain/repositories';
+import { LoginWithEmailAndPassword, LoginWithGoogle, RefreshToken } from '@domain/use-cases';
 import { HandlerError } from '@handler-errors';
 import { Response, Request } from 'express';
-import {
-  LoginWithEmailAndPassword,
-  LoginWithGoogle,
-  RefreshToken,
-} from 'src/domain';
+
 
 export class AuthenticationController {
   constructor(

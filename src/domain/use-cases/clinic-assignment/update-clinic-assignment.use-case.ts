@@ -1,7 +1,6 @@
-import {
-  ClinicAssignmentDto,
-  ClinicAssignmentRepository,
-} from '../../../domain';
+import { ClinicAssignmentDto } from "@domain/dtos";
+import { ClinicAssignmentRepository } from "@domain/repositories";
+
 
 interface UpdateClinicAssignmentUseCase {
   execute(assignmentDto: ClinicAssignmentDto): Promise<Boolean>;

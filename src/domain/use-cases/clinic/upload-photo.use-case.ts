@@ -1,5 +1,7 @@
+import { UploadDto } from '@domain/dtos';
+import { ClinicRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
-import { ClinicRepository, UploadDto } from '../../../domain';
+
 
 interface UploadPhotoUseCase {
   excute(uploadDto: UploadDto, uploadedFile: UploadedFile): Promise<Boolean>;

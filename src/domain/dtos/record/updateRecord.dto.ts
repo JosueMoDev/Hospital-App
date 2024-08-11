@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 interface UpdateRecordDtoArgs {
@@ -40,10 +40,10 @@ export class UpdateRecordDto {
 
   static update(
     object: UpdateRecordDtoArgs,
-  ): [undefined | CustomErrors[], UpdateRecordDto?] {
+  ): [undefined | string[], UpdateRecordDto?] {
     const recordDto = new UpdateRecordDto(object);
     const [errors, updatedDto] =
-      CustomValidationErrors.validateDto<UpdateRecordDto>(recordDto);
+      CustomValidatorErrors.validateDto<UpdateRecordDto>(recordDto);
     if (errors) return [errors];
     return [undefined, updatedDto];
   }

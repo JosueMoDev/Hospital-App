@@ -1,6 +1,7 @@
-import { UploadedFile } from 'express-fileupload';
-import { UploadDto } from '../../dtos';
-import { RecordRepository } from '../../repositories';
+import { UploadDto } from "@domain/dtos";
+import { RecordRepository } from "@domain/repositories";
+import { UploadedFile } from "express-fileupload";
+
 
 interface UploadRecordPDFUseCase {
   execute(dto: UploadDto, file: UploadedFile): Promise<boolean>;

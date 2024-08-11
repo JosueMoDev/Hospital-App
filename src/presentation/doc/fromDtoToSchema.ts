@@ -1,8 +1,8 @@
-import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { APIDOCSCHEMAS } from './schemas.interface';
+import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 
-class FromDtoToSchema {
-  static getShemas() {
+export class FromDtoToSchema {
+  static getShemas(): APIDOCSCHEMAS {
     const schemas = validationMetadatasToSchemas();
     schemas as APIDOCSCHEMAS;
     const {
@@ -12,7 +12,8 @@ class FromDtoToSchema {
       Address,
       ...rest
     }: APIDOCSCHEMAS = schemas;
-    const GloblaSchema = {
+
+    const GloblaSchema: APIDOCSCHEMAS = {
       ...rest,
       CreateClinicDto: {
         ...rest.CreateClinicDto,
@@ -42,7 +43,6 @@ class FromDtoToSchema {
           },
         },
       },
-      AddressDto: Address,
       UploadFileDto: {
         type: 'object',
         properties: {
@@ -60,9 +60,7 @@ class FromDtoToSchema {
         required: ['id', 'file', 'updatedBy'],
       },
       DeleteFileDto: UploadDto,
-    };
+    }
     return GloblaSchema;
   }
 }
-
-export const GlobasSchemas: APIDOCSCHEMAS = FromDtoToSchema.getShemas();

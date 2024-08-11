@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 interface RecordDtoArgs {
@@ -28,10 +28,10 @@ export class CreateRecordDto {
 
   static create(
     object: RecordDtoArgs,
-  ): [undefined | CustomErrors[], CreateRecordDto?] {
+  ): [undefined | string[], CreateRecordDto?] {
     const recordDto = new CreateRecordDto(object);
     const [errors, updatedDto] =
-      CustomValidationErrors.validateDto<CreateRecordDto>(recordDto);
+      CustomValidatorErrors.validateDto<CreateRecordDto>(recordDto);
     if (errors) return [errors];
     return [undefined, updatedDto];
   }

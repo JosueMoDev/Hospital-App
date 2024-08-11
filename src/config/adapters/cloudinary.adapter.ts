@@ -1,5 +1,5 @@
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-import { Environment } from '../envs';
+import { Environment } from '../envs/envs';
 
 cloudinary.config({
   cloud_name: Environment.CLOUDINARY_CLOUD_NAME,

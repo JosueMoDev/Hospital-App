@@ -5,19 +5,12 @@ import {
   UploadDto,
 } from '@domain/dtos';
 import { RecordRepository } from '@domain/repositories';
+import { CreaateRecord, UpdateRecord, FindOneRecordById, FindManyRecords, ChangeRecordStatus, UploadRecordPDF, DeleteRecordPDF } from '@domain/use-cases';
 import { HandlerError } from '@handler-errors';
 import { Request, Response } from 'express';
 
 import { UploadedFile } from 'express-fileupload';
-import {
-  CreaateRecord,
-  UpdateRecord,
-  FindOneRecordById,
-  FindManyRecords,
-  ChangeRecordStatus,
-  UploadRecordPDF,
-  DeleteRecordPDF,
-} from 'src/domain';
+
 
 export class RecordController {
   constructor(private readonly recordRepository: RecordRepository) {}

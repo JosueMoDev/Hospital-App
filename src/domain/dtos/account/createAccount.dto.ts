@@ -10,7 +10,7 @@ import {
   Length,
   MinLength,
 } from 'class-validator';
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 
 interface CreateAccountDtoArgs {
   duiNumber: string;
@@ -69,11 +69,11 @@ export class CreateAccountDto {
   }
   static create(
     object: CreateAccountDtoArgs,
-  ): [undefined | CustomErrors[], CreateAccountDto?] {
+  ): [undefined | string[], CreateAccountDto?] {
     const createAccountDto = new CreateAccountDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<CreateAccountDto>(createAccountDto);
+      CustomValidatorErrors.validateDto<CreateAccountDto>(createAccountDto);
 
     if (errors) return [errors];
 

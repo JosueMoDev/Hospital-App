@@ -1,4 +1,5 @@
-import { AccountRepository, ChangePasswordDto } from '../../../domain';
+import { ChangePasswordDto } from "@domain/dtos";
+import { AccountRepository } from "@domain/repositories";
 
 interface ChangeAccountPasswordUseCase {
   execute(changePasswordDto: ChangePasswordDto): Promise<Boolean>;

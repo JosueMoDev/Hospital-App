@@ -1,7 +1,5 @@
-import {
-  ClinicAssignmentDto,
-  ClinicAssignmentRepository,
-} from '../../../domain';
+import { ClinicAssignmentDto } from "@domain/dtos";
+import { ClinicAssignmentRepository } from "@domain/repositories";
 
 interface DeleteClinicAssignmentUseCase {
   execute(assignmentDto: ClinicAssignmentDto): Promise<Boolean>;

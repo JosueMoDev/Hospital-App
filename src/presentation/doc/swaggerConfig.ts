@@ -1,9 +1,9 @@
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
-import { Environment } from '../envs';
+import { Environment} from '@config';
 import { OpenAPIV3 } from 'openapi-types';
-import * as paths from './api';
-import { GlobasSchemas } from './fromDtoToSchema';
+import * as paths from '@api-documentation';
+import { FromDtoToSchema } from '@api-documentation';
 
 const swaggerOptions: OpenAPIV3.Document = {
   openapi: '3.1.1',
@@ -66,7 +66,7 @@ const swaggerOptions: OpenAPIV3.Document = {
         bearerFormat: 'JWT',
       },
     },
-    schemas: GlobasSchemas as any,
+    schemas: { ...FromDtoToSchema.getShemas() },
   },
 };
 

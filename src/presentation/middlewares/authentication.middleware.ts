@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { JWTAdapter } from '../../config';
+import { JWTAdapter } from '@config';
 
 export class AuthenticationMiddleware {
   public static async validateAccessToken(

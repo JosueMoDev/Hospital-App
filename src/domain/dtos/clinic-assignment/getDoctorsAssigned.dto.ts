@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 
 export class GetDoctorsAssignedDto {
@@ -12,10 +12,10 @@ export class GetDoctorsAssignedDto {
 
   static create(
     clinic: string,
-  ): [undefined | CustomErrors[], GetDoctorsAssignedDto?] {
+  ): [undefined | string[], GetDoctorsAssignedDto?] {
     const assignmentDto = new GetDoctorsAssignedDto(clinic);
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<GetDoctorsAssignedDto>(assignmentDto);
+      CustomValidatorErrors.validateDto<GetDoctorsAssignedDto>(assignmentDto);
     if (errors) return [errors];
 
     return [undefined, validatedDto];

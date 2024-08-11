@@ -1,3 +1,3 @@
 export * from './customErrors';
-export * from './customValidation';
+export * from './customValidationErrors';
 export * from './handleError';

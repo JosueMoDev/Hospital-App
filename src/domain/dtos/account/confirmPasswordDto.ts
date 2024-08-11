@@ -1,5 +1,5 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, MinLength } from 'class-validator';
+import { CustomValidatorErrors } from '@handler-errors';
 
 interface ConfirmPasswordDtoArgs {
   id: string;
@@ -21,11 +21,11 @@ export class ConfirmPasswordDto {
   }
   static update(
     object: ConfirmPasswordDtoArgs,
-  ): [undefined | CustomErrors[], ConfirmPasswordDto?] {
+  ): [undefined | string[], ConfirmPasswordDto?] {
     const updateAccountDto = new ConfirmPasswordDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<ConfirmPasswordDto>(updateAccountDto);
+      CustomValidatorErrors.validateDto<ConfirmPasswordDto>(updateAccountDto);
 
     if (errors) return [errors];
 

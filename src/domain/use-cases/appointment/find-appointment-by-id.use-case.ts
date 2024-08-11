@@ -1,4 +1,5 @@
-import { AppointmentEntity, AppointmentRepository } from '../../../domain';
+import { AppointmentEntity } from "@domain/entities";
+import { AppointmentRepository } from "@domain/repositories";
 
 interface FindAppointmentByIdUseCase {
   execute(id: string): Promise<AppointmentEntity>;

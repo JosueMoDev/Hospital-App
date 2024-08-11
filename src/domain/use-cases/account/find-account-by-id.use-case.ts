@@ -1,4 +1,5 @@
-import { AccountEntity, AccountRepository } from '../../../domain';
+import { AccountEntity } from "@domain/entities";
+import { AccountRepository } from "@domain/repositories";
 
 interface FindAccountByIdUseCase {
   execute(id: string): Promise<AccountEntity>;

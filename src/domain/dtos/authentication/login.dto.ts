@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 interface LoginDtoOptions {
   email: string;
@@ -19,11 +19,11 @@ export class LoginDto {
 
   static create(
     object: LoginDtoOptions,
-  ): [undefined | CustomErrors[], LoginDto?] {
+  ): [undefined | string[], LoginDto?] {
     const loginDto = new LoginDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<LoginDto>(loginDto);
+      CustomValidatorErrors.validateDto<LoginDto>(loginDto);
 
     if (errors) return [errors];
 

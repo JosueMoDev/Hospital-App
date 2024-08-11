@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
 import compression from 'compression';
 import cors from 'cors';
-import { ExpressFileUploadAdapter, setupSwagger } from '@config';
+import { ExpressFileUploadAdapter, WinstonLogger,  } from '@config';
 import { Server as HttpServer } from 'http';
-import logger from 'src/config/adapters/winstonLogger.adapter';
+import { setupSwagger } from '@api-documentation';
 
 interface serverConfig {
   port: number;
@@ -35,11 +35,11 @@ export class Server {
       // * Swagger Documentation API
       setupSwagger(this.app);
       this.serverListener = this.app.listen(this.port, () => ({
-        port: logger.info(`Server running on port ${this.port}`),
-        link: logger.info(`http://localhost:${this.port}/api-docs`),
+        port: WinstonLogger.Logger.info(`Server running on port ${this.port}`),
+        link: WinstonLogger.Logger.info(`http://localhost:${this.port}/api-docs`),
       }));
     } catch (error) {
-      logger.error(error);
+      WinstonLogger.Logger.error(error);
     }
   }
 

@@ -1,5 +1,5 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
-import { Gender, Role } from '../../entities';
+import { Gender, Role } from '@domain/entities';
+import { CustomValidatorErrors } from '@handler-errors';
 import {
   IsBoolean,
   IsEmail,
@@ -85,11 +85,11 @@ export class UpdateAccountDto {
   }
   static update(
     object: UpdateAccountDtoArgs,
-  ): [undefined | CustomErrors[], UpdateAccountDto?] {
+  ): [undefined | string[], UpdateAccountDto?] {
     const updateAccountDto = new UpdateAccountDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<UpdateAccountDto>(updateAccountDto);
+      CustomValidatorErrors.validateDto<UpdateAccountDto>(updateAccountDto);
 
     if (errors) return [errors];
 

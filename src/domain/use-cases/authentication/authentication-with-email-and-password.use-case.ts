@@ -1,8 +1,7 @@
-import {
-  LoginDto,
-  AuthenticatedUserEntity,
-  AuthenticationRepository,
-} from '../../../domain';
+import { LoginDto } from "@domain/dtos";
+import { AuthenticatedUserEntity } from "@domain/entities";
+import { AuthenticationRepository } from "@domain/repositories";
+
 
 interface LoginWithEmailAndPasswordUseCase {
   execute(loginDto: LoginDto): Promise<AuthenticatedUserEntity>;

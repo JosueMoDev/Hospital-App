@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { GlobasSchemas } from '../fromDtoToSchema';
+import { FromDtoToSchema } from '../fromDtoToSchema';
 
 type AccountPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -28,7 +28,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.CreateAccountDto,
+            schema: FromDtoToSchema.getShemas().CreateAccountDto,
           },
         },
       },
@@ -116,7 +116,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.UpdateAccountDto,
+            schema: FromDtoToSchema.getShemas().UpdateAccountDto,
           },
         },
       },
@@ -143,7 +143,7 @@ export const account: AccountPaths = {
         {
           in: 'query',
           name: 'PaginationDto',
-          schema: GlobasSchemas.PaginationDto,
+          schema: FromDtoToSchema.getShemas().PaginationDto,
         },
       ],
       responses: {
@@ -201,7 +201,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.ChangePasswordDto,
+            schema: FromDtoToSchema.getShemas().ChangePasswordDto,
           },
         },
       },
@@ -229,7 +229,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.ConfirmPasswordDto,
+            schema: FromDtoToSchema.getShemas().ConfirmPasswordDto,
           },
         },
       },
@@ -256,7 +256,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'multipart/form-data': {
-            schema: GlobasSchemas.DeleteFileDto,
+            schema: FromDtoToSchema.getShemas().DeleteFileDto,
           },
         },
       },
@@ -283,7 +283,7 @@ export const account: AccountPaths = {
         required: true,
         content: {
           'multipart/form-data': {
-            schema: GlobasSchemas.UploadFileDto,
+            schema: FromDtoToSchema.getShemas().UploadFileDto,
           },
         },
       },

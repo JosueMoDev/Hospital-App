@@ -1,5 +1,5 @@
+import { FromDtoToSchema} from '../fromDtoToSchema';
 import { OpenAPIV3 } from 'openapi-types';
-import { GlobasSchemas } from '../fromDtoToSchema';
 
 type AuthenticationPath = {
   login: OpenAPIV3.PathItemObject;
@@ -15,7 +15,7 @@ export const authentication: AuthenticationPath = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.Address,
+            schema: FromDtoToSchema.getShemas().LoginDto,
           },
         },
       },

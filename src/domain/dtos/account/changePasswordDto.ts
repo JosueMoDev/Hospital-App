@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors  } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty, MinLength } from 'class-validator';
 
 interface ChangePasswordDtoArgs {
@@ -33,11 +33,11 @@ export class ChangePasswordDto {
   }
   static update(
     object: ChangePasswordDtoArgs,
-  ): [undefined | CustomErrors[], ChangePasswordDto?] {
+  ): [undefined | string[], ChangePasswordDto?] {
     const updateAccountDto = new ChangePasswordDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<ChangePasswordDto>(updateAccountDto);
+      CustomValidatorErrors.validateDto<ChangePasswordDto>(updateAccountDto);
 
     if (errors) return [errors];
 

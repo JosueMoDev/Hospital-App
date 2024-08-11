@@ -1,8 +1,8 @@
-import {
-  ClinicEntity,
-  ClinicRepository,
-  CreateClinicDto,
-} from '../../../domain';
+import { CreateClinicDto } from "@domain/dtos";
+import { ClinicEntity } from "@domain/entities";
+import { ClinicRepository } from "@domain/repositories";
+
+;
 
 interface CreateClinicUseCase {
   excute(createClinicDto: CreateClinicDto): Promise<ClinicEntity>;

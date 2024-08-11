@@ -1,5 +1,6 @@
-import { UpdateRecordDto } from '../../dtos';
-import { RecordRepository } from '../../repositories';
+import { UpdateRecordDto } from "@domain/dtos";
+import { RecordRepository } from "@domain/repositories";
+
 
 interface ChangeRecordStatusUseCase {
   execute(dto: UpdateRecordDto): Promise<boolean>;

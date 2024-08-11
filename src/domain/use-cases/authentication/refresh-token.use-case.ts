@@ -1,7 +1,6 @@
-import {
-  AuthenticatedUserEntity,
-  AuthenticationRepository,
-} from '../../../domain';
+import { AuthenticatedUserEntity } from "@domain/entities";
+import { AuthenticationRepository } from "@domain/repositories";
+
 
 interface RefreshTokenUseCase {
   execute(accessToken: string): Promise<AuthenticatedUserEntity>;

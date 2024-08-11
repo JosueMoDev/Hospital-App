@@ -4,15 +4,10 @@ import {
   PaginationDto,
 } from '@domain/dtos';
 import { AppointmentRepository } from '@domain/repositories';
+import { CreateAppointment, UpdateAppoinment, FindAppointmentById, FindManyAppointments, DeleteAppointmentById } from '@domain/use-cases';
 import { HandlerError } from '@handler-errors';
 import { Request, Response } from 'express';
-import {
-  CreateAppointment,
-  UpdateAppoinment,
-  FindAppointmentById,
-  FindManyAppointments,
-  DeleteAppointmentById,
-} from 'src/domain';
+
 
 export class AppointmentController {
   constructor(private readonly appointmentRepository: AppointmentRepository) {}

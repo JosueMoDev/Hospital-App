@@ -1,8 +1,7 @@
-import {
-  AppointmentEntity,
-  AppointmentRepository,
-  UpdateAppointmentDto,
-} from '../../../domain';
+import { UpdateAppointmentDto } from "@domain/dtos";
+import { AppointmentEntity } from "@domain/entities";
+import { AppointmentRepository } from "@domain/repositories";
+
 
 interface UpdateAppointmentUseCase {
   excute(

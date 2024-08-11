@@ -1,6 +1,6 @@
-import { UpdateClinicDto } from '../../dtos';
-import { ClinicEntity } from '../../entities';
-import { ClinicRepository } from '../../repositories';
+import { UpdateClinicDto } from "@domain/dtos";
+import { ClinicRepository } from "@domain/repositories";
+
 
 interface ChangeClinicStatusUseCase {
   execute(updateClinicDto: UpdateClinicDto): Promise<boolean>;

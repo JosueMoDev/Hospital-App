@@ -1,4 +1,4 @@
-import { CustomErrors, CustomValidationErrors } from '@handler-errors';
+import { CustomValidatorErrors } from '@handler-errors';
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 
 
@@ -23,11 +23,11 @@ export class UploadDto {
   }
   static update(
     object: UploadDtoArgs,
-  ): [undefined | CustomErrors[], UploadDto?] {
+  ): [undefined | string[], UploadDto?] {
     const uploadDto = new UploadDto(object);
 
     const [errors, validatedDto] =
-      CustomValidationErrors.validateDto<UploadDto>(uploadDto);
+      CustomValidatorErrors.validateDto<UploadDto>(uploadDto);
 
     if (errors) return [errors];
 

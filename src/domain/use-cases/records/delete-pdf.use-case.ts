@@ -1,5 +1,6 @@
-import { UploadDto } from '../../dtos';
-import { RecordRepository } from '../../repositories';
+import { UploadDto } from "@domain/dtos";
+import { RecordRepository } from "@domain/repositories";
+
 
 interface DeleteRecordPDFUseCase {
   execute(dto: UploadDto): Promise<boolean>;

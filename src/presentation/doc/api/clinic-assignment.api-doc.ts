@@ -1,5 +1,5 @@
+import { FromDtoToSchema} from '../fromDtoToSchema';
 import { OpenAPIV3 } from 'openapi-types';
-import { GlobasSchemas } from '../fromDtoToSchema';
 
 type ClinicAssignmentPaths = {
   create: OpenAPIV3.PathItemObject;
@@ -23,7 +23,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.ClinicAssignmentDto,
+            schema: FromDtoToSchema.getShemas().ClinicAssignmentDto,
           },
         },
       },
@@ -50,7 +50,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.ClinicAssignmentDto,
+            schema: FromDtoToSchema.getShemas().ClinicAssignmentDto,
           },
         },
       },
@@ -126,7 +126,7 @@ export const clinicAssignment: ClinicAssignmentPaths = {
         required: true,
         content: {
           'application/json': {
-            schema: GlobasSchemas.ClinicAssignmentDto,
+            schema: FromDtoToSchema.getShemas().ClinicAssignmentDto,
           },
         },
       },

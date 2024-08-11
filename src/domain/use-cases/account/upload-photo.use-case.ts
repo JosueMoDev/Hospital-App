@@ -1,5 +1,6 @@
+import { UploadDto } from '@domain/dtos';
+import { AccountRepository } from '@domain/repositories';
 import { UploadedFile } from 'express-fileupload';
-import { AccountRepository, UploadDto } from '../../../domain';
 
 interface UploadPhotoUseCase {
   execute(dto: UploadDto, file: UploadedFile): Promise<boolean>;
