@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { get } from 'env-var';
 
 export class Environment {
