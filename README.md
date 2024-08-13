@@ -1,4 +1,4 @@
-# 🏥 The Clinic - Backend System
+# 🏥 The Clinic -  API Rest
 
 A simulation of a clinic management system where users can manage appointments, patients, and medical staff. The system includes roles for Administrators, Doctors, and Patients, allowing them to perform tasks such as scheduling appointments, managing patient records, and more.
 
