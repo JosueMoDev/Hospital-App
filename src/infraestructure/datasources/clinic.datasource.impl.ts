@@ -108,8 +108,7 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
     try {
       const newClinic = await prisma.clinic.create({
         data: {
-          ...dto,
-          createdAt: DateFnsAdapter.formatDate(),
+          ...dto
         },
       });
       return ClinicEntity.fromObject(newClinic);

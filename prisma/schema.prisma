@@ -85,7 +85,7 @@ model Clinic {
   address Address
   photoUrl String? @default("")
   photoId String? @default("")
-  createdAt DateTime
+  createdAt DateTime @default(now())
   status Boolean ? @default(true)
   lastUpdate LastUpdate[]
 
