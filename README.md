@@ -44,7 +44,7 @@ A simulation of a clinic management system where users can manage appointments, 
 
 ### 3. **Rename the `.env.template` file to `.env` and configure the following variables:**
 
-  ```bash
+  ```env
     PORT=
     SECRET_KEY_JWT=
     
