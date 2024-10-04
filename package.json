@@ -5,6 +5,7 @@
   "repository": "https://github.com/JosueMoDev/clinic-node-api.git",
   "author": "Jonas Morales <josuemodev@gmail.com>",
   "scripts": {
+    "seed": "npx tsnd --clear src/db/seeder.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "dev": "tsnd --respawn --clear --env-file=.env -r tsconfig-paths/register src/app.ts",
     "build": "rimraf ./dist && tsc",

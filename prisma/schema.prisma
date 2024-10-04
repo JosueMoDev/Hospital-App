@@ -105,16 +105,16 @@ model Appointment {
   lastUpdate LastUpdate[]
   createdAt DateTime 
 
-  appointment_doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
+  doctor Account @relation("appointment_doctor", fields: [doctorId], references: [id])
   doctorId String @unique @db.ObjectId
 
-  appointment_patient Account @relation("appointment_patient", fields: [patientId], references: [id])
+  patient Account @relation("appointment_patient", fields: [patientId], references: [id])
   patientId String @unique @db.ObjectId
 
-  appointment_clinic Clinic @relation("appointment_clinic", fields: [clinicId], references: [id])
+  clinic Clinic @relation("appointment_clinic", fields: [clinicId], references: [id])
   clinicId String @unique @db.ObjectId
 
-  appointmet_ccount Account @relation("appointment_account", fields: [createdBy], references: [id])
+  account Account @relation("appointment_account", fields: [createdBy], references: [id])
   createdBy String @unique @db.ObjectId
 
 }

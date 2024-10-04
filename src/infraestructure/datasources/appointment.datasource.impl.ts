@@ -7,15 +7,16 @@ import {
 } from '@domain/dtos';
 import { AppointmentEntity, PaginationEntity } from '@domain/entities';
 import { CustomError } from '@handler-errors';
+import { Account } from '@prisma/client';
 
 export class AppointmentDataSourceImpl implements AppointmentDataSource {
   async findOneById(id: string): Promise<AppointmentEntity> {
     const appointment = await prisma.appointment.findFirst({
       where: { id: id },
       include: {
-        appointment_clinic: true,
-        appointment_doctor: true,
-        appointment_patient: true,
+        clinic: true,
+        doctor: true,
+        patient: true,
       },
     });
     if (!appointment) throw CustomError.badRequest('Any appointment found');
@@ -33,14 +34,41 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
         include: {
-          appointment_clinic: true,
-          appointment_doctor: true,
-          appointment_patient: true,
+          clinic: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              phone: true,
+              photoUrl: true,
+            },
+          },
+          doctor: {
+            select: {
+              id: true,
+              duiNumber: true,
+              name: true,
+              lastname: true,
+              phone: true,
+              photoUrl: true,
+              email: true,
+            },
+          },
+          patient: {
+            select: {
+              id: true,
+              duiNumber: true,
+              name: true,
+              lastname: true,
+              phone: true,
+              photoUrl: true,
+              email: true,
+            },
+          },
         },
       }),
       prisma.appointment.count(),
     ]);
-
     const appointmentsMapped = appointments.map(AppointmentEntity.fromObject);
     const pagination = PaginationEntity.setPagination({ ...dto, total });
     return { pagination, appointments: appointmentsMapped };
@@ -48,7 +76,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
   async create(dto: CreateAppointmentDto): Promise<AppointmentEntity> {
     try {
-      const newAppointment = await prisma.appointment.create({
+      const { doctorId, patientId, clinicId, ...newAppointment } = await prisma.appointment.create({
         data: {
           ...dto,
           startDate: new Date(dto.startDate),
@@ -56,11 +84,14 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
           createdAt: DateFnsAdapter.formatDate(),
         },
       });
-      return AppointmentEntity.fromObject(newAppointment);
+      const {patient, doctor, clinic } = await this.#getExtraData(clinicId, doctorId, patientId);
+      return AppointmentEntity.fromObject({ ... newAppointment, patient, doctor, clinic });
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
   }
+
+
   async update(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
     const { id, lastUpdate, ...rest }: any = dto;
     if (Object.keys(rest).length === 0)
@@ -71,7 +102,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     if (rest.endDate) rest.endDate = new Date(dto.endDate!);
 
     try {
-      const appointmentUpdated = await prisma.appointment.update({
+      const { clinicId, patientId, doctorId, ...appointmentEdited } = await prisma.appointment.update({
         where: { id: id },
         data: {
           ...rest,
@@ -85,7 +116,8 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
           ],
         },
       });
-      return AppointmentEntity.fromObject(appointmentUpdated);
+      const {patient, doctor, clinic } = await this.#getExtraData(clinicId, doctorId, patientId);
+      return AppointmentEntity.fromObject({ ... appointmentEdited, patient, doctor, clinic });
     } catch (error) {
       throw CustomError.internalServer(`${error}`);
     }
@@ -97,5 +129,25 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
     });
 
     return AppointmentEntity.fromObject(appointment);
+  }
+
+  async #getExtraData(clinicId: string, doctorId: string, patientId: string ) {
+    
+       const transaccion = prisma;
+       const { patient, doctor, clinic } = await transaccion.$transaction(
+         async (tx) => {
+           const doctor = await tx.account.findUnique({
+             where: { id: doctorId },
+           });
+           const patient = await tx.account.findUnique({
+             where: { id: patientId },
+           });
+           const clinic = await tx.clinic.findUnique({
+             where: { id: clinicId },
+           });
+           return { doctor, patient, clinic };
+         },
+       );
+    return { patient, doctor, clinic }
   }
 }
