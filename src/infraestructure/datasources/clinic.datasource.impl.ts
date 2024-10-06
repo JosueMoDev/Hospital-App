@@ -126,7 +126,6 @@ export class ClinicDataSourceImpl implements ClinicDataSource {
 
     if (rest.address)
       rest.address = {
-        ...clinic.address,
         ...rest.address,
       };
 

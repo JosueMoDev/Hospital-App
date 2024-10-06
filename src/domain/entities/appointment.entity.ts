@@ -5,7 +5,7 @@ import { AccountEntity, ClinicEntity } from '@domain/entities';
 type Account = Partial<
   Pick<
     AccountEntity,
-    'id' | 'duiNumber' | 'name' | 'lastname' | 'email' | 'photoUrl' | 'phone'
+    'id' | 'duiNumber' | 'name' | 'lastname' | 'email' | 'photoUrl' | 'phone' | 'role'
   >
 >;
 type Clinic = Partial<
@@ -59,8 +59,8 @@ export class AppointmentEntity {
   }
 
   static accountMapper(object: { [key: string]: any }): Account {
-    const { id, duiNumber, name, lastname, phone, photoUrl, email } = object;
-    return { id, duiNumber, name, lastname, phone, photoUrl, email };
+    const { id, duiNumber, name, lastname, phone, photoUrl, email, role } = object;
+    return { id, duiNumber, name, lastname, phone, photoUrl, email, role };
   }
 
   static clinicMapper(object: { [key: string]: any }): Clinic {

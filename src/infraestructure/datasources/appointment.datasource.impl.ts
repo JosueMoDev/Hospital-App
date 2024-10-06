@@ -52,6 +52,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
               phone: true,
               photoUrl: true,
               email: true,
+              role: true,
             },
           },
           patient: {
@@ -63,6 +64,7 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
               phone: true,
               photoUrl: true,
               email: true,
+              role: true,
             },
           },
         },
@@ -93,29 +95,28 @@ export class AppointmentDataSourceImpl implements AppointmentDataSource {
 
 
   async update(dto: UpdateAppointmentDto): Promise<AppointmentEntity> {
-    const { id, lastUpdate, ...rest }: any = dto;
+    const { id, updatedBy, ...rest } = dto;
     if (Object.keys(rest).length === 0)
       throw CustomError.badRequest('Nothing to update');
     const appointment = await this.findOneById(id);
-
-    if (rest.startDate) rest.startDate = new Date(dto.startDate!);
-    if (rest.endDate) rest.endDate = new Date(dto.endDate!);
-
+    if (rest.startDate) rest.startDate = new Date(dto.startDate!) as any;
+    if (rest.endDate) rest.endDate = new Date(dto.endDate!) as any;
+  
     try {
-      const { clinicId, patientId, doctorId, ...appointmentEdited } = await prisma.appointment.update({
-        where: { id: id },
-        data: {
-          ...rest,
-          lastUpdate: [
-            ...appointment.lastUpdate,
-            {
-              account: lastUpdate.account,
-              date: DateFnsAdapter.formatDate(),
-              action: 'UPDATE',
-            },
-          ],
-        },
-      });
+      const { clinicId, patientId, doctorId, ...appointmentEdited } =
+        await prisma.appointment.update({
+          where: { id: id },
+          data: {
+            ...rest,
+            lastUpdate: [
+              ...appointment.lastUpdate,
+              {
+                updatedBy: updatedBy,
+                action: 'UPDATE',
+              },
+            ],
+          },
+        });
       const {patient, doctor, clinic } = await this.#getExtraData(clinicId, doctorId, patientId);
       return AppointmentEntity.fromObject({ ... appointmentEdited, patient, doctor, clinic });
     } catch (error) {

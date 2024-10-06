@@ -160,12 +160,9 @@ export class AccountDataSourceImpl implements AccountDataSource {
   }
 
   async updateAccount(dto: UpdateAccountDto): Promise<AccountEntity> {
-    const { id, lastUpdate, isValidated, ...rest }: any = dto;
+    const { id, updatedBy, isValidated, gender, role,  ...rest } = dto;
     if (Object.keys(rest).length === 0)
       throw CustomError.badRequest('Nothing to update');
-    if (rest.role) rest.role = roleT[dto.role];
-    if (rest.gender) rest.gender = genderT[dto.gender];
-
     const account = await this.findOneById(id);
 
     try {
@@ -173,12 +170,14 @@ export class AccountDataSourceImpl implements AccountDataSource {
         where: { id: id },
         data: {
           ...rest,
+          role: roleT[dto.role],
+          gender: genderT[dto.gender],
           lastUpdate: [
             ...account.lastUpdate,
             {
-              account: account.id,
+              updatedBy: account.id,
               date: DateFnsAdapter.formatDate(),
-              action: 'UPDATE ACCOUNT',
+              action: 'UPDATE',
             },
           ],
         },
